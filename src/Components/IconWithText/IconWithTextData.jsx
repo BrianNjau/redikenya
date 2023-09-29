@@ -79,22 +79,22 @@ const IconWithTextData_03 = [
 
 const IconWithTextData_04 = [
     {
-        icon: "line-icon-Cursor-Click2 text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
+        icon: "line-icon-Home text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
         title: "78",
         content: "Number of Properties",
     },
     {
-        icon: "line-icon-Bakelite text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
+        icon: "line-icon-Numbering-List text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
         title: "15k",
         content: "Number of Units",
     },
     {
-        icon: "line-icon-Boy text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
+        icon: "line-icon-Edit-Map text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
         title: "5.5",
-        content: "Aggregate Average",
+        content: "Aggregate Accerage",
     },
     {
-        icon: "line-icon-Boy text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
+        icon: "line-icon-Bank text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
         title: "Ksh 4bn",
         content: "Aggregate Market Price",
     },

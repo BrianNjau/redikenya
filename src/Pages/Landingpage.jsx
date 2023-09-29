@@ -36,7 +36,7 @@ const Landingpage = (props) =>{
                     <SideButtons />
                     <div className="bg-white" >
      {/* Header Start */}
-    {/* <Header topSpace={{ md: true }} type="reverse-scroll">
+            <Header topSpace={{ md: true }} type="reverse-scroll">
                     <HeaderNav fluid="fluid" theme="dark" expand="lg" className="digital-agency-header py-[0px] px-[35px] md:px-[15px] md:py-[20px] sm:px-0" containerClass="md:pr-0">
                         <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
                             <Link aria-label="header logo" className="flex items-center" to="/">
@@ -50,10 +50,10 @@ const Landingpage = (props) =>{
                         <Menu className="justify-center col-auto col-lg-8 md:hidden" {...props} />
                         <MobileMenu className="order-last d-lg-none" type="full" {...props} />
                         <Col lg={2} xs={"auto"} className="justify-end pe-0 flex items-center">
-                            <SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />
+                            {/*<SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />*/}
                         </Col>
                     </HeaderNav>
-                </Header>*/}
+                </Header>
                 {/* Header End */}
 
                 <HeroCarousel/>

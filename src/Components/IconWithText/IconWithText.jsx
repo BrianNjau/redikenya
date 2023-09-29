@@ -2,7 +2,6 @@ import React, { memo } from 'react'
 
 // Libraries
 import { Row } from 'react-bootstrap';
-import { m } from 'framer-motion';
 import { PropTypes } from "prop-types";
 import { Link } from 'react-router-dom';
 

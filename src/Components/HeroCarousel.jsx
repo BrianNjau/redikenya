@@ -22,7 +22,7 @@ const HeroCarousel = () => {
     }}
     effect='fade'
     modules={[Autoplay,EffectFade]}
-    >
+   >
        {/* Parallax Scrolling Start */}
        <SwiperSlide className="full-screen md:h-[600px] sm:h-[350px] md:flex md:items-center overflow-hidden relative bg-white">
         <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] sm:h-[70vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://images.unsplash.com/photo-1611348524140-53c9a25263d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2673&q=80` }}></Parallax>
@@ -37,7 +37,7 @@ const HeroCarousel = () => {
                         <span className="bg-[#3eb489] w-[50%] h-[1px] ml-36 md:w-[70%] sm:ml-8 sm:w-[50px] xs:ml-8"></span>                   
                     </div>
                     */}
-                    <div className='mt-8 mb-0 w-full mt-[20rem] mb-[10rem]'>
+                    <div className='mt-8 w-full mt-[20vh] mb-[10vh]'>
                     <IconWithText
         grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 text-center gap-y-10"
         theme="icon-with-text-04"
@@ -47,7 +47,7 @@ const HeroCarousel = () => {
         />
                     </div>
              
-                    <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[6rem] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
+                    <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[5vh] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
                                 
                                 <Typed
                                     className="font-semibold text-[#3eb489] text-[68px] "
@@ -61,13 +61,16 @@ const HeroCarousel = () => {
                                 <span className="mr-[18px]"> the quality of your real estate investment decisions</span>
                             </h1>
 
-                            <div className="relative w-[40rem] subscribe-style-05">
+                            <div className="relative subscribe-style-05">
                      
                         <select name="search" className="border-[1px] large-input border-solid border-transparent rounded-[4px]">
+                        <option>All</option>
+                        <option>Kilimani</option>
+                        <option>Kileleshwa</option>
                         <option>Westlands</option>
                         <option>Lavington</option>
                         </select>
-                        <button type="submit" className={`text-xs py-[12px] !font-semibold px-[28px] uppercase }`}><i className="fas fa-search text-white text-xs leading-none mr-[10px] xs:mr-0"></i>search</button>
+                        
                   
                     </div>
 
@@ -100,16 +103,19 @@ const HeroCarousel = () => {
                         <span className="bg-[#3eb489] w-[50%] h-[1px] ml-36 md:w-[70%] sm:ml-8 sm:w-[50px] xs:ml-8"></span>                   
                     </div>
                     */}
-                    <div className='mt-8 mb-0 w-full mt-[20rem] mb-[10rem]'>
-                    <IconWithText
+                    <div className='mt-8 w-full mt-[20vh] mb-[10vh]'>
+    
+                    <IconWithText 
         grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 text-center gap-y-10"
         theme="icon-with-text-04"
         data={IconWithTextData_04}
         animation={fadeIn}
         animationDelay={0.5}
         />
+
                     </div>
-                    <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[6rem] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
+
+<h1 className="font-serif font-semibold text-white text-[65px] mt-[5vh] leading-[80px] w-[75%] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
                                 
                                 <Typed
                                     className="font-bold text-[#3eb489]"
@@ -122,16 +128,18 @@ const HeroCarousel = () => {
                                 />
                                 <span className="mr-[18px]"> the quality of your real estate investment decisions</span>
                             </h1>
+                   
                     
-                            <div className="relative w-[40rem] subscribe-style-05">
+                            <div className="relative  subscribe-style-07">
                      
-                     <select name="search" className="border-[1px] large-input border-solid border-transparent rounded-[4px]">
-                     <option>Westlands</option>
-                     <option>Lavington</option>
+                     <select name="search" className="border-[1px] large-input border-solid border-transparent rounded-[6px]">
+                     <option>All</option>
+                        <option>Kilimani</option>
+                        <option>Kileleshwa</option>
+                        <option>Westlands</option>
+                        <option>Lavington</option>
                      </select>
-                     <button type="submit" className={`text-xs py-[12px] !font-semibold px-[28px] uppercase }`}><i className="fas fa-search text-white text-xs leading-none mr-[10px] xs:mr-0"></i>search</button>
-               
-                 </div>
+                            </div>
 
                    
                     <div>
