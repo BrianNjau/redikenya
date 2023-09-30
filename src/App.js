@@ -10,6 +10,7 @@ import GlobalContext from "./Context/Context";
 
 //Import pages 
 const LandingPage = lazy(() => import("./Pages/Landingpage"))
+const LoginRegister = lazy(() => import("./Pages/LoginRegister"))
 
 
 function App() {
@@ -83,6 +84,7 @@ function App() {
      <Suspense fallback={<></>}>
       <Routes>
         <Route path="/" element={<LandingPage style={{ "--base-color": "#e6994e" }}   />} />
+        <Route path="login-register" element={<LoginRegister />} />
       </Routes>
      </Suspense>
      </AnimatePresence>
