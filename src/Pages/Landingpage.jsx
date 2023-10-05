@@ -6,28 +6,10 @@ import { Link } from 'react-router-dom'
 import SideButtons from "../Components/SideButtons";
 import Header, { HeaderNav, Menu, MobileMenu } from '../Components/Header';
 import HeroCarousel from '../Components/HeroCarousel';
-import SocialIcons from '../Components/SocialIcon/SocialIcons';
-
+import Logo from "../Assets/img/1.png"
+import Buttons from '../Components/Buttons';
 const Landingpage = (props) =>{
 
-    const SocialIconsData = [
-        {
-            color: "#ffffff99",
-            link: "https://www.facebook.com/",
-            icon: "fab fa-facebook-f"
-        },
-        {
-            color: "#ffffff99",
-            link: "https://www.instagram.com/",
-            icon: "fab fa-instagram"
-        },
-        {
-            color: "#ffffff99",
-            link: "https://twitter.com/",
-            icon: "fab fa-twitter"
-        }
-    ]
-    
 
 
     
@@ -40,8 +22,8 @@ const Landingpage = (props) =>{
                     <HeaderNav fluid="fluid" theme="dark" expand="lg" className="digital-agency-header py-[0px] px-[35px] md:px-[15px] md:py-[20px] sm:px-0" containerClass="md:pr-0">
                         <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
                             <Link aria-label="header logo" className="flex items-center" to="/">
-                                <Navbar.Brand className="inline-block p-0 m-0">
-                                    <img className="default-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-white.webp' data-rjs='/assets/img/webp/logo-white@2x.webp' alt='logo' />
+                                <Navbar.Brand className="inline-block p-0 m-0 mt-0">
+                                    <img className="default-logo" loading="lazy" src={Logo} data-rjs='/assets/img/webp/logo-white@2x.webp' alt='logo' />
                                     <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
                                     <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
                                 </Navbar.Brand>
@@ -50,6 +32,8 @@ const Landingpage = (props) =>{
                         <Menu className="justify-center col-auto col-lg-8 md:hidden" {...props} />
                         <MobileMenu className="order-last d-lg-none" type="full" {...props} />
                         <Col lg={2} xs={"auto"} className="justify-end pe-0 flex items-center">
+                        <Link to="/login-register" className="text-[#F3EFE0] font-serif hover:text-[#3EB489]  mr-[2rem] p-2"><i className="line-icon-User mr-[1rem]"></i>Login</Link>
+                        <Buttons ariaLabel="button" href="/login-register" className="btn-fill mx-[8px] font-medium uppercase rounded-[80px]" themeColor="#3EB489" color="#F3EFE0" size="md" title="Try free" />
                             {/*<SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />*/}
                         </Col>
                     </HeaderNav>
