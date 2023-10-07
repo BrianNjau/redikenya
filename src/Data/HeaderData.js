@@ -50,27 +50,12 @@ const HeaderData = [
         title: 'About',
         dropdown: [
             {
-                title: 'Company',
-                dropdown: [
-                    {
-                        title: 'Our story',
-                        link: '/page/our-story'
-                    },
-                    {
-                        title: 'Who we are',
-                        link: '/page/who-we-are'
-                    }
-                ]
+                title: 'About Us',
+               link:'/about-us'
             },
             {
-                title: 'Our Data',
-                dropdown: [
-                    {
-                        title: 'Our Data sources',
-                        link: '/page/our-services'
-                    },
-                  
-                ]
+                title: 'Our Data Sources',
+                link: '/data-sources'
             },
             {
                 title: 'Contact',
@@ -93,7 +78,7 @@ const HeaderData = [
    
     {
         title: 'Economics',
-     link:"#"
+     link:"/economics"
     },
 ]
 

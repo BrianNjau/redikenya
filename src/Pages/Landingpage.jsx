@@ -3,7 +3,6 @@ import React from 'react'
 // Libraries
 import { Col,Navbar } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import SideButtons from "../Components/SideButtons";
 import Header, { HeaderNav, Menu, MobileMenu } from '../Components/Header';
 import HeroCarousel from '../Components/HeroCarousel';
 import Logo from "../Assets/img/1.png"
@@ -15,7 +14,7 @@ const Landingpage = (props) =>{
     
   return (
     <div style={props.style}>
-                    <SideButtons />
+                    {/**<SideButtons /> */}
                     <div className="bg-white" >
      {/* Header Start */}
             <Header topSpace={{ md: true }} type="reverse-scroll">

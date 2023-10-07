@@ -8,9 +8,12 @@ import GlobalContext from "./Context/Context";
 
 
 
+
 //Import pages 
 const LandingPage = lazy(() => import("./Pages/Landingpage"))
 const LoginRegister = lazy(() => import("./Pages/LoginRegister"))
+const AboutUs = lazy(() => import("./Pages/AboutUs"))
+const Economics = lazy(() => import("./Pages/Economics"))
 
 
 function App() {
@@ -85,6 +88,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage style={{ "--base-color": "#e6994e" }}   />} />
         <Route path="login-register" element={<LoginRegister />} />
+        <Route path="about-us" element={<AboutUs />} />
+        <Route path="economics" element={<Economics />} />
       </Routes>
      </Suspense>
      </AnimatePresence>

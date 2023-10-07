@@ -11,19 +11,27 @@ import { Checkbox, Input } from '../Components/Form'
 import Buttons from '../Components/Buttons'
 import { fadeIn } from "../Functions/GlobalAnimations";
 import { resetForm } from '../Functions/Utilities';
+import GlobalHeader from '../Components/GlobalHeader';
 const LoginRegister = () => {
   return (
-    <>
+  
+    <div>
+       {/** <SideButtons /> */}
+        <div className="bg-white" >
+
+        <GlobalHeader theme="light"/>
+
+
       {/* Section Start */}
       <section className="bg-lightgray py-[25px]">
         <Container>
           <Row className="items-center justify-center">
             <Col xl={8} lg={6}>
-              <h1 className="font-serif text-darkgray font-medium mb-0 text-lg md:text-center">Redi Kenya</h1>
+             {/* <h1 className="font-serif text-darkgray font-medium mb-0 text-lg md:text-center"></h1> */} 
             </Col>
             <Col xl={4} lg={6} className="breadcrumb mb-0 justify-end font-serif md:justify-center sm:mt-[10px] text-sm">
               <ul className="xs-text-center">
-                <li><Link aria-label="homepage-link" to="/">Login</Link></li>
+                <li>Login</li>
                 <li>Register</li>
               </ul>
             </Col>
@@ -97,7 +105,12 @@ const LoginRegister = () => {
         </Container>
       </section>
       {/* Section End */}
-      </>
+
+
+            </div>             
+    </div>
+
+      
   )
 }
 
