@@ -3,7 +3,7 @@ import GlobalHeader from '../Components/GlobalHeader'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Parallax } from 'react-scroll-parallax'
 import { fadeIn } from '../Functions/GlobalAnimations'
-import Buttons from '../Components/Buttons'
+
 import { SwiperSlide, Swiper } from 'swiper/react'
 import {
     Chart as ChartJS,

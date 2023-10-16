@@ -8,10 +8,6 @@ import HeroCarousel from '../Components/HeroCarousel';
 import Logo from "../Assets/img/1.png"
 import Buttons from '../Components/Buttons';
 const Landingpage = (props) =>{
-
-
-
-    
   return (
     <div style={props.style}>
                     {/**<SideButtons /> */}

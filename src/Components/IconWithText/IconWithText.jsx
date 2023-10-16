@@ -2,7 +2,7 @@ import React, { memo } from 'react'
 
 // Libraries
 import { Row } from 'react-bootstrap';
-import { PropTypes } from "prop-types";
+//import { PropTypes } from "prop-types";
 import { Link } from 'react-router-dom';
 
 // components
@@ -57,7 +57,7 @@ IconWithText.defaultProps = {
   animationTransition: "circOut",
   theme: "icon-with-text-01",
 }
-
+/*
 IconWithText.propTypes = {
   className: PropTypes.string,
   data: PropTypes.arrayOf(
@@ -77,5 +77,5 @@ IconWithText.propTypes = {
   grid: PropTypes.string,
 }
 
-
+**/
 export default memo(IconWithText)
