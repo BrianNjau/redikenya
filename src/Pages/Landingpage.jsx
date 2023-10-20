@@ -27,7 +27,7 @@ const Landingpage = (props) =>{
                         <Menu className="justify-center col-auto col-lg-8 md:hidden" {...props} />
                         <MobileMenu className="order-last d-lg-none" type="full" {...props} />
                         <Col lg={2} xs={"auto"} className="justify-end pe-0 flex items-center">
-                        <Link to="/login-register" className="text-[#F3EFE0] font-serif hover:text-[#3EB489]  mr-[2rem] p-2"><i className="line-icon-User mr-[1rem]"></i>Login</Link>
+                        <Link to="/login-register" className="text-[#F3EFE0] font-serif hover:text-[#3EB489]  mr-[2rem]"><i className="mr-[1rem]"></i>LOGIN</Link>
                         <Buttons ariaLabel="button" href="/login-register" className="btn-fill mx-[8px] font-medium uppercase rounded-[80px]" themeColor="#3EB489" color="#F3EFE0" size="md" title="Try free" />
                             {/*<SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />*/}
                         </Col>
