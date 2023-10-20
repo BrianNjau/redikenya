@@ -63,10 +63,10 @@ const AboutUs = () => {
               <div className="w-full md:h-[700px] sm:h-[550px] xs:h-[450px] cover-background" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1612253280934-3e0eb5b25251?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80') " }}></div>
             </Col>
             <Col lg={4} md={6} className="ps-lg-0 flex items-center sm:mb-[30px]">
-              <div className="justify-center h-full w-full flex flex-col items-start bg-[#3eb489] px-[5.5rem] lg:px-[3rem] md:p-16">
+              <div className="justify-center h-full w-full flex flex-col items-start bg-[#08415c] px-[5.5rem] lg:px-[3rem] md:p-16">
                 <span className="text-xlg lg:text-lg lg:leading-[26px] font-medium text-[#f3efe0] mb-[20px] block">Redi Kenya, your trusted partner in unlocking the power of data-driven decision-making within the realm of real estate investments.</span>
                 <p className="text-[#f3efe0] font-sans opacity-70 mb-[20px] xs:mb-[15px]"> In an era where information drives innovation and success, our company stands at the forefront of revolutionizing the way real estate professionals and investors approach their investment strategies.</p>
-                <Buttons href="/contact-us" className="font-medium font-serif uppercase btn-link after:h-[2px] md:text-md md:mb-[15px] after:bg-[#f3efe0] hover:text-[#f3efe0]" color="#f3efe0" title="Talk to us" />
+                <Buttons href="/contact-us" className="font-medium font-serif uppercase text-[#f3efe0]  after:h-[2px] btn-link md:text-md md:mb-[15px] after:bg-[#f3efe0] hover:text-[#f3efe0]" color="#f3efe0" title="Talk to us" />
               </div>
             </Col>
             <Col lg={4} md={6} className="flex flex-col pr-0">
@@ -89,12 +89,12 @@ harness the power of data to drive innovation, reduce risk, and seize opportunit
         <Container>
           <Row className="items-center justify-center">
             <Col xl={7} lg={8} md={7} sm={10} className="text-left sm:text-center sm:mb-[30px]">
-              <h6 className="font-serif text-darkgray font-medium mb-0"><strong className="text-[#3eb489] underline underline-offset-auto font-semibold">Our Mission</strong> to bridge the gap between data and real estate investments.</h6>
+              <h6 className="font-serif text-darkgray font-medium mb-0"><strong className="text-[#08415c] underline underline-offset-auto font-semibold">Our Mission</strong> to bridge the gap between data and real estate investments.</h6>
             </Col>
             <Col xl={{ span: 3, offset: 2 }} lg={4} md={5} className="sm:text-center text-right">
             <Link to="#">
             <span className="cursor-pointer font-serif inline-block py-[19px] px-[44px] text-white rounded about-us-bg-gradient">
-                    <i className="fa fa-arrow-right line-icon-Cube-Molecule text-[50px] inline-block ml-0 mr-[15px] align-middle"></i>
+                    <i className="fa fa-arrow-right line-icon-Arrow-Forward2 text-[50px] inline-block ml-0 mr-[15px] align-middle"></i>
                     <div className="inline-block text-start text-md align-middle uppercase font-medium">
                     <span className="opacity-60 text-md block leading-[15px]">Explore our</span>Features</div></span>
             </Link>

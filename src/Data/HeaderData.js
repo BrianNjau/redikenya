@@ -1,6 +1,11 @@
 const HeaderData = [
     {
-        title: 'Features',
+        title: 'Search',
+        link:"#"
+    },
+   
+    {
+        title: 'Research',
         megamenu: [
             {
                 title: <> 
@@ -47,6 +52,14 @@ const HeaderData = [
         ]
     },
     {
+        title: 'Invest',
+        link:"#"
+    },
+    {
+        title: 'Economics',
+     link:"/economics"
+    },
+    {
         title: 'About',
         dropdown: [
             {
@@ -70,16 +83,7 @@ const HeaderData = [
        
         ]
     },
-    {
-        title: 'Invest',
-        link:"#"
-    },
-
-   
-    {
-        title: 'Economics',
-     link:"/economics"
-    },
+ 
 ]
 
 export default HeaderData

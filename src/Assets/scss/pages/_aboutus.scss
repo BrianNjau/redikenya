@@ -22,10 +22,10 @@
                 height: 100%;
                 z-index: -1;
                 opacity: 0;
-                background-image: linear-gradient(to right top, #0039e3, #4132e0, #5e28dd, #741bd9, #8600d4);
+                background-image: linear-gradient(to right top, #08415c , #08415c,#3eb489);
             }
             i {
-                @apply bg-gradient-to-r from-[#0038e3] via-[#0038e3] to-[#0038e3];
+                @apply bg-gradient-to-r from-[#08415c] via-[#08415c] to-[#08415c];
             }
             &:hover {
                 &::after {
