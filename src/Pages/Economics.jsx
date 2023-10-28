@@ -18,7 +18,7 @@ import {
   } from 'chart.js';
   import { Bar } from 'react-chartjs-2';
   import { Line } from 'react-chartjs-2';
-
+  import Typed from 'react-typed';
 
 ChartJS.register(
     CategoryScale,
@@ -213,7 +213,15 @@ const Economics = () => {
          <Col xl={4} lg={6} className="breadcrumb mb-0 justify-end font-serif md:justify-center sm:mt-[10px] text-sm">
            <ul className="xs-text-center">
              <li>Economics</li>
-             <li>Redi Kenya</li>
+             <li> <Typed
+                                    className=""
+                                    strings={[ "PDI","Property Development Investments", "Property Data Insights"]}
+                                    typeSpeed={80}
+                                    backSpeed={80}
+                                    loop
+                                    showCursor
+                                    cursorChar="|"
+                                /></li>
            </ul>
          </Col>
        </Row>

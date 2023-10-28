@@ -14,6 +14,7 @@ const LandingPage = lazy(() => import("./Pages/Landingpage"))
 const LoginRegister = lazy(() => import("./Pages/LoginRegister"))
 const AboutUs = lazy(() => import("./Pages/AboutUs"))
 const Economics = lazy(() => import("./Pages/Economics"))
+const Search = lazy(() => import("./Pages/Search"))
 
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
         <Route path="login-register" element={<LoginRegister />} />
         <Route path="about-us" element={<AboutUs />} />
         <Route path="economics" element={<Economics />} />
+        <Route path="search" element={<Search />} />
       </Routes>
      </Suspense>
      </AnimatePresence>

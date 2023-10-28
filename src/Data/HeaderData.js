@@ -1,7 +1,7 @@
 const HeaderData = [
     {
         title: 'Search',
-        link:"#"
+        link:"/search"
     },
    
     {
@@ -53,8 +53,16 @@ const HeaderData = [
     },
     {
         title: 'Invest',
-        link:"#"
+        link:"/invest"
     },
+    // {
+    //     title: 'Locations',
+    //     link:"/locations"
+    // },
+    // {
+    //     title: 'Pipeline',
+    //     link:"/pipeline"
+    // },
     {
         title: 'Economics',
      link:"/economics"

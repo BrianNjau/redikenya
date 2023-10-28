@@ -5,7 +5,7 @@ import Buttons from '../Components/Buttons'
 import { Link } from 'react-router-dom'
 import { fadeIn } from '../Functions/GlobalAnimations'
 import IconWithText from '../Components/IconWithText/IconWithText';
-
+import Typed from 'react-typed';
 
 const AboutUs = () => {
 
@@ -47,7 +47,15 @@ const AboutUs = () => {
          <Col xl={4} lg={6} className="breadcrumb mb-0 justify-end font-serif md:justify-center sm:mt-[10px] text-sm">
            <ul className="xs-text-center">
              <li>About</li>
-             <li>Redi Kenya</li>
+             <li> <Typed
+                                    className=""
+                                    strings={[ "PDI","Property Development Investments", "Property Data Insights"]}
+                                    typeSpeed={80}
+                                    backSpeed={80}
+                                    loop
+                                    showCursor
+                                    cursorChar="|"
+                                /></li>
            </ul>
          </Col>
        </Row>

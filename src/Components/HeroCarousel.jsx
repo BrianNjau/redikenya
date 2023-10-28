@@ -71,12 +71,12 @@ let combinedSummaryData = () =>{
         {
             icon: "line-icon-Edit-Map text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
             title: calculatedSummaryData.accerage,
-            content: "Aggregate Accerage",
+            content: "Aggregate Acreage",
         },
         {
             icon: "line-icon-Bank text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
-            title: calculatedSummaryData.price.toString().length>9?calculatedSummaryData.price.toString().slice(0,3)+"b":calculatedSummaryData.price.toString().length>6?calculatedSummaryData.price.toString().slice(0,3)+"m":calculatedSummaryData.price,
-            content: "Aggregate Market Price",
+            title: calculatedSummaryData.price.toString().length>9?calculatedSummaryData.price.toString().slice(0,3)+"B":calculatedSummaryData.price.toString().length>6?calculatedSummaryData.price.toString().slice(0,3)+"M":calculatedSummaryData.price,
+            content: "Aggregate Market Value",
         },
     ]
 
@@ -103,12 +103,12 @@ let combinedSummaryData = () =>{
             <Row className="h-[100vh] md:h-full">
                 <Col className="flex flex-col">
      
-                    {/* <div className="flex flex-row items-center  mb-0">
-                    <span className="font-serif text-lg text-[#3eb489] xs:text-xmd">Property Market Overview</span>
+                    <div className="flex flex-row items-center  mb-0 mt-[20vh]">
+                    <span className="font-serif text-md text-[#3eb489] xs:text-xmd">Our Data Inventory</span>
                         <span className="bg-[#3eb489] w-[50%] h-[1px] ml-36 md:w-[70%] sm:ml-8 sm:w-[50px] xs:ml-8"></span>                   
                     </div>
-                    */}
-                    <div className='mt-8 w-full mt-[20vh] mb-[10vh]'>
+                   
+                    <div className=' w-full mt-[5vh] mb-[5vh]'>
                     <IconWithText
                     grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 text-center gap-y-10"
                     theme="icon-with-text-04"
@@ -118,7 +118,7 @@ let combinedSummaryData = () =>{
                     />
                     </div>
              
-                    <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[5vh] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
+                    <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[2vh] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
                                 
                                 <Typed
                                     className="font-semibold text-[#3eb489] text-[68px] "
@@ -138,10 +138,10 @@ let combinedSummaryData = () =>{
                     
                    
 
-                    <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
+                    {/* <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
                         <span className="bg-[#3eb489] w-[50%] h-[1px] mr-36 md:w-[40%] sm:mr-8 sm:w-[50px] xs:mr-8"></span>
                         <span className="font-serif font-semibold text-lg text-[#3eb489] xs:text-xmd">Property Market Overview</span>
-                    </div>
+                    </div> */}
          
                 </Col>
             </Row>
@@ -159,12 +159,11 @@ let combinedSummaryData = () =>{
             <Row className="h-[100vh] md:h-full  ">
                 <Col className="flex flex-col">
      
-          {/* <div className="flex flex-row items-center  mb-0">
-              <span className="font-serif text-lg text-[#3eb489] xs:text-xmd">Property Market Overview</span>
+                <div className="flex flex-row items-center  mb-0 mt-[20vh]">
+                    <span className="font-serif text-md text-[#3eb489] xs:text-xmd">Our Data Inventory</span>
                         <span className="bg-[#3eb489] w-[50%] h-[1px] ml-36 md:w-[70%] sm:ml-8 sm:w-[50px] xs:ml-8"></span>                   
                     </div>
-                    */}
-                    <div className='mt-8 w-full mt-[20vh] mb-[10vh]'>
+                    <div className='w-full mt-[5vh] mb-[5vh]'>
     
                     <IconWithText 
         grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 text-center gap-y-10"
@@ -176,7 +175,7 @@ let combinedSummaryData = () =>{
 
                     </div>
 
-<h1 className="font-serif font-semibold text-white text-[65px] mt-[5vh] leading-[80px] w-[75%] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
+<h1 className="font-serif font-semibold text-white text-[65px] mt-[2vh] leading-[80px] w-[75%] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
                                 
                                 <Typed
                                     className="font-bold text-[#3eb489]"
@@ -200,10 +199,69 @@ let combinedSummaryData = () =>{
                     <div>
     
                     </div>
-                    <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
+                    {/* <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
                         <span className="bg-[#3eb489] w-[50%] h-[1px] mr-36 md:w-[40%] sm:mr-8 sm:w-[50px] xs:mr-8"></span>
                         <span className="font-serif font-semibold text-lg text-[#3eb489] xs:text-xmd">Property Market Overview</span>
+                    </div> */}
+         
+                </Col>
+            </Row>
+        </Container>
+    </SwiperSlide>
+    {/* Parallax Scrolling End */}
+       {/* Parallax Scrolling Start */}
+       <SwiperSlide className="full-screen md:h-[600px] sm:h-[350px] md:flex md:items-center overflow-hidden relative bg-white">
+        <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] sm:h-[70vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://images.unsplash.com/photo-1669127300649-940337f1487e?auto=format&fit=crop&q=80&w=3024&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D` }}></Parallax>
+        <div className="absolute top-0 left-0 h-full w-full opacity-80
+         bg-gradient-to-b from-[#08415c] to-[#000000]"></div>
+        <Container className="relative md:h-full">
+            <Row className="h-[100vh] md:h-full  ">
+                <Col className="flex flex-col">
+     
+                <div className="flex flex-row items-center  mb-0 mt-[20vh]">
+                    <span className="font-serif text-md text-[#3eb489] xs:text-xmd">Our Data Inventory</span>
+                        <span className="bg-[#3eb489] w-[50%] h-[1px] ml-36 md:w-[70%] sm:ml-8 sm:w-[50px] xs:ml-8"></span>                   
                     </div>
+                    <div className='w-full mt-[5vh] mb-[5vh]'>
+    
+                    <IconWithText 
+        grid="row-cols-1 row-cols-lg-4 row-cols-sm-2 text-center gap-y-10"
+        theme="icon-with-text-04"
+        data={IconWithTextData_04}
+        animation={fadeIn}
+        animationDelay={0.5}
+        />
+
+                    </div>
+
+<h1 className="font-serif font-semibold text-white text-[65px] mt-[2vh] leading-[80px] w-[75%] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
+                                
+                                <Typed
+                                    className="font-bold text-[#3eb489]"
+                                    strings={[ "Refine","Enrich"]}
+                                    typeSpeed={40}
+                                    backSpeed={40}
+                                    loop
+                                    showCursor
+                                    cursorChar="|"
+                                />
+                                <span className="mr-[18px]"> the quality of your real estate investment decisions</span>
+                            </h1>
+                   
+                    
+                            <div className="relative  subscribe-style-07">
+
+                            <HeroSelect selectedOption={selectedOption} handleSelect={handleSelect} />
+                            </div>
+
+                   
+                    <div>
+    
+                    </div>
+                    {/* <div className="flex flex-row items-center mt-auto mb-[7.5rem]">
+                        <span className="bg-[#3eb489] w-[50%] h-[1px] mr-36 md:w-[40%] sm:mr-8 sm:w-[50px] xs:mr-8"></span>
+                        <span className="font-serif font-semibold text-lg text-[#3eb489] xs:text-xmd">Property Market Overview</span>
+                    </div> */}
          
                 </Col>
             </Row>

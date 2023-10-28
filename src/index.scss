@@ -1,2 +1,7 @@
 @tailwind components;
 @tailwind utilities;
+
+
+.my-select-container .ant-select .ant-select-selector {
+    border-radius:3px;
+  }
