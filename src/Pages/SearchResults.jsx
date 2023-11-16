@@ -2,7 +2,7 @@ import React from 'react'
 import GlobalHeader from '../Components/GlobalHeader'
 import { Parallax } from 'react-scroll-parallax'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Button, Card, Checkbox, Dropdown, Select, Statistic, ConfigProvider, Tabs, Tooltip as ToolTipANT } from 'antd'
+import { Button, Card, Checkbox, Dropdown, Select, ConfigProvider, Tabs, Tooltip as ToolTipANT } from 'antd'
 import { useLocation } from 'react-router-dom'
 import {
   Chart as ChartJS,
@@ -15,7 +15,7 @@ import {
 import { Scatter } from 'react-chartjs-2';
 import { FilterOutlined,  } from '@ant-design/icons';
 import { useState } from 'react'
-
+import "./search.css"
 
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
@@ -80,6 +80,16 @@ const SearchResults = () => {
     const scatterOptions = {
 
       plugins: {
+        legend: {
+          labels: {
+              // This more specific font property overrides the global property
+              font: {
+                  size: 16,
+                  color:"#f3efe0"
+              },
+              color:"#f3efe0"
+            },
+          },
         tooltip: {
             callbacks: {
                 label: function(item, context) {
@@ -116,26 +126,41 @@ const SearchResults = () => {
     },
       
         scales: {
+          
           y: {
             title: {
                 display: true,
                 text: "Market Price",
                 font: {
                     size: 15
-                }
+                },
+                color:"#f3efe0"
             },
+            ticks:{
+              color:"#f3efe0"
+            }
           },
           x: {
+            
             title: {
                 display: true,
                 text: "Floor area (SqM)",
                 font: {
                     size: 15
-                }
+                },
+                color:"#f3efe0"
+              
             },
+            ticks:{
+              color:"#f3efe0",
+              backdropColor:"#f3efe0",
+            }
           },
+         
           
         },
+        
+       
         
       };
     
@@ -165,10 +190,11 @@ const SearchResults = () => {
         {
           label: 'Data point',
           data: testData,
-          backgroundColor: 'rgba(8, 65, 92)',
+          backgroundColor: 'rgba(62, 180, 137)',
         },
        
       ],
+     
     };
 
     let marketPriceTotal = marketValuePicker.reduce((partialSum, a) => partialSum + a, 0);
@@ -237,39 +263,59 @@ const SearchResults = () => {
   </Dropdown>
   {/* DropDown Options */}
 
-<Row className='mb-6' gutter={16}>
+<Row className='mb-6 ' gutter={16}>
     <Col span={8}>
-      <Card bordered={false}>
-        <Statistic
+      <Card className='bg-[#08415c]' bordered={false}>
+      <div className=''>
+      <span className='font-base text-[#f3efe0] text-md mb-1'>Average of Market Price</span>
+       <br /> 
+       {/* <hr className='text-[#f3efe0]' /> */}       
+      <span className='font-semibold text-[#3eb489] text-[1.8rem] '>Ksh. {avgMarket.toLocaleString()||0}</span>
+      </div> 
+        {/* <Statistic
           title="Average of Market Price"
+          
           value={avgMarket||0}
           precision={2}
           
           valueStyle={{
-            color: '#08415c',
+            color: '#3eb489',
           }}
           prefix={"Ksh. "}
           suffix=""
-        />
+        /> */}
       </Card>
     </Col>
     <Col span={8}>
-      <Card bordered={false}>
-        <Statistic
+      <Card className='bg-[#08415c]' bordered={false}>
+      <div className=''>
+      <span className='font-base text-[#f3efe0] text-md mb-1'>Median of Market Price</span>
+       <br /> 
+       {/* <hr className='text-[#f3efe0]' /> */}       
+      <span className='font-semibold text-[#3eb489] text-[1.8rem] '>Ksh. {medianCal().toLocaleString()||0}</span>
+      </div> 
+        {/* <Statistic
           title="Median of Market Price"
           value={medianCal()||0}
           precision={2}
+          titleStyle={{color:"#3eb489"}}
           valueStyle={{
             color: '#08415c',
           }}
           prefix={"Ksh. "}
           suffix=""
-        />
+        /> */}
       </Card>
     </Col>
     <Col span={8}>
-      <Card bordered={false}>
-        <Statistic
+      <Card  className='bg-[#08415c]'  bordered={false}>
+      <div className=''>
+      <span className='font-base text-[#f3efe0] text-md mb-1'>Min of Market Price</span>
+       <br /> 
+       {/* <hr className='text-[#f3efe0]' /> */}       
+      <span className='font-semibold text-[#3eb489] text-[1.8rem] '>Ksh. {minMarket.toLocaleString()||0}</span>
+      </div> 
+        {/* <Statistic
           title="Min of Market Price"
           value={minMarket||0}
           precision={2}
@@ -278,26 +324,37 @@ const SearchResults = () => {
           }}
           prefix={"Ksh. "}
           suffix=""
-        />
+        /> */}
       </Card>
     </Col>
     <Col span={8}>
-      <Card bordered={false}>
-        <Statistic
+      <Card  className='bg-[#08415c]'   bordered={false}>
+
+      <div className=''>
+      <span className='font-base text-[#f3efe0] text-md mb-1'>Max of Market Price</span>
+       <br /> 
+       {/* <hr className='text-[#f3efe0]' /> */}       
+      <span className='font-semibold text-[#3eb489] text-[1.8rem] '>Ksh. {maxMarket.toLocaleString()||0}</span>
+      </div> 
+
+        {/* <Statistic
           title="Max of Market Price"
           value={maxMarket||0}
           precision={2}
+          style={{
+            color:"#3eb489"
+          }}
           valueStyle={{
             color: '#08415c',
           }}
           prefix={"Ksh. "}
           suffix=""
-        />
+        /> */}
       </Card>
     </Col>
   </Row>
 
-  <Scatter options={scatterOptions} data={scatterData} />
+  <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} />
 
 
             </div>
@@ -379,6 +436,9 @@ const SearchResults = () => {
           },
           Select:{
             colorPrimary: '#08415c',
+          },
+          Statistic:{
+            colorPrimary:"#3eb489"
           }
         }
       }}
