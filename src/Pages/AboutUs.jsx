@@ -48,8 +48,8 @@ const AboutUs = () => {
            <ul className="xs-text-center">
              <li>About</li>
              <li> <Typed
-                                    className=""
-                                    strings={[ "PDI","Property Development Investments", "Property Data Insights"]}
+                                    className="font-semibold text-[#3eb489]"
+                                    strings={[ "PDI","Property Development & Investments", "Property Data & Insights"]}
                                     typeSpeed={80}
                                     backSpeed={80}
                                     loop

@@ -75,8 +75,8 @@ let combinedSummaryData = () =>{
         },
         {
             icon: "line-icon-Bank text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
-            title: calculatedSummaryData.price.toString().length>9?calculatedSummaryData.price.toString().slice(0,3)+"B":calculatedSummaryData.price.toString().length>6?calculatedSummaryData.price.toString().slice(0,3)+"M":calculatedSummaryData.price,
-            content: "Aggregate Market Value",
+            title: calculatedSummaryData.price.toString().length>=12?calculatedSummaryData.price.toString().slice(0,3)+"T":calculatedSummaryData.price.toString().length>9?calculatedSummaryData.price.toString().slice(0,3)+"B":calculatedSummaryData.price.toString().length>6?calculatedSummaryData.price.toString().slice(0,3)+"M":calculatedSummaryData.price,
+            content: "Est. Market Value",
         },
     ]
 
@@ -211,7 +211,7 @@ let combinedSummaryData = () =>{
     {/* Parallax Scrolling End */}
        {/* Parallax Scrolling Start */}
        <SwiperSlide className="full-screen md:h-[600px] sm:h-[350px] md:flex md:items-center overflow-hidden relative bg-white">
-        <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] sm:h-[70vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://images.unsplash.com/photo-1669127300649-940337f1487e?auto=format&fit=crop&q=80&w=3024&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D` }}></Parallax>
+        <Parallax className="lg-no-parallax bg-cover absolute top-[0px] left-0 md:-top-[30px] w-full h-[100vh] sm:h-[70vh]" translateY={[-40, 40]} style={{ backgroundImage: `url(https://images.pexels.com/photos/14168997/pexels-photo-14168997.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1` }}></Parallax>
         <div className="absolute top-0 left-0 h-full w-full opacity-80
          bg-gradient-to-b from-[#08415c] to-[#000000]"></div>
         <Container className="relative md:h-full">
