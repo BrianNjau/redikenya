@@ -15,7 +15,7 @@ import {
 import { Scatter } from 'react-chartjs-2';
 import { FilterOutlined,  } from '@ant-design/icons';
 import { useState } from 'react'
-import Buttons from '../Components/Buttons'
+
 
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
