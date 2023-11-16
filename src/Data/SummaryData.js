@@ -1,32 +1,32 @@
 export const summaryData = {
     kileleshwa: {
-        number: 24,
-        units:3791,
+        number: 26,
+        units:4260,
         accerage:17.117,
-        price:1421841960
+        price:73351640124
     },
     westands: {
-        number: 12,
-        units:1954,
+        number: 14,
+        units:2431,
         accerage:5.639,
-        price:515064750
+        price:28465728333
     },
     lavington: {
-        number: 4,
-        units:1062,
+        number: 5,
+        units:1317,
         accerage:3.21,
-        price:159500000
+        price:12429000000
     },
     kilimani: {
-        number: 31,
-        units:7381,
+        number: 34,
+        units:8242,
         accerage:22.335,
-        price:4763620210
+        price:95245502750
     },
     riverside: {
         number: 8,
         units:1138,
         accerage:7.285,
-        price:659954000
+        price:22677422879
     }
 }

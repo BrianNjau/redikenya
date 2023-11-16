@@ -214,7 +214,7 @@ const Economics = () => {
            <ul className="xs-text-center">
              <li>Economics</li>
              <li> <Typed
-                                    className=""
+                                    className="text-[#3eb489]"
                                     strings={[ "PDI","Property Development Investments", "Property Data Insights"]}
                                     typeSpeed={80}
                                     backSpeed={80}

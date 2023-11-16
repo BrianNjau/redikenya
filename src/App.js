@@ -9,12 +9,14 @@ import GlobalContext from "./Context/Context";
 
 
 
+
 //Import pages 
 const LandingPage = lazy(() => import("./Pages/Landingpage"))
 const LoginRegister = lazy(() => import("./Pages/LoginRegister"))
 const AboutUs = lazy(() => import("./Pages/AboutUs"))
 const Economics = lazy(() => import("./Pages/Economics"))
 const Search = lazy(() => import("./Pages/Search"))
+const SearchResults = lazy(() => import("./Pages/SearchResults"))
 
 
 function App() {
@@ -92,6 +94,7 @@ function App() {
         <Route path="about-us" element={<AboutUs />} />
         <Route path="economics" element={<Economics />} />
         <Route path="search" element={<Search />} />
+        <Route path="search-results" element={<SearchResults />} />
       </Routes>
      </Suspense>
      </AnimatePresence>
