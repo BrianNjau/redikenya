@@ -75,7 +75,7 @@ let combinedSummaryData = () =>{
         },
         {
             icon: "line-icon-Bank text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
-            title: calculatedSummaryData.price.toString().length>=12?calculatedSummaryData.price.toString().slice(0,3)+"T":calculatedSummaryData.price.toString().length>9?calculatedSummaryData.price.toString().slice(0,3)+"B":calculatedSummaryData.price.toString().length>6?calculatedSummaryData.price.toString().slice(0,3)+"M":calculatedSummaryData.price,
+            title: calculatedSummaryData.price.toString().length>9?(calculatedSummaryData.price/10**9).toFixed(2).toString()+"B":calculatedSummaryData.price.toString().length>6?(calculatedSummaryData.price/10**6).toFixed(2).toString()+"M":calculatedSummaryData.price,
             content: "Est. Market Value",
         },
     ]
