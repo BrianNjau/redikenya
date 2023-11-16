@@ -15,6 +15,7 @@ import {
 import { Scatter } from 'react-chartjs-2';
 import { FilterOutlined,  } from '@ant-design/icons';
 import { useState } from 'react'
+import Buttons from '../Components/Buttons'
 
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
@@ -105,6 +106,8 @@ const SearchResults = () => {
                       label.push(`Amenities location: ${amenitiesLocation}`);
                       label.push(`Location: ${location}`);
                       label.push(`Road: ${road}`);
+                      label.push(` `);
+                      label.push(`Click to view this property`);
 
                    return label;
                 }
