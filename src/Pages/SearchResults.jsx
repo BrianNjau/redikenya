@@ -1,9 +1,7 @@
 import React from 'react'
-import GlobalHeader from '../Components/GlobalHeader'
-import { Parallax } from 'react-scroll-parallax'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Button, Card, Checkbox, Dropdown, Select, ConfigProvider, Tabs, Tooltip as ToolTipANT } from 'antd'
-import { useLocation } from 'react-router-dom'
+import { Button, Card, Checkbox, Dropdown, Select, ConfigProvider, Tabs, Tooltip as ToolTipANT, Modal, Divider, Row as RowAnt, Col as ColAnt } from 'antd'
+import {useLocation, useNavigate } from 'react-router-dom'
 import {
   Chart as ChartJS,
   LinearScale,
@@ -13,19 +11,71 @@ import {
   Legend,
 } from 'chart.js';
 import { Scatter } from 'react-chartjs-2';
-import { FilterOutlined,  } from '@ant-design/icons';
+import { ExclamationCircleOutlined, FilterOutlined } from '@ant-design/icons';
 import { useState } from 'react'
 import "./search.css"
 
-
+import { useContext } from 'react'
+import GlobalContext from '../Context/Context'
+import { useEffect } from 'react'
+import { GoogleMap, useJsApiLoader,InfoWindowF,MarkerF } from '@react-google-maps/api';
+// 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const SearchResults = () => {
 
 
+  //Maps
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: "AIzaSyBscXCca5fy4M1LLmKh2qEZE4RUXyuvdqs"
+  })
+
+  const containerStyle = {
+    width:"100%",
+    height: "700px"
+  }
+
+  const centerLocations={
+    westlands: {
+      lat:-1.266944,
+      lng:36.811667
+    },
+    lavington: {
+      lat:-1.2789,
+      lng:36.7778
+    },
+    kilimani: {
+      lat:-1.2893,
+      lng:36.7869
+    },
+    kileleshwa: {
+      lat:-1.2807,
+      lng:36.7817
+    },
+    riverside: {
+      lat:-1.271818,
+      lng:36.805263
+    }
+  }
 
 
 
+  const { setHeaderHeight } = useContext(GlobalContext);
+  useEffect(()=>{
+  setHeaderHeight(20) 
+  })
+
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [selectedPlace, setSelectedPlace] = useState(undefined);
+
+    const [modal, contextHolder] = Modal.useModal();
+
+    const navigate = useNavigate();
+    let [displayMarketView, setDisplayMarketView] = useState("scatterChart")
     let location = useLocation();
     let searchResults = location.state;
     let uniqueAvailableTypology = [...new Set(searchResults.propertyData.map((item) => item["Typology "]))];
@@ -33,26 +83,44 @@ const SearchResults = () => {
     // let [filteredRoadResults, setFilteredRoadResults] = useState(searchResults.roadResults);
 
 
-    //create filter functionality
+  
+  const LocalizedModal = () => {
+  const [open, setOpen] = useState(false);
 
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+}
+
+    //create filter functionality
     function onCheckFilter(checkedValues){
-        console.log("checked", checkedValues)
+        // console.log("checked", checkedValues)
         setFilteredPropertyData(searchResults.propertyData.filter(el => checkedValues.includes(el["Typology "])))
         
     }
 
+    function onMarketPriceSelectChange(selectedValue){
+     
+      if(selectedValue==="mapView"){
+        setDisplayMarketView("mapView");
+      } else if(selectedValue==="tableView"){
+        setDisplayMarketView("tableView");
+      } else if(selectedValue==="scatterChart"){
+        setDisplayMarketView("scatterChart");
+      }
+    }
 
-
-
-    console.log("search results",searchResults);
+     console.log("search results",searchResults);
     //search data specific to the overview
-
   let marketValuePicker = filteredPropertyData.map((a)=>{
       let val =  a["Market Price"].split(" ")[1].trim()
       return parseFloat(val.replace(/,/g, ''));
     })
   let floorValuePicker = filteredPropertyData.map((a)=> a["Floor area (SqM)"])
-
     //unit
   // let floorValuePicker = searchResults.propertyData.map((a)=>{
   //     let val =  a["Floor area (SqM)"].split(" ")[1].trim()
@@ -60,8 +128,7 @@ const SearchResults = () => {
   //   })
 
   //checkbox options
-  
-  console.log(uniqueAvailableTypology)
+  // console.log(uniqueAvailableTypology)
   const typologyOptions = uniqueAvailableTypology;
    
   const filterOptions = [
@@ -77,6 +144,7 @@ const SearchResults = () => {
    
   ];
 
+  
     const scatterOptions = {
 
       plugins: {
@@ -103,8 +171,7 @@ const SearchResults = () => {
                    let amenitiesLocation = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Wellness location"];
                    let location = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Location"];
                    let road = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Road"];
-                      console.log(marketPriceDetails)
-                      
+                      // console.log(marketPriceDetails)       
                       let label = [`Property name: ${propertyName}`];
                       label.push(`Floor area (SqM): ${marketPriceDetails["Floor area (SqM)"]}`);
                       label.push(`Market price: ${marketPriceDetails["Market Price"]}`);
@@ -158,18 +225,9 @@ const SearchResults = () => {
           },
          
           
-        },
-        
-       
-        
+        },     
       };
-    
-  
-
-  
-     let testData = [];
-    
-    
+     let testData = [];   
     for(let i=0; i<marketValuePicker.length; i++) {
 
       let myObj = {};
@@ -212,9 +270,6 @@ const SearchResults = () => {
         : (medSort[half - 1] + medSort[half]) / 2
       );
     }
-
-
-
     // Tab
     const items = [
         {
@@ -229,18 +284,19 @@ const SearchResults = () => {
             <div>
 
               <Select
-              defaultValue="scatter"
+              onChange={onMarketPriceSelectChange}
+              defaultValue={displayMarketView}
               options={[
                 {
-                  value: 'scatter',
+                  value: 'scatterChart',
                   label: 'Scatter Chart',
                 },
                 {
-                  value: 'map',
+                  value: 'mapView',
                   label: 'Map View ',
                 },
                 {
-                  value: 'table',
+                  value: 'tableView',
                   label: 'Table View',
                 },
                
@@ -252,6 +308,7 @@ const SearchResults = () => {
   {/* DropDown options */}
     <Dropdown  trigger={['click']}
       className='ml-8'
+      
     menu={{
      items: filterOptions,
     }}
@@ -354,8 +411,100 @@ const SearchResults = () => {
     </Col>
   </Row>
 
-  <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} />
+  {/* Render based on selected select value */}
 
+{
+  displayMarketView==="scatterChart"? <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} />: 
+
+
+  displayMarketView==="mapView"? <div style={{ height: '60vh', width: '100%' }}>
+
+  {
+    isLoaded&&(
+      <GoogleMap 
+      mapContainerStyle={containerStyle}
+      center={{
+        lat:searchResults.location===("Nairobi Westlands")?centerLocations.westlands.lat:searchResults.location===("Nairobi Kilimani")?centerLocations.kilimani.lat:searchResults.location===("Nairobi Kileleshwa")?centerLocations.kileleshwa.lat:searchResults.location===("Nairobi Lavington")?centerLocations.lavington.lat:centerLocations.riverside.lat,
+        lng:searchResults.location===("Nairobi Westlands")?centerLocations.westlands.lng:searchResults.location===("Nairobi Kilimani")?centerLocations.kilimani.lng:searchResults.location===("Nairobi Kileleshwa")?centerLocations.kileleshwa.lng:searchResults.location===("Nairobi Lavington")?centerLocations.lavington.lng:centerLocations.riverside.lng
+      }}
+      zoom={14}   
+>
+
+
+
+ {searchResults.roadResults.map((place)=>(
+        <MarkerF
+        key={`${Number(place["Geo-Location"].split(',')[0])} - ${Number(place["Geo-Location"].split(',')[1])}`}
+        onClick={()=>{
+          place===selectedPlace?setSelectedPlace(undefined):setSelectedPlace(place);
+        }}
+        position={{
+          lat:Number(place["Geo-Location"].split(',')[0]),
+          lng:Number(place["Geo-Location"].split(',')[1])
+        }}
+        />
+ ))}
+{console.log(selectedPlace)}
+ {selectedPlace&&(
+  <InfoWindowF
+
+  position={{
+    lat: Number(selectedPlace["Geo-Location"].split(',')[0]),
+    lng: Number(selectedPlace["Geo-Location"].split(',')[1])
+  }}
+
+  zIndex={1} 
+  option={{
+    pixelOffset:{
+      width:0,
+      height:-40,
+    }
+  }}
+  onCloseClick={()=>setSelectedPlace(undefined)}
+  
+
+
+  >
+    <div>
+    <p className='font-semibold'>Property Name:{selectedPlace.Name}</p>
+    <p className=''>Typology:{selectedPlace["Typology "]}</p>
+    <p>Number of Units:{selectedPlace.number_of_units}</p>
+    <p>Acreage:{selectedPlace["erf (acres)"]}</p>
+    <p>Density:{selectedPlace["Density (units/acre)"]}</p>
+    <p>Number of Floors:{selectedPlace["Habitable no. of Floors"]}</p>
+    <p>Location:{selectedPlace.Location}</p>
+
+    <br />
+    <Button>View this Property</Button>
+
+    {/* <Divider orientation="left">{selectedPlace.Name}</Divider>
+    <RowAnt gutter={16}>
+      <ColAnt className="gutter-row" span={6}>
+        <div>Property Name:</div>
+      </ColAnt>
+      <Col className="gutter-row" span={6}>
+        <div>{selectedPlace.Name}</div>
+      </Col>
+    </RowAnt>
+    */}
+
+    </div>
+
+  </InfoWindowF>
+ )} 
+      
+
+</GoogleMap>
+    )
+  }
+
+
+
+  </div>:
+
+
+  <p>HERE IS TABLE VIEW </p>
+}
 
             </div>
           ),
@@ -402,19 +551,49 @@ const SearchResults = () => {
         },
       ];
 
+      
+      const handleOk = () => {
+        setIsModalOpen(false);
+        navigate("/search");
+      };
+      const handleCancel = () => {
+        setIsModalOpen(false);
+      };
 
+      const confirm = () => {
+        modal.confirm({
+          title: "You are going back to the search page",
+          icon: <ExclamationCircleOutlined />,
+          content: (
+            <>
+       
+        <p>Kindly note that every search costs a token.</p>
+        
+        <p>Do you want to return ? </p>
+            </>
+          ),
+          okText: 'Yes Proceed',
+          okType:"danger",
+          cancelText: 'Cancel',
+          onOk:handleOk,
+          onCancel:handleCancel
+        });
+      };
   return (
     <div>
-         
-         <GlobalHeader theme="light" />
+    <LocalizedModal/>
+    <Button onClick={confirm} className='ml-4 '> <i className='line-icon-Arrow-Back3'></i></Button>
+         {contextHolder}
+         {/* NavBar hidden */}
+         {/* <GlobalHeader theme="light" /> */}
            {/* Parallax Section Start */}
-      <div className="py-[60px] h-auto overflow-hidden md:relative md:py-[30px]">
-        <Parallax className="lg-no-parallax absolute top-[0] w-full h-full lg:bg-cover" translateY={[-40, 40]} style={{ backgroundImage: `url(/assets/img/webp/portfolio-bg2.webp)` }}></Parallax>
+      <div className="py-[10px] h-auto overflow-hidden md:relative md:py-[30px] mt-8">
+        {/* <Parallax className="lg-no-parallax absolute top-[0] w-full h-full lg:bg-cover" translateY={[-40, 40]} style={{ backgroundImage: `url(/assets/img/webp/portfolio-bg2.webp)` }}></Parallax> */}
         <Container className="h-full relative">
-          <Row className="justify-center h-[100px] sm:h-[50px]">
+          <Row className="justify-center">
             <Col xl={6} lg={6} sm={8} className="text-center flex justify-center flex-col font-serif">
-              <h1 className="text-gradient bg-gradient-to-r from-[#08415c] via-[#08415c] to-[#08415c] mb-[15px] inline-block text-xmd leading-[20px]">{searchResults.roadResults.length} data points</h1>
-              <h2 className="text-darkgray font-bold text-lg -tracking-[1px] mb-0">Searched for: {searchResults.road||searchResults.location}</h2>
+              <h1 className="text-gradient bg-gradient-to-r from-[#08415c] via-[#08415c] to-[#08415c] mb-[20px] inline-block text-xmd leading-[20px]">{searchResults.propertyData.length} data points</h1>
+              <h2 className="text-darkgray font-bold text-lg -tracking-[1px] mb-5">Searched for: {searchResults.road||searchResults.location}</h2>
             </Col>
           </Row>
         </Container>
@@ -459,8 +638,6 @@ const SearchResults = () => {
       </section>
       {/* Section End */}
     </ConfigProvider>
-
-   
     </div>
   )
 }

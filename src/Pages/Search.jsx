@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import GlobalHeader from '../Components/GlobalHeader'
 import { Parallax } from 'react-scroll-parallax'
 import { Col, Container, Form, Row } from 'react-bootstrap'
@@ -9,6 +9,7 @@ import { Supabase } from '../Functions/SupabaseClient'
 import { Select} from 'antd';
 // import Buttons from '../Components/Buttons'
 import { fadeIn } from '../Functions/GlobalAnimations'
+import GlobalContext from '../Context/Context'
 const Search =  () => {
 
      const navigate = useNavigate()
@@ -21,6 +22,10 @@ const Search =  () => {
     let [selectedRoad, setSelectedRoad] = useState('');
     let [selectedLocation, setSelectedLocation] = useState('');
 
+    const { setHeaderHeight } = useContext(GlobalContext);
+    useEffect(()=>{
+    setHeaderHeight(154) 
+    },[])
 
       const onChange = async (value) => {
       try{
