@@ -69,6 +69,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
+  
 
   return (
     <GlobalContext.Provider
@@ -83,6 +84,7 @@ function App() {
       setCustomModal,
     }}
   >
+    
     <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
     {
      <main  style={{ marginTop: headerHeight, marginBottom: footerHeight }} >
