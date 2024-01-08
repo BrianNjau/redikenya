@@ -14,6 +14,7 @@ import "./Assets/css/icons.css"
 import "./Assets/css/global.css"
 import "./Assets/css/pages.css"
 import "./index.scss"
+// import "./newStyles.scss"
 
 
 
