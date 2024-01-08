@@ -17,6 +17,7 @@ const AboutUs = lazy(() => import("./Pages/AboutUs"))
 const Economics = lazy(() => import("./Pages/Economics"))
 const Search = lazy(() => import("./Pages/Search"))
 const SearchResults = lazy(() => import("./Pages/SearchResults"))
+const Invest = lazy(() => import("./Pages/Invest"))
 
 
 function App() {
@@ -85,7 +86,9 @@ function App() {
     }}
   >
     
-    <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
+    <div
+     className="App" style={{ "--header-height": `${headerHeight}px` }}
+     >
     {
      <main  style={{ marginTop: headerHeight, marginBottom: footerHeight }} >
      <AnimatePresence exitBeforeEnter>
@@ -97,6 +100,7 @@ function App() {
         <Route path="economics" element={<Economics />} />
         <Route path="search" element={<Search />} />
         <Route path="search-results" element={<SearchResults />} />
+        <Route path="invest" element={<Invest />} />
       </Routes>
      </Suspense>
      </AnimatePresence>

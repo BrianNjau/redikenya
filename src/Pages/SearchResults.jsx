@@ -20,6 +20,7 @@ import GlobalContext from '../Context/Context'
 import { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader,InfoWindowF,MarkerF } from '@react-google-maps/api';
 import StatisticCard from '../Components/StatisticCard';
+import { Scatter as ScattAnt } from '@ant-design/plots';
 // 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
@@ -261,7 +262,11 @@ const SearchResults = () => {
       for(let j =0; j<floorValuePicker.length; j++){
           myObj.x = floorValuePicker[i];
           myObj.y = marketValuePicker[i];
+         
+
       }
+
+
 
       testData.push(myObj)
 
@@ -280,6 +285,42 @@ const SearchResults = () => {
       ],
      
     };
+
+    
+    // const antScatterConfig = {
+      
+    //   appendPadding: 10,
+    //   testData,
+    //   xField: 'Revenue (Millions)',
+    //   yField: 'Rating',
+    //   shape: 'circle',
+    //   colorField: 'Genre',
+    //   size: 4,
+    //   yAxis: {
+    //     nice: true,
+    //     line: {
+    //       style: {
+    //         stroke: '#aaa',
+    //       },
+    //     },
+    //   },
+    //   xAxis: {
+    //     min: -100,
+    //     grid: {
+    //       line: {
+    //         style: {
+    //           stroke: '#eee',
+    //         },
+    //       },
+    //     },
+    //     line: {
+    //       style: {
+    //         stroke: '#aaa',
+    //       },
+    //     },
+    //   },
+    // };
+  
 
     let marketPriceTotal = marketValuePicker.length===0?0:marketValuePicker.reduce((partialSum, a) => partialSum + a, 0);
     let unitsNumberTotal = unitsNumberPicker.length===0?0:unitsNumberPicker.reduce((partialSum, a) => partialSum + a, 0);
@@ -305,6 +346,8 @@ const SearchResults = () => {
         : (medSort[half - 1] + medSort[half]) / 2
       );
     }
+
+
 
       
       const handleOk = () => {
@@ -334,10 +377,35 @@ const SearchResults = () => {
           onCancel:handleCancel
         });
       };
+
+      const scatterDataCheckbox = [
+        { label: 'Typology', value: 'typology' },
+       
+        { label: 'DSQ', value: 'dsq' },
+        { label: 'Ensuite', value: 'Ensuite' },
+        { label: 'Cloakroom', value: 'cloakroom' },
+        { label: 'Amenities Location', value: 'amenitiesLocation' },
+        { label: 'Sale Type', value: 'saleType' },
+        { label: 'Location', value: 'location' },
+        { label: 'Road', value: 'road' },
+      ];
+
+
+
+
+
   return (
     <div>
     <LocalizedModal/>
-    <Button onClick={confirm} className='ml-4 '> <i className='line-icon-Arrow-Back3'></i></Button>
+    <div className='flex justify-between'>
+    <ToolTipANT title="Back">
+    <Button onClick={confirm}  className='ml-4'> <i className='line-icon-Arrow-Back3 '></i></Button>
+    </ToolTipANT>
+    <ToolTipANT title="Save Search">
+    <Button  className='mr-4'> <i className='line-icon-Save'></i></Button>
+    </ToolTipANT>
+    </div>
+
          {contextHolder}
          {/* NavBar hidden */}
          {/* <GlobalHeader theme="light" /> */}
@@ -347,7 +415,7 @@ const SearchResults = () => {
         <Container className="h-full relative">
           <Row className="justify-center">
             <Col xl={6} lg={6} sm={8} className="text-center flex justify-center flex-col font-serif">
-            <h2 className="text-darkgray font-bold text-lg -tracking-[1px] mb-5">Searched for: {searchResults.road||searchResults.location}</h2>
+            <h2 className="text-[#08415c] font-bold text-lg -tracking-[1px] mb-5">Searched for: {searchResults.road||searchResults.location}</h2>
               {/* <h1 className="text-gradient bg-gradient-to-r from-[#08415c] via-[#08415c] to-[#08415c] mb-[20px] inline-block text-xmd leading-[20px]">Found: {searchResults.propertyData.length} data points , {searchResults.roadResults.length} properties , {unitsNumberTotal} units</h1>  */}
               {/* <h3 className="text-gray font-base text-md -tracking-[1px] mb-5">Found: {searchResults.roadResults.length} properties & {unitsNumberTotal} units</h3> */}
             </Col>
@@ -424,7 +492,9 @@ className='w-auto mb-12'
 {/* DropDown options */}
 
 {
-  displayMarketView ==="scatterChart" ? <Dropdown  trigger={['click']}
+  displayMarketView ==="scatterChart" ?
+  <>
+<Dropdown  trigger={['click']}
   className='ml-8'
   
   menu={{
@@ -435,9 +505,13 @@ className='w-auto mb-12'
   <Button  icon={<FilterOutlined />}  /> 
   </ToolTipANT>
   
-  </Dropdown>:<></>
+  </Dropdown> 
+  
+    </> :<></>
 }
 {/* Render based on selected select value */}
+
+{console.log("hello unit=>", Math.round(medianCal(unitValuePicker)))}
 
 {
 displayMarketView==="scatterChart"? 
@@ -446,35 +520,48 @@ displayMarketView==="scatterChart"?
 {/* Display Dash Card */}
 <Row className='mb-6 ' gutter={16}>
 <Col span={8}>
-  <StatisticCard title={"Median of Unit Price/SqM"} value={`Ksh. ${medianCal(unitValuePicker).toLocaleString()}`||0}/>
+  <StatisticCard title={"Median of Unit Price/SqM"} value={`Ksh. ${Math.round(medianCal(unitValuePicker)).toLocaleString()}`||0}/>
 </Col>
 <Col span={8}>
   <StatisticCard title={"Median of Rent"} value={`Ksh. ${medianCal(rentValuePicker).toLocaleString()}`||0}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Median of Rental Yield"} value={`${medianCal(rentalYieldValuePicker).toLocaleString()}%`||0}/>
+  <StatisticCard title={"Median of Rental Yield"} value={`${Math.round(medianCal(rentalYieldValuePicker)).toLocaleString()}%`||0}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Median of GRM (Years)"} value={`${medianCal(grmYieldValuePicker).toLocaleString()}`||0}/> 
+  <StatisticCard title={"Median of GRM (Years)"} value={`${Math.round(medianCal(grmYieldValuePicker)).toLocaleString()}`||0}/> 
 </Col>
 </Row>
 <Row className='mb-6 ' gutter={16}>
 <Col span={8}>
-  <StatisticCard title={"Average of Market Price"} value={`Ksh. ${avgMarket.toLocaleString()||0}`}/>
+  <StatisticCard title={"Average of Market Price"} value={`Ksh. ${Math.round(avgMarket).toLocaleString()||0}`}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Median of Market Price"} value={`Ksh. ${medianCal(marketValuePicker).toLocaleString()||0}`}/>
+  <StatisticCard title={"Median of Market Price"} value={`Ksh. ${Math.round(medianCal(marketValuePicker)).toLocaleString()||0}`}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Min of Market Price"} value={`Ksh. ${minMarket.toLocaleString()||0}`}/>
+  <StatisticCard title={"Min of Market Price"} value={`Ksh. ${Math.round(minMarket).toLocaleString()||0}`}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Max of Market Price"} value={`Ksh. ${maxMarket.toLocaleString()||0}`} /> 
+  <StatisticCard title={"Max of Market Price"} value={`Ksh. ${Math.round(maxMarket).toLocaleString()||0}`} /> 
 </Col>
 </Row>
 
 
 <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} />
+
+{/* <ScattAnt/> */}
+
+<div className="text-center  flex justify-center flex-col font-serif">
+ 
+<span className='text-[#08415c] font-base text-md -tracking-[1px] mt-4'>Apply property data parameters to uncover high yield prospects</span>
+    <br />
+   <Checkbox.Group className='justify-center text-[#08415c]' options={scatterDataCheckbox}  />
+</div>
+
+
+
+
 </>
 
 ): displayMarketView==="mapView"? 
@@ -483,10 +570,10 @@ displayMarketView==="scatterChart"?
 {/* Display Dash Card */}
 <Row className='mb-6 ' gutter={16}>
 <Col span={8}>
-  <StatisticCard title={ "Average No. of Units (per property) "} value={`${Math.floor(avgUnits.toLocaleString())||0}`||0}/>
+  <StatisticCard title={ "Average No. of Units (per property) "} value={`${Math.round(avgUnits).toLocaleString()||0}`||0}/>
 </Col>
 <Col span={8}>
-  <StatisticCard title={"Average Density (units/acre)"} value={avgDensity}/>
+  <StatisticCard title={"Average Density (units/acre)"} value={Math.round(avgDensity)}/>
 </Col>
 {/* <Col span={8}>
   <StatisticCard title={"Average no. of floors"} value={`${medianCal(rentalYieldValuePicker).toLocaleString()}%`||0}/>
@@ -497,13 +584,13 @@ displayMarketView==="scatterChart"?
 </Row>
 <Row className='mb-6 ' gutter={16}>
 <Col span={8}>
-  <StatisticCard title={ "Average of Floor Area (SqM)"} value={avgFloorAreaTotal}/>
+  <StatisticCard title={ "Average of Floor Area (SqM)"} value={Math.round(avgFloorAreaTotal)}/>
 </Col>
 {/* <Col span={8}>
   <StatisticCard title={"Median of Total No. of Floors"} value={`${medianCal(floorTotalPicker).toLocaleString()}`||0}/>
 </Col> */}
 <Col span={8}>
-  <StatisticCard title={"Average no. of floors"} value={Math.floor(avgFloor)}/>
+  <StatisticCard title={"Average no. of floors"} value={Math.floor(Math.round(avgFloor))}/>
 </Col>
 {/* <Col span={8}>
   <StatisticCard title={"No. of Plotted Properties"} value={searchResults.roadResults.length}/> 

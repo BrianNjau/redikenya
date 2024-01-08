@@ -1,9 +1,10 @@
 import React from 'react'
 import Header, { HeaderNav, Menu, MobileMenu } from './Header'
 import { Col, Navbar } from 'react-bootstrap'
-import LogoLight from "../Assets/img/1.png"
-import LogoDark from "../Assets/img/2.png"
+import LogoLight from "../Assets/img/lwhite.png"
+import LogoDark from "../Assets/img/logo.png"
 import { Link } from 'react-router-dom'
+import { Image } from 'antd'
 
 const GlobalHeader = (props) => {
   return (
@@ -15,9 +16,10 @@ const GlobalHeader = (props) => {
          <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
              <Link aria-label="header logo" className="flex items-center" to="/">
                  <Navbar.Brand className="inline-block p-0 m-0 mt-0">
-                     <img className="default-logo" loading="lazy" src={(props.theme==="dark")?LogoLight:LogoDark}  alt='logo' />
-                     <img className="alt-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
-                     <img className="mobile-logo" width="111" height="36" loading="lazy" src='/assets/img/webp/logo-brownish-orange-green.webp' data-rjs='/assets/img/webp/logo-brownish-orange-green@2x.webp' alt='logo' />
+                     <Image preview={false} className="default-logo p-1" width={120}  src={(props.theme==="dark")?LogoLight:LogoDark}  alt='logo' />
+                     <Image preview={false} className="mobile-logo   right-8" width={100}  src={LogoDark} alt='logo' />
+                     <Image className="alt-logo p-1" src={(props.theme==="dark")?LogoLight:LogoDark} width={120} preview={false} alt='logo' />
+                    
                  </Navbar.Brand>
              </Link>
          </Col>
