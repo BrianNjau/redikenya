@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Button, Card, Checkbox, Dropdown, Select, ConfigProvider, Tabs, Tooltip as ToolTipANT, Modal, Divider, Row as RowAnt, Col as ColAnt, Statistic } from 'antd'
+import { Button, Checkbox, Dropdown, Select, Row as RowAnt, Col as ColAnt,  ConfigProvider,  Tooltip as ToolTipANT, Modal, Statistic,  notification } from 'antd'
 import {useLocation, useNavigate } from 'react-router-dom'
 import {
   Chart as ChartJS,
@@ -10,18 +10,16 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Scatter } from 'react-chartjs-2';
-import { ExclamationCircleOutlined, FilterOutlined } from '@ant-design/icons';
+
 import { useState } from 'react'
 import "./search.css"
-
 import { useContext } from 'react'
 import GlobalContext from '../Context/Context'
 import { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader,InfoWindowF,MarkerF } from '@react-google-maps/api';
 import StatisticCard from '../Components/StatisticCard';
-import { Scatter as ScattAnt } from '@ant-design/plots';
-// 
+import { ScatterChart, Scatter as RechartScatter, XAxis, YAxis, CartesianGrid, Tooltip as RechartTooltip, ResponsiveContainer, Legend as RechartsLegend, Label } from 'recharts';
+
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const SearchResults = () => {
@@ -68,11 +66,14 @@ const SearchResults = () => {
   useEffect(()=>{
   setHeaderHeight(20) 
   });
-  const gridStyle = {
-    width: '25%',
-    textAlign: 'center',
-  };
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [saleType, setSaleType] = useState(undefined);
+    const [dsq, setDsq] = useState(undefined);
+    const [ensuite, setEnsuite] = useState(undefined);
+    const [cloakroom, setCloakRoom] = useState(undefined);
+    const [amenitiesLocation, setAmenitiesLocation] = useState(undefined);
+    const [scatterLocation, setScatterLocation] = useState(undefined);
+    const [scatterRoad, setScatterRoad] = useState(undefined);
+    const [  , setIsModalOpen] = useState(false);
     const [selectedPlace, setSelectedPlace] = useState(undefined);
     const [modal, contextHolder] = Modal.useModal();
     const navigate = useNavigate();
@@ -82,24 +83,12 @@ const SearchResults = () => {
     let uniqueAvailableTypology = [...new Set(searchResults.propertyData.map((item) => item["Typology "]))];
     let [filteredPropertyData, setFilteredPropertyData] = useState(searchResults.propertyData);
     // let [filteredRoadResults, setFilteredRoadResults] = useState(searchResults.roadResults);
-  const LocalizedModal = () => {
-  const [open, setOpen] = useState(false);
-
-  const showModal = () => {
-    setOpen(true);
-  };
-
-  const hideModal = () => {
-    setOpen(false);
-  };
-}
     //create filter functionality
     function onCheckFilter(checkedValues){
         // console.log("checked", checkedValues)
         setFilteredPropertyData(searchResults.propertyData.filter(el => checkedValues.includes(el["Typology "])))
         
     }
-
     function onMarketPriceSelectChange(selectedValue){
      
       if(selectedValue==="mapView"){
@@ -134,7 +123,7 @@ const SearchResults = () => {
       let val =  a["Market Price"].split(" ")[1].trim()
       return parseFloat(val.replace(/,/g, ''));
     })
-  let floorValuePicker = filteredPropertyData.map((a)=> a["Floor area (SqM)"])
+  // let floorValuePicker = filteredPropertyData.map((a)=> a["Floor area (SqM)"])
     //unit
  let unitValuePicker = filteredPropertyData.map((a)=>{
        let val =  a["Unit Price/SqM"].split(" ")[1].trim()
@@ -170,157 +159,212 @@ const SearchResults = () => {
     },
    
   ];
+    //format data for scatter chart
 
-  
-    const scatterOptions = {
+    let antdScatterChartData = filteredPropertyData.map(item => {
+      let propertyName = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Name"];
+      let saleType = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Sale type"];
+      let amenitiesLocation = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Wellness location"];
+      let location = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Location"];
+      let road = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Road"];
+      let marketPrice = parseFloat(item["Market Price"].split(" ")[1].trim().replace(/,/g, ''));
+      return {
+        propertyName: propertyName,
+        floorArea:item["Floor area (SqM)"],
+        marketPrice: marketPrice,
+        typology: item["Typology "],
+        saleType: saleType,
+        dsq: item["DSQ"],
+        ensuite: item["En-suite"],
+        cloakroom: item["Cloak room"],
+        amenitiesLocation:amenitiesLocation,
+        location:location,
+        road:road
+      }});
 
-      plugins: {
-        legend: {
-          labels: {
-              // This more specific font property overrides the global property
-              font: {
-                  size: 16,
-                  color:"#f3efe0"
-              },
-              color:"#f3efe0"
-            },
-          },
-        tooltip: {
-            callbacks: {
-                label: function(item, context) {
-                 
-                  
-                  // console.log("here item", item)
+      const CustomToolTip = ({active, payload, label}) =>{
 
-                   let marketPriceDetails = filteredPropertyData[item.dataIndex];
-                   let propertyName = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Name"];
-                   let saleType = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Sale type"];
-                   let amenitiesLocation = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Wellness location"];
-                   let location = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Location"];
-                   let road = searchResults.roadResults.filter(el => el["Property ID"] === marketPriceDetails["PropertyID"])[0]["Road"];
-                      // console.log(marketPriceDetails)       
-                      let label = [`Property name: ${propertyName}`];
-                      label.push(`Floor area (SqM): ${marketPriceDetails["Floor area (SqM)"]}`);
-                      label.push(`Market price: ${marketPriceDetails["Market Price"]}`);
-                      label.push(`Typology: ${marketPriceDetails["Typology "]}`);
-                      label.push(`Sale type : ${saleType}`);
-                      label.push(`DSQ: ${marketPriceDetails["DSQ"]}`);
-                      label.push(`En-suite: ${marketPriceDetails["En-suite"]}`);
-                      label.push(`Cloak room: ${marketPriceDetails["Cloak room"]}`);
-                      label.push(`Amenities location: ${amenitiesLocation}`);
-                      label.push(`Location: ${location}`);
-                      label.push(`Road: ${road}`);
-                      label.push(` `);
-                      label.push(`Click to view this property`);
-
-                   return label;
-                }
-            }
-        }
-    },
-      
-        scales: {
-          
-          y: {
-            title: {
-                display: true,
-                text: "Market Price",
-                font: {
-                    size: 15
-                },
-                color:"#f3efe0"
-            },
-            ticks:{
-              color:"#f3efe0"
-            }
-          },
-          x: {
+          // console.log(payload)
+        if(active && payload && payload.length){
+          return (
+            <div style={{background: "rgb(256, 256, 256, 0.85)"}} className='rounded-md p-3 px-8 font-bold text-xs' >
+      <RowAnt gutter={8}>
+      <ColAnt  flex="auto" className="gutter-row" >
+      <span >Property Name:</span>
+      </ColAnt>
+      <ColAnt  flex="auto" className="gutter-row">
+      <span >{payload[0].payload["propertyName"]} </span>
+      </ColAnt>
+      </RowAnt>
             
-            title: {
-                display: true,
-                text: "Floor area (SqM)",
-                font: {
-                    size: 15
-                },
-                color:"#f3efe0"
-              
-            },
-            ticks:{
-              color:"#f3efe0",
-              backdropColor:"#f3efe0",
-            }
-          },
-         
-          
-        },     
-      };
-     let testData = [];   
-    for(let i=0; i<marketValuePicker.length; i++) {
+      <RowAnt gutter={8}>
+      <ColAnt  flex="auto" className="gutter-row" >
+      <span >Market Price:</span>
+      </ColAnt>
+      <ColAnt  flex="auto" className="gutter-row items-start">
+      <span>{payload[0].payload["marketPrice"].toLocaleString().trim()} KES </span>
+      </ColAnt>
+      </RowAnt>
+      <RowAnt gutter={8}>
+      <ColAnt  flex="auto" className="gutter-row" >
+      <span >Typology:</span>
+      </ColAnt>
+      <ColAnt  flex="auto" className="gutter-row items-start">
+      <span >{payload[0].payload["typology"].trim()} </span>
+      </ColAnt>
+      </RowAnt>
+            
+      <RowAnt gutter={8}>
+      <ColAnt  flex="auto" className="gutter-row" >
+      <span >Floor Area:</span>
+      </ColAnt>
+      <ColAnt  flex="auto" className="gutter-row items-start">
+      <span >{payload[0].payload["floorArea"]} Sqm </span>
+      </ColAnt>
+      </RowAnt>
 
-      let myObj = {};
-
-      for(let j =0; j<floorValuePicker.length; j++){
-          myObj.x = floorValuePicker[i];
-          myObj.y = marketValuePicker[i];
-         
-
+      {
+        saleType ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Sale Type:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row">
+          <span >{payload[0].payload["saleType"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        dsq ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >DSQ:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["dsq"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        ensuite ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Ensuite:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["ensuite"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        cloakroom ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Cloakroom:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["cloakroom"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        amenitiesLocation ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Amenities Location:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["amenitiesLocation"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        scatterLocation ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Location:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["location"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      {
+        scatterRoad ? (
+          <RowAnt gutter={8}>
+          <ColAnt  flex="auto" className="gutter-row" >
+          <span >Road:</span>
+          </ColAnt>
+          <ColAnt  flex="auto" className="gutter-row items-start">
+          <span >{payload[0].payload["road"].trim()} </span>
+          </ColAnt>
+          </RowAnt>
+        ): null
+      }
+      <br />
+      <span className='font-semibold text-sm -tracking-[1px]'>Click to view this property</span>
+     </div>
+          )
+        }
+        return null 
       }
 
+      const [api, contextNotification] = notification.useNotification();
+      const openNotificationWithIcon = () => {
+        api["success"]({
+          message: `Update Successful`,
+          description:
+            'Hover over the datapoints to uncover.',
+        });
+      };
 
+      const handlePropertyCheckbox = (selectedItemArray) =>{
+         openNotificationWithIcon();
+        console.log("SELECTED",selectedItemArray);
+        if(selectedItemArray.includes("saleType")){
+          setSaleType(true)
+         
+        } else{
+          setSaleType(false)
+        }
+        if(selectedItemArray.includes("dsq")){
+          setDsq(true);
+        } else{
+          setDsq(false)
+        }
+        if(selectedItemArray.includes("ensuite")){
+          setEnsuite(true);
+        } else{
+          setEnsuite(false)
+        }
+        if(selectedItemArray.includes("cloakroom")){
+          setCloakRoom(true);
+        } else{
+          setCloakRoom(false)
+        }
+        if(selectedItemArray.includes("amenitiesLocation")){
+          setAmenitiesLocation(true);
+        } else{
+          setAmenitiesLocation(false)
+        }
+        if(selectedItemArray.includes("location")){
+          setScatterLocation(true);
+        } else{
+          setScatterLocation(false)
+        }
+        if(selectedItemArray.includes("road")){
+          setScatterRoad(true);
+        } else{
+          setScatterRoad(false)
+        }
 
-      testData.push(myObj)
-
-    }
-
-// console.log(testData)
-
-    const scatterData = {
-      datasets: [
-        {
-          label: 'Data point',
-          data: testData,
-          backgroundColor: 'rgba(62, 180, 137)',
-        },
-       
-      ],
-     
-    };
-
-    
-    // const antScatterConfig = {
-      
-    //   appendPadding: 10,
-    //   testData,
-    //   xField: 'Revenue (Millions)',
-    //   yField: 'Rating',
-    //   shape: 'circle',
-    //   colorField: 'Genre',
-    //   size: 4,
-    //   yAxis: {
-    //     nice: true,
-    //     line: {
-    //       style: {
-    //         stroke: '#aaa',
-    //       },
-    //     },
-    //   },
-    //   xAxis: {
-    //     min: -100,
-    //     grid: {
-    //       line: {
-    //         style: {
-    //           stroke: '#eee',
-    //         },
-    //       },
-    //     },
-    //     line: {
-    //       style: {
-    //         stroke: '#aaa',
-    //       },
-    //     },
-    //   },
-    // };
-  
+      }
 
     let marketPriceTotal = marketValuePicker.length===0?0:marketValuePicker.reduce((partialSum, a) => partialSum + a, 0);
     let unitsNumberTotal = unitsNumberPicker.length===0?0:unitsNumberPicker.reduce((partialSum, a) => partialSum + a, 0);
@@ -345,11 +389,7 @@ const SearchResults = () => {
         ? medSort[half]
         : (medSort[half - 1] + medSort[half]) / 2
       );
-    }
-
-
-
-      
+      }    
       const handleOk = () => {
         setIsModalOpen(false);
         navigate("/search");
@@ -361,7 +401,7 @@ const SearchResults = () => {
       const confirm = () => {
         modal.confirm({
           title: "You are going back to the search page",
-          icon: <ExclamationCircleOutlined />,
+          icon: <i className='line-icon-Danger m-2 text-red-600'></i>,
           content: (
             <>
        
@@ -379,24 +419,20 @@ const SearchResults = () => {
       };
 
       const scatterDataCheckbox = [
-        { label: 'Typology', value: 'typology' },
-       
+        { label: 'Sale Type', value: 'saleType' },
         { label: 'DSQ', value: 'dsq' },
-        { label: 'Ensuite', value: 'Ensuite' },
+        { label: 'Ensuite', value: 'ensuite' },
         { label: 'Cloakroom', value: 'cloakroom' },
         { label: 'Amenities Location', value: 'amenitiesLocation' },
-        { label: 'Sale Type', value: 'saleType' },
         { label: 'Location', value: 'location' },
         { label: 'Road', value: 'road' },
       ];
 
-
-
-
-
   return (
+   
     <div>
-    <LocalizedModal/>
+         {contextNotification}
+
     <div className='flex justify-between'>
     <ToolTipANT title="Back">
     <Button onClick={confirm}  className='ml-4'> <i className='line-icon-Arrow-Back3 '></i></Button>
@@ -405,6 +441,7 @@ const SearchResults = () => {
     <Button  className='mr-4'> <i className='line-icon-Save'></i></Button>
     </ToolTipANT>
     </div>
+ 
 
          {contextHolder}
          {/* NavBar hidden */}
@@ -502,7 +539,7 @@ className='w-auto mb-12'
   }}
   >
   <ToolTipANT title="Filter">
-  <Button  icon={<FilterOutlined />}  /> 
+  <Button  icon={<i className='line-icon-Filter-2'></i>}  /> 
   </ToolTipANT>
   
   </Dropdown> 
@@ -511,7 +548,7 @@ className='w-auto mb-12'
 }
 {/* Render based on selected select value */}
 
-{console.log("hello unit=>", Math.round(medianCal(unitValuePicker)))}
+
 
 {
 displayMarketView==="scatterChart"? 
@@ -548,16 +585,47 @@ displayMarketView==="scatterChart"?
 </Row>
 
 
-<Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} />
+{/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
 
-{/* <ScattAnt/> */}
 
-<div className="text-center  flex justify-center flex-col font-serif">
+
+
+
+{/* scatter chart upgrade */}
+<ResponsiveContainer width="100%" height={700}>
+<ScatterChart  className='bg-[#08415c]  rounded-md p-5' margin={{
+            top: 20,
+            right: 20,
+            bottom: 20,
+            left: 20,
+          }} >
+  <CartesianGrid opacity={0.5}   strokeDasharray="2  2"  />
+  <XAxis tick={{fill:"#f3efe0"}} dataKey="floorArea" type='number' name='FloorArea (SqM)' unit="sqm" >
+  <Label fill='#f3efe0' value="Floor area (SqM)" offset={0} position="bottom" />
+  </XAxis>
+  <YAxis tick={{fill:"#f3efe0"}} dataKey="marketPrice" type='number' name='Estimated Market Price' unit="KES" >
+  </YAxis>
+  <RechartTooltip content={<CustomToolTip/>} cursor={{ strokeDasharray: '3 3' }}/>
+  <RechartsLegend  verticalAlign="top" height={36} />
+  <RechartScatter name={`Data point`} data={antdScatterChartData} fill="#3eb489" />
+</ScatterChart>
+</ResponsiveContainer>
+
+
+
+
+
+
+
+
+
+<div className="text-center  flex justify-center flex-col font-serif ">
  
 <span className='text-[#08415c] font-base text-md -tracking-[1px] mt-4'>Apply property data parameters to uncover high yield prospects</span>
     <br />
-   <Checkbox.Group className='justify-center text-[#08415c]' options={scatterDataCheckbox}  />
+   <Checkbox.Group onChange={handlePropertyCheckbox} className='justify-center text-[#08415c]' options={scatterDataCheckbox}  />
 </div>
+
 
 
 

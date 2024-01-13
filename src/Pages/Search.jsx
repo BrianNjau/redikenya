@@ -180,8 +180,59 @@ const Search =  () => {
         </div>
 
 
-        <Divider className="mt-8">Uncover Vital Property Insights </Divider>
-    <RowAnt gutter={16} className='m-4' >
+        <Divider className="mt-3">Uncover Vital Property Insights </Divider>
+
+
+      <RowAnt gutter={56} className='m-4  mb-8' >
+      <ColAnt className="gutter-row" span={8}>
+      <Card style={{ width: 450, marginTop: 16,  height:150 }} >
+        <Meta
+          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Pipe text-[#08415c]"></i>}/>}
+          title="Project pipeline"
+          description={
+            <>
+           <span>Access upcoming projects in your location of interest.</span>
+           <br />
+           <br />
+            </>
+          }
+        />
+      </Card>
+      </ColAnt>
+      <ColAnt className="gutter-row" span={8}>
+      <Card style={{ width: 450, marginTop: 16 , height:150 }} >
+        <Meta
+          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Bar-Chart3 text-[#08415c]"></i>}/>}
+          title="Economic Data"
+          description={
+            <>
+           <span>Access macro-economic data which plays an important role in shaping the real estate market.</span>
+           <br />
+           <br />
+            </>
+          }
+        />
+      </Card>
+      </ColAnt>
+      <ColAnt className="gutter-row" span={8}>
+      <Card style={{ width: 450, marginTop: 16, height:150 }} >
+        <Meta
+          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Dashboard text-[#08415c]"></i>}/>}
+          title="Visuals"
+          description={
+            <>
+           <span> Access modern, well detailed and easy to understand dashboards offering key insights on data points</span>
+           <br />
+           <br />
+          
+            </>
+          }
+        />
+      </Card>
+      </ColAnt>
+    </RowAnt>
+
+    <RowAnt gutter={56} className='m-4  mb-8' >
       <ColAnt className="gutter-row" span={8}>
       <Card style={{ width: 450, marginTop: 16,  height:320 }} >
         <Meta
@@ -286,57 +337,6 @@ const Search =  () => {
               <br />
               v. Quality of Amenities
             </p>
-          
-            </>
-          }
-        />
-      </Card>
-      </ColAnt>
-    </RowAnt>
-
-
- 
-    <RowAnt gutter={16} className='m-4 mb-8' >
-      <ColAnt className="gutter-row" span={8}>
-      <Card style={{ width: 450, marginTop: 16,  height:150 }} >
-        <Meta
-          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Pipe text-[#08415c]"></i>}/>}
-          title="Project pipeline"
-          description={
-            <>
-           <span>Access upcoming projects in your location of interest.</span>
-           <br />
-           <br />
-            </>
-          }
-        />
-      </Card>
-      </ColAnt>
-      <ColAnt className="gutter-row" span={8}>
-      <Card style={{ width: 450, marginTop: 16 , height:150 }} >
-        <Meta
-          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Bar-Chart3 text-[#08415c]"></i>}/>}
-          title="Economic Data"
-          description={
-            <>
-           <span>Access macro-economic data which plays an important role in shaping the real estate market.</span>
-           <br />
-           <br />
-            </>
-          }
-        />
-      </Card>
-      </ColAnt>
-      <ColAnt className="gutter-row" span={8}>
-      <Card style={{ width: 450, marginTop: 16, height:150 }} >
-        <Meta
-          avatar={<Avatar size={64} style={{ backgroundColor: '#FFFFFF' }}  icon={<i className="line-icon-Dashboard text-[#08415c]"></i>}/>}
-          title="Visuals"
-          description={
-            <>
-           <span> Access modern, well detailed and easy to understand dashboards offering key insights on data points</span>
-           <br />
-           <br />
           
             </>
           }
