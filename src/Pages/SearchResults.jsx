@@ -204,7 +204,7 @@ const SearchResults = () => {
       <span >Market Price:</span>
       </ColAnt>
       <ColAnt  flex="auto" className="gutter-row items-start">
-      <span>{payload[0].payload["marketPrice"].toLocaleString().trim()} KES </span>
+      <span>Ksh. {payload[0].payload["marketPrice"].toLocaleString().trim()}</span>
       </ColAnt>
       </RowAnt>
       <RowAnt gutter={8}>
@@ -229,7 +229,7 @@ const SearchResults = () => {
       <span >Unit Price/Sqm:</span>
       </ColAnt>
       <ColAnt  flex="auto" className="gutter-row items-start">
-      <span >{payload[0].payload["unit"].toLocaleString().trim()} KES</span>
+      <span >Ksh. {payload[0].payload["unit"].toLocaleString().trim()}</span>
       </ColAnt>
       </RowAnt>
 
@@ -595,6 +595,7 @@ displayMarketView==="scatterChart"?
 </Row>
 {/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
 
+
 {/* scatter chart upgrade */}
 <ResponsiveContainer width="100%" height={700}>
 <ScatterChart  className='bg-[#08415c]  rounded-md p-5' margin={{
@@ -604,10 +605,17 @@ displayMarketView==="scatterChart"?
             left: 20,
           }} >
   <CartesianGrid opacity={0.5}   strokeDasharray="2  2"  />
-  <XAxis tick={{fill:"#f3efe0"}} dataKey="floorArea" type='number' name='FloorArea (SqM)' unit="sqm" >
+  <XAxis  style={{
+    fontSize:"0.9rem"
+  }} tick={{fill:"#f3efe0"}} dataKey="floorArea" type='number' name='FloorArea (SqM)' unit="sqm" >
   <Label fill='#f3efe0' value="Floor area (SqM)" offset={0} position="bottom" />
   </XAxis>
-  <YAxis tick={{fill:"#f3efe0"}} dataKey="marketPrice" type='number' name='Estimated Market Price' unit="KES" >
+  <YAxis style={{
+    fontSize:"0.9rem"
+  }} tickFormatter={(val)=> 
+     `Ksh.${val.toLocaleString()}`
+  } tick={{fill:"#f3efe0"}} dataKey="marketPrice" type='number' name='Estimated Market Price' >
+  <Label fill='#f3efe0' value="Market Price" angle={0} offset={30}  position="top" />
   </YAxis>
   <RechartTooltip content={<CustomToolTip/>} cursor={{ strokeDasharray: '3 3' }}/>
   <RechartsLegend  verticalAlign="top" height={36} />
