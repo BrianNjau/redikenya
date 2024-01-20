@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import GlobalHeader from '../Components/GlobalHeader'
 import { Col, Container, Row } from 'react-bootstrap'
 import Typed from 'react-typed';
@@ -7,6 +7,8 @@ import { fadeIn } from '../Functions/GlobalAnimations';
 import { Link } from 'react-router-dom';
 import MultiRangeSlider from '../Components/MultiRangeSlider';
 import { Select } from 'antd';
+import GlobalContext from '../Context/Context';
+import { Supabase } from '../Functions/SupabaseClient';
 const Invest = () => {
 
     let maxSliderNumber = 50000000
@@ -18,6 +20,35 @@ for (let i = 10; i < 36; i++) {
     label: i.toString(36) + i,
   });
 }
+const [loadingPropData, setLoadingPropData] = useState([]);
+const [propData, setPropData] = useState([]);
+
+
+async function fetchPropData () {
+try {
+setLoadingPropData(true);
+
+//get data
+let { data: PropData } = await Supabase
+  .from('PropData')
+  .select('*');
+  setPropData(PropData);
+
+} catch (error) {
+  setLoadingPropData(false);
+  console.log("Fetch property Data err >", error)
+}
+
+
+
+} 
+
+const { setHeaderHeight } = useContext(GlobalContext);
+useEffect(()=>{
+setHeaderHeight(120);
+fetchPropData(); 
+});
+
   return (
     <div>
         <GlobalHeader theme="light" />
@@ -59,6 +90,15 @@ for (let i = 10; i < 36; i++) {
 
                         <div className="border-b border-mediumgray pb-12 mb-12 relative">
                                 <span className="shop-title relative font-serif font-medium text-darkgray block mb-[26px]">Filter By Market Price</span>
+                                <MultiRangeSlider
+                                    min={0}
+                                    max={maxSliderNumber}
+                                    onChange={({ min, max }) => (`min = ${min}, max = ${max}`)}
+                                />
+                            </div>
+
+                        <div className="border-b border-mediumgray pb-12 mb-12 relative">
+                                <span className="shop-title relative font-serif font-medium text-darkgray block mb-[26px]">Filter By Rent</span>
                                 <MultiRangeSlider
                                     min={0}
                                     max={maxSliderNumber}
