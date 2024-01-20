@@ -167,6 +167,7 @@ const SearchResults = () => {
       let amenitiesLocation = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Wellness location"];
       let location = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Location"];
       let road = searchResults.roadResults.filter(el => el["Property ID"] === item["PropertyID"])[0]["Road"];
+      let unit = parseFloat(item["Unit Price/SqM"].split(" ")[1].trim().replace(/,/g, ''))
       let marketPrice = parseFloat(item["Market Price"].split(" ")[1].trim().replace(/,/g, ''));
       return {
         propertyName: propertyName,
@@ -179,7 +180,8 @@ const SearchResults = () => {
         cloakroom: item["Cloak room"],
         amenitiesLocation:amenitiesLocation,
         location:location,
-        road:road
+        road:road,
+        unit:unit
       }});
 
       const CustomToolTip = ({active, payload, label}) =>{
@@ -220,6 +222,14 @@ const SearchResults = () => {
       </ColAnt>
       <ColAnt  flex="auto" className="gutter-row items-start">
       <span >{payload[0].payload["floorArea"]} Sqm </span>
+      </ColAnt>
+      </RowAnt>
+      <RowAnt gutter={8}>
+      <ColAnt  flex="auto" className="gutter-row" >
+      <span >Unit Price/Sqm:</span>
+      </ColAnt>
+      <ColAnt  flex="auto" className="gutter-row items-start">
+      <span >{payload[0].payload["unit"].toLocaleString().trim()} KES</span>
       </ColAnt>
       </RowAnt>
 
@@ -583,13 +593,7 @@ displayMarketView==="scatterChart"?
   <StatisticCard title={"Max of Market Price"} value={`Ksh. ${Math.round(maxMarket).toLocaleString()||0}`} /> 
 </Col>
 </Row>
-
-
 {/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
-
-
-
-
 
 {/* scatter chart upgrade */}
 <ResponsiveContainer width="100%" height={700}>
@@ -612,23 +616,12 @@ displayMarketView==="scatterChart"?
 </ResponsiveContainer>
 
 
-
-
-
-
-
-
-
 <div className="text-center  flex justify-center flex-col font-serif ">
  
 <span className='text-[#08415c] font-base text-md -tracking-[1px] mt-4'>Apply property data parameters to uncover high yield prospects</span>
     <br />
    <Checkbox.Group onChange={handlePropertyCheckbox} className='justify-center text-[#08415c]' options={scatterDataCheckbox}  />
 </div>
-
-
-
-
 
 </>
 

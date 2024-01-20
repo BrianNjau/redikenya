@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 
 // Libraries
 import { Col, Container, Row } from 'react-bootstrap'
@@ -12,7 +12,14 @@ import Buttons from '../Components/Buttons'
 import { fadeIn } from "../Functions/GlobalAnimations";
 import { resetForm } from '../Functions/Utilities';
 import GlobalHeader from '../Components/GlobalHeader';
+import GlobalContext from '../Context/Context';
 const LoginRegister = () => {
+
+  const { setHeaderHeight } = useContext(GlobalContext);
+useEffect(()=>{
+setHeaderHeight(120) 
+});
+
   return (
   
     <div>
