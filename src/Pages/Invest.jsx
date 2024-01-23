@@ -6,14 +6,13 @@ import Typed from 'react-typed';
 import { fadeIn } from '../Functions/GlobalAnimations';
 import { Link } from 'react-router-dom';
 import MultiRangeSlider from '../Components/MultiRangeSlider';
-import { Select } from 'antd';
+import { Select, Skeleton } from 'antd';
 import GlobalContext from '../Context/Context';
 import { Supabase } from '../Functions/SupabaseClient';
 const Invest = () => {
 
-    let maxSliderNumber = 50000000
+const options = [];
 
-    const options = [];
 for (let i = 10; i < 36; i++) {
   options.push({
     value: i.toString(36) + i,
@@ -21,7 +20,17 @@ for (let i = 10; i < 36; i++) {
   });
 }
 const [loadingPropData, setLoadingPropData] = useState([]);
+const [loadingPropOverview, setLoadingPropOverview] = useState([]);
 const [propData, setPropData] = useState([]);
+const [propOverview, setPropOverview] = useState([]);
+
+const { setHeaderHeight } = useContext(GlobalContext);
+
+useEffect(()=>{
+setHeaderHeight(120);
+fetchPropData(); 
+fetchPropOverview();
+},[]);
 
 
 async function fetchPropData () {
@@ -34,20 +43,36 @@ let { data: PropData } = await Supabase
   .select('*');
   setPropData(PropData);
 
+  setLoadingPropData(false)
+
 } catch (error) {
   setLoadingPropData(false);
   console.log("Fetch property Data err >", error)
 }
+  }
+  
+  async function fetchPropOverview(){
+    try{
+    setLoadingPropOverview(true);
+      //get data
+    let { data: PropOverview } = await Supabase
+    .from('Property Overview')
+    .select('*');
+    setPropOverview(PropOverview);
+    setLoadingPropOverview(false);
+    }catch(err){
+      setLoadingPropOverview(false);
+      console.log(err)
+    }
+  }
 
 
+const marketPrices = propData.map(val =>  parseFloat(val["Market Price"].split(" ")[1].trim().replace(/,/g, '')));
+const rents = propData.map(val =>  parseFloat(val["Rent"].replace(/,/g, '')));
+const locations = [...new Set(propOverview.map(val =>  val["Location"]))];
 
-} 
 
-const { setHeaderHeight } = useContext(GlobalContext);
-useEffect(()=>{
-setHeaderHeight(120);
-fetchPropData(); 
-});
+console.log(locations)
 
   return (
     <div>
@@ -90,27 +115,32 @@ fetchPropData();
 
                         <div className="border-b border-mediumgray pb-12 mb-12 relative">
                                 <span className="shop-title relative font-serif font-medium text-darkgray block mb-[26px]">Filter By Market Price</span>
-                                <MultiRangeSlider
-                                    min={0}
-                                    max={maxSliderNumber}
-                                    onChange={({ min, max }) => (`min = ${min}, max = ${max}`)}
-                                />
+
+                                {
+                                  loadingPropData ? <Skeleton active paragraph={{rows:1}}/>:<MultiRangeSlider
+                                  min={0}
+                                  max={Math.max(...marketPrices)}
+                                  onChange={({ min, max }) => (`min = ${min}, max = ${max}`)}
+                              />
+                                }
+                                
                             </div>
 
                         <div className="border-b border-mediumgray pb-12 mb-12 relative">
                                 <span className="shop-title relative font-serif font-medium text-darkgray block mb-[26px]">Filter By Rent</span>
-                                <MultiRangeSlider
-                                    min={0}
-                                    max={maxSliderNumber}
-                                    onChange={({ min, max }) => (`min = ${min}, max = ${max}`)}
-                                />
+                                {
+                                  loadingPropData ? <Skeleton active paragraph={{rows:1}}/>:<MultiRangeSlider
+                                  min={0}
+                                  max={Math.max(...rents)}
+                                  onChange={({ min, max }) => (`min = ${min}, max = ${max}`)}
+                              />
+                                }
                             </div>
 
                             <div className="border-b border-mediumgray pb-12 mb-12 relative">
                                 <span className="shop-title relative font-serif font-medium text-darkgray block mb-[20px]">Filter By Location</span>
 
-                                <Select mode="multiple" size={"large"} placeholder="Please select" defaultValue={['a10', 'c12']}style={{width: '100%',}}options={options}
-        />
+                                <Select mode="multiple" size={"large"} placeholder="Please select" style={{width: '100%',}} options={locations.map((a) =>{return{value:a,label:a,}})}/>
                                 {/* <ul className="list-style filter-color">
                                     <li><a aria-label="product-category" rel="noreferrer" onClick={(e) => e.preventDefault()} target="_blank" href="#black"><span className="product-cb paroduct-color-cb" style={{ backgroundColor: "#363636" }}></span>Carbon black</a><span className="item-qty">25</span></li>
                                     <li><a aria-label="product-category" rel="noreferrer" onClick={(e) => e.preventDefault()} target="_blank" href="#blue"><span className="product-cb paroduct-color-cb" style={{ backgroundColor: "#657fa8" }}></span>Prussian blue</a><span className="item-qty">03</span></li>
