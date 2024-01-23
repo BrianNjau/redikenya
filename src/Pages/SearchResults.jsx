@@ -684,6 +684,8 @@ zoom={12}
 
 {searchResults.roadResults.map((place)=>(
 <MarkerF
+ 
+
 key={`${Number(place["Geo-Location"].split(',')[0])} - ${Number(place["Geo-Location"].split(',')[1])}`}
 onClick={()=>{
 place===selectedPlace?setSelectedPlace(undefined):setSelectedPlace(place);
