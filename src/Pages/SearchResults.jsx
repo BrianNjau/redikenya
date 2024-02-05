@@ -10,7 +10,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
 import { useState } from 'react'
 import "./search.css"
 import { useContext } from 'react'
@@ -19,6 +18,7 @@ import { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader,InfoWindowF,MarkerF } from '@react-google-maps/api';
 import StatisticCard from '../Components/StatisticCard';
 import { ScatterChart, Scatter as RechartScatter, XAxis, YAxis, CartesianGrid, Tooltip as RechartTooltip, ResponsiveContainer, Legend as RechartsLegend, Label } from 'recharts';
+import MapPin from "../Assets/img/CilLocationPin.svg"
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
@@ -438,6 +438,8 @@ const SearchResults = () => {
         { label: 'Road', value: 'road' },
       ];
 
+      let customPin = <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="#888888" d="M253.924 127.592a64 64 0 1 0 64 64a64.073 64.073 0 0 0-64-64m0 96a32 32 0 1 1 32-32a32.037 32.037 0 0 1-32 32"></path><path fill="#3eb489" d="M376.906 68.515A173.922 173.922 0 0 0 108.2 286.426l120.907 185.613a29.619 29.619 0 0 0 49.635 0l120.911-185.613a173.921 173.921 0 0 0-22.747-217.911m-4.065 200.444l-118.916 182.55l-118.917-182.55c-36.4-55.879-28.593-130.659 18.563-177.817a141.92 141.92 0 0 1 200.708 0c47.156 47.158 54.962 121.938 18.562 177.817"></path></svg>
+
   return (
    
     <div>
@@ -557,6 +559,7 @@ className='w-auto mb-12'
     </> :<></>
 }
 {/* Render based on selected select value */}
+
 
 
 
@@ -684,7 +687,12 @@ zoom={12}
 
 {searchResults.roadResults.map((place)=>(
 <MarkerF
- 
+options={ 
+  {
+    icon:MapPin
+  }
+}
+
 
 key={`${Number(place["Geo-Location"].split(',')[0])} - ${Number(place["Geo-Location"].split(',')[1])}`}
 onClick={()=>{
