@@ -3,14 +3,14 @@ import GlobalHeader from '../Components/GlobalHeader'
 import { Col, Container, Row } from 'react-bootstrap'
 import Typed from 'react-typed';
 import { fadeIn } from '../Functions/GlobalAnimations';
-import { Link } from 'react-router-dom';
+
 import MultiRangeSlider from '../Components/MultiRangeSlider';
-import { Checkbox, Select, Skeleton, Result, FloatButton, Button, Modal, List, Space, Spin } from 'antd';
+import { Checkbox, Select, Skeleton, Result, FloatButton, Button, Modal, List, Space, Spin, Tooltip } from 'antd';
 import GlobalContext from '../Context/Context';
 import { Supabase } from '../Functions/SupabaseClient';
-import Buttons from '../Components/Buttons';
-import { DollarOutlined, ExclamationCircleOutlined, HomeFilled, HomeOutlined, MoneyCollectFilled, MonitorOutlined } from '@ant-design/icons';
-import { type } from '@testing-library/user-event/dist/type';
+import { CodeOutlined, DollarOutlined, HomeOutlined,  MonitorOutlined, QuestionCircleOutlined, RiseOutlined } from '@ant-design/icons';
+import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
+import MapPin from "../Assets/img/CilLocationPin.svg"
 
 const Invest = () => {
 const [loadingPropData, setLoadingPropData] = useState([]);
@@ -26,6 +26,8 @@ const [filterSearchResults, setFilterSearchResults] = useState([]);
 const [isConfirmSearchModalOpen, setIsConfirmSearchModalOpen] = useState(false);
 
 const { setHeaderHeight } = useContext(GlobalContext);
+
+const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
 
 
 useEffect(()=>{
@@ -77,9 +79,9 @@ const locations = [...new Set(propOverview.map(val =>  val["Location"]))];
 const handleMarketPricePicker =  (marketPrices) => {
   setSelectedMarketPrice(marketPrices);
 }
-const handleMarketPriceNumberPicker =  (marketPrices) => {
-  setSelectedMarketPrice(marketPrices);
-}
+// const handleMarketPriceNumberPicker =  (marketPrices) => {
+//   setSelectedMarketPrice(marketPrices);
+// }
 const handleRentPricePicker =  (rentPrices) => {
   setSelectedRentPrice(rentPrices)
 }
@@ -201,6 +203,17 @@ const IconText = ({icon,text}) => {
 
 }
 
+const mapContainerStyle = {
+  minWidth:"17vh",
+  minHeight:"15vh",
+  borderRadius:"10px",
+  boxShadow:"rgba(black, 0.66) 0 30px 60px 0",
+  transition:"1s $returnEasing"
+}
+const { isLoaded } = useJsApiLoader({
+  id: 'google-map-script',
+  googleMapsApiKey: mapsApi,
+})
 
   return (
     <div>
@@ -218,9 +231,9 @@ const IconText = ({icon,text}) => {
              <li>Invest</li>
              <li> 
             <Typed className="font-semibold text-[#3eb489]"
-            strings={[ "PDI","Property Development & Investments", "Property Data & Insights"]}
-            typeSpeed={80}
-            backSpeed={80}
+            strings={[ "PDI","Property Development And Investments", "Property Data And Insights"]}
+            typeSpeed={60}
+            backSpeed={60}
             loop
             showCursor
             cursorChar="|"/>
@@ -230,12 +243,28 @@ const IconText = ({icon,text}) => {
        </Row>
      </Container>
    </section>
-   <FloatButton
+
+   <FloatButton.Group
+      trigger="click"
+      type="default"
+      badge={{ dot: true }}
+      icon={<MonitorOutlined />}
+    >
+      <Tooltip title="Generate PDI investment insights" >
+      <FloatButton  badge={{ dot: true }} icon={<QuestionCircleOutlined  />} />
+      </Tooltip>
+
+     <Tooltip title="Let our AI analyze your results" >
+     <FloatButton  badge={{ dot: true }} icon={<CodeOutlined />} />
+     </Tooltip>
+     
+    </FloatButton.Group>
+   {/* <FloatButton
       icon={<MonitorOutlined />}
       type="default"
       badge={{ dot: true }}
      
-    />
+    /> */}
 
      {/* Section Start */}
      <section className="shopping-right-left-sidebar pt-0 py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] mt-8">
@@ -247,49 +276,68 @@ const IconText = ({icon,text}) => {
 
                       { 
                           filterSearchResults.length===0? <Result style={{right:"50%", bottom:"50%"}} status="404" title="Search to uncover investment insights" subTitle="1 search = 1 token"/>:
-                                  <div>
-                                  <div>
-                                  <span className='float-right text-sm mb-12'>Found results: {filterSearchResults.length}</span>
+                            <div>
+                                <div>
+                                <span className='float-right text-sm mb-12'>Found results: {filterSearchResults.length}</span>
                                   <br />
                                   <hr />
-                                  </div>
-
-
-                                  <List 
+                                </div>
+                              <List 
                                   className='mt-8'
                                   itemLayout='vertical'
                                   size='large'
                                   pagination={{
-                                    onChange: (page)=>{
-                                      console.log(page);
-                                    },
+                                    // onChange: (page)=>{
+                                    //   console.log(page);
+                                    // },
                                     pageSize: 8
                                   }}
                                   dataSource={filterSearchResults}
                                   footer={
-                                    <div>
-                                      <Typed className="font-semibold text-[#3eb489]"
-            strings={[ "PDI Marketplace Kenya","Property Development And Investments", "Property Data And Insights"]}
-            typeSpeed={6}
-            backSpeed={16}
-            loop
-            showCursor
-            cursorChar="|"/>
-                                    </div>
+                                  <div>
+                                    <Typed className="font-semibold text-[#3eb489]"
+                                    strings={[ "PDI Marketplace Kenya","Property Development And Investments", "Property Data And Insights"]}
+                                    typeSpeed={6}
+                                    backSpeed={16}
+                                    loop
+                                    showCursor
+                                    cursorChar="|"/>
+                                  </div>
                                   }
                                   renderItem={(item)=>(
                                     <List.Item key={item['Property Key']} 
                                      actions={[
-                                      <IconText icon={<DollarOutlined />} text={`${item["Market Price"]}`} key={"market-price-icon"}/>,
-                                      <IconText icon={<HomeOutlined />} text={`${item["Typology "]}`} key={"home-price-icon"}/>,
+                                      <IconText icon={<DollarOutlined />} text={`Market Price: ${item["Market Price"]}`} key={"market-price-icon"}/>,
+                                      <IconText icon={<HomeOutlined />} text={`Typology: ${item["Typology "]}`} key={"home-price-icon"}/>,
+                                      <IconText icon={<RiseOutlined />} text={`GRM: ${item["GRM (Years)"]} Years`} key={"grm-price-icon"}/>,
                                      ]}
-                                    //  extra={
-                                    //   <div>
-                                    //   <span className='text-xs'>Typology: {item["Typology "]}</span>
+                                     extra={
+                                        isLoaded&&(
+                                          <div className='md:hidden sm:hidden' style={mapContainerStyle}>
 
-                                    //   </div>
-
-                                    // }
+                                        
+                                        <GoogleMap 
+                                        mapContainerStyle={mapContainerStyle}
+                                        center={{
+                                       lat:   Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[0]),
+                                       lng:  Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[1])  
+                                                }}
+                                        zoom={15}   
+                                        >
+                                        
+                                        <MarkerF 
+                                        options={{
+                                          icon:MapPin
+                                        }}
+                                        key={`${Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[0])} - ${Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[1])}`}
+                                        position={{
+                                        lat:Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[0]),
+                                        lng:Number(propOverview.find(a => a["Property ID"] === item["PropertyID"])["Geo-Location"].split(',')[1]),
+                                        }}
+                                        />
+                                        </GoogleMap>
+                                        </div>
+                                  )}
                                     >
 
                <List.Item.Meta
@@ -297,7 +345,11 @@ const IconText = ({icon,text}) => {
                  title={<span>{
                   propOverview.find(a => a["Property ID"] === item["PropertyID"]) ? propOverview.find(a => a["Property ID"] === item["PropertyID"])["Name"] : <Spin/>        
                   }</span>}
-                 description={propOverview.find(a => a["Property ID"] === item["PropertyID"]) ? propOverview.find(a => a["Property ID"] === item["PropertyID"])["Location"]: <Spin/>}
+                 description={
+                  <span>
+                   {propOverview.find(a => a["Property ID"] === item["PropertyID"]) ? propOverview.find(a => a["Property ID"] === item["PropertyID"])["Location"]: <Spin/>},  {propOverview.find(a => a["Property ID"] === item["PropertyID"]) ? propOverview.find(a => a["Property ID"] === item["PropertyID"])["Road"]: <Spin/>}
+                  </span>
+                 }
                 />
                 <div>
                   <ul>
