@@ -21,17 +21,19 @@ import { ScatterChart, Scatter as RechartScatter, XAxis, YAxis, CartesianGrid, T
 import MapPin from "../Assets/img/CilLocationPin.svg"
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
-
+const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
 const SearchResults = () => {
 
-
+  
+ 
   //Maps
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyBscXCca5fy4M1LLmKh2qEZE4RUXyuvdqs"
+    googleMapsApiKey: mapsApi,
   })
-
+  //AIzaSyBscXCca5fy4M1LLmKh2qEZE4RUXyuvdqs
+  // AIzaSyC4V6QqaOkXqMH48fb8DfzB1o79N2otnJw
   const containerStyle = {
     width:"100%",
     height: "700px"
@@ -43,8 +45,8 @@ const SearchResults = () => {
       lng:36.811667
     },
     lavington: {
-      lat:-1.2789,
-      lng:36.7778
+      lat:-1.2765100,
+      lng:36.7753400
     },
     kilimani: {
       lat:-1.2893,
@@ -438,7 +440,7 @@ const SearchResults = () => {
         { label: 'Road', value: 'road' },
       ];
 
-      let customPin = <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512"><path fill="#888888" d="M253.924 127.592a64 64 0 1 0 64 64a64.073 64.073 0 0 0-64-64m0 96a32 32 0 1 1 32-32a32.037 32.037 0 0 1-32 32"></path><path fill="#3eb489" d="M376.906 68.515A173.922 173.922 0 0 0 108.2 286.426l120.907 185.613a29.619 29.619 0 0 0 49.635 0l120.911-185.613a173.921 173.921 0 0 0-22.747-217.911m-4.065 200.444l-118.916 182.55l-118.917-182.55c-36.4-55.879-28.593-130.659 18.563-177.817a141.92 141.92 0 0 1 200.708 0c47.156 47.158 54.962 121.938 18.562 177.817"></path></svg>
+    
 
   return (
    
@@ -680,7 +682,7 @@ center={{
 lat:selectedPlace?Number(selectedPlace["Geo-Location"].split(',')[0]):searchResults.location===("Nairobi Westlands")?centerLocations.westlands.lat:searchResults.location===("Nairobi Kilimani")?centerLocations.kilimani.lat:searchResults.location===("Nairobi Kileleshwa")?centerLocations.kileleshwa.lat:searchResults.location===("Nairobi Lavington")?centerLocations.lavington.lat:centerLocations.riverside.lat,
 lng:selectedPlace?Number(selectedPlace["Geo-Location"].split(',')[1]):searchResults.location===("Nairobi Westlands")?centerLocations.westlands.lng:searchResults.location===("Nairobi Kilimani")?centerLocations.kilimani.lng:searchResults.location===("Nairobi Kileleshwa")?centerLocations.kileleshwa.lng:searchResults.location===("Nairobi Lavington")?centerLocations.lavington.lng:centerLocations.riverside.lng
 }}
-zoom={12}   
+zoom={14}   
 >
 
 
