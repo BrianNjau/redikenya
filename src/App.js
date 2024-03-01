@@ -18,6 +18,7 @@ const Economics = lazy(() => import("./Pages/Economics"))
 const Search = lazy(() => import("./Pages/Search"))
 const SearchResults = lazy(() => import("./Pages/SearchResults"))
 const Invest = lazy(() => import("./Pages/Invest"))
+const Area = lazy(() => import("./Pages/Area"))
 
 
 function App() {
@@ -101,6 +102,7 @@ function App() {
         <Route path="search" element={<Search />} />
         <Route path="search-results" element={<SearchResults />} />
         <Route path="invest" element={<Invest />} />
+        <Route path="area-data" element={<Area />} />
       </Routes>
      </Suspense>
      </AnimatePresence>
