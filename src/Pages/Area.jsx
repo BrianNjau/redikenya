@@ -25,6 +25,7 @@ import { Supabase } from "../Functions/SupabaseClient";
 import StatisticCard from "../Components/StatisticCard";
 import { ResponsivePie } from "@nivo/pie";
 import { Bar, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveLine } from "@nivo/line";
 
 const Area = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
@@ -358,39 +359,6 @@ const Area = () => {
       setFilterLoading(false);
     }
   }
-
-  //
-
-  // handle chart options
-  // const marketProfileChartSeries =  [
-  //   {
-  //     name: 'Average Market Price',
-  //     //
-  //     // [2423232,100033]
-  //     data: filteredPropertyDetails.map((a)=> a["Ty"])
-  //   },
-  //   {
-  //     name: 'Median of Market Price',
-  //     data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
-  //       min: 10,
-  //       max: 20
-  //     })
-  //   },
-  //   {
-  //     name: 'Average of Rental Yield',
-  //     data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
-  //       min: 10,
-  //       max: 15
-  //     })
-  //   },
-  //   {
-  //     name: 'Median of Rental Yield',
-  //     data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
-  //       min: 10,
-  //       max: 15
-  //     })
-  //   }
-  // ];
   const theme = {
     axis: {
       legend: {
@@ -494,6 +462,271 @@ const Area = () => {
         .length,
       label: "NoDSQ",
       color: "hsl(355, 67%, 26%)",
+    },
+  ];
+
+  //Market profile
+
+  //studio
+
+  const marketTotalProfileLineStudio =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+      .length === 0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "Studio")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLineStudio =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+      .length === 0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLineStudio /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+
+  //1br
+
+  const marketTotalProfileLine1BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "1BR").length ===
+    0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "1BR")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLine1BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "1BR").length ===
+    0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLine1BR /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "1BR")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+  //2br
+
+  const marketTotalProfileLine2BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "2BR").length ===
+    0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "2BR")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLine2BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "2BR").length ===
+    0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLine2BR /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "2BR")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+  //3br
+
+  const marketTotalProfileLine3BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "3BR").length ===
+    0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "3BR")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLine3BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "3BR").length ===
+    0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLine3BR /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "3BR")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+  //4br
+
+  const marketTotalProfileLine4BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "4BR").length ===
+    0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "4BR")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLine4BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "4BR").length ===
+    0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLine4BR /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "4BR")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+  //5br
+
+  const marketTotalProfileLine5BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "5BR").length ===
+    0
+      ? 0
+      : filteredPropertyDetails
+          .filter((el) => el["Typology "] === "5BR")
+          .map((a) => {
+            let val = a["Market Price"].split(" ")[1].trim();
+            return parseFloat(val.replace(/,/g, ""));
+          })
+          .reduce((partialSum, a) => partialSum + a, 0);
+
+  const marketTotalAvgLine5BR =
+    filteredPropertyDetails.filter((el) => el["Typology "] === "5BR").length ===
+    0
+      ? 0
+      : Math.round(
+          (marketTotalProfileLine5BR /
+            filteredPropertyDetails.filter((el) => el["Typology "] === "5BR")
+              .length +
+            Number.EPSILON) *
+            100
+        ) / 100;
+
+  const marketProfileLineChartData = [
+    {
+      id: "Average Market Price",
+      color: "hsl(79, 70%, 50%)",
+      data: [
+        {
+          x: "Studio",
+          y: marketTotalAvgLineStudio,
+        },
+        {
+          x: "1BR",
+          y: marketTotalAvgLine1BR,
+        },
+        {
+          x: "2BR",
+          y: marketTotalAvgLine2BR,
+        },
+        {
+          x: "3BR",
+          y: marketTotalAvgLine3BR,
+        },
+        {
+          x: "4BR",
+          y: marketTotalAvgLine4BR,
+        },
+        {
+          x: "5BR",
+          y: marketTotalAvgLine5BR,
+        },
+      ],
+    },
+    {
+      id: "Median Market Price",
+      color: "hsl(79, 70%, 50%)",
+      data: [
+        {
+          x: "Studio",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "Studio")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+        {
+          x: "1BR",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "1BR")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+        {
+          x: "2BR",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "2BR")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+        {
+          x: "3BR",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "3BR")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+        {
+          x: "4BR",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "4BR")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+        {
+          x: "5BR",
+          y:
+            medianCal(
+              filteredPropertyDetails
+                .filter((el) => el["Typology "] === "5BR")
+                .map((a) => {
+                  let val = a["Market Price"].split(" ")[1].trim();
+                  return parseFloat(val.replace(/,/g, ""));
+                })
+            ) || 0,
+        },
+      ],
     },
   ];
 
@@ -642,6 +875,83 @@ const Area = () => {
               />
             </ColAnt>
           </RowAnt>
+
+          <ColAnt className="gutter-row mt-8" span={24}>
+            <div
+              className="bg-[#08415c] rounded-lg p-6"
+              style={{ height: "50vh", width: "100%" }}
+            >
+              <span className="font-base text-[#f3efe0] text-sm ">
+                Market Profile Analysis
+              </span>{" "}
+              <ResponsiveLine
+                data={marketProfileLineChartData}
+                theme={theme}
+                margin={{ top: 50, right: 150, bottom: 50, left: 60 }}
+                xScale={{ type: "point" }}
+                yScale={{
+                  type: "linear",
+                  min: "auto",
+                  max: "auto",
+                  stacked: true,
+                  reverse: false,
+                }}
+                yFormat=" >-.2f"
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  legend: "Typology",
+                  legendOffset: 36,
+                  legendPosition: "middle",
+                  truncateTickAt: 0,
+                }}
+                axisLeft={{
+                  tickSize: 5,
+                  tickPadding: 5,
+                  tickRotation: 0,
+                  // legend: "count",
+                  legendOffset: -40,
+                  legendPosition: "middle",
+                  truncateTickAt: 0,
+                }}
+                pointSize={10}
+                pointColor={{ theme: "background" }}
+                pointBorderWidth={2}
+                pointBorderColor={{ from: "serieColor" }}
+                pointLabelYOffset={-12}
+                useMesh={true}
+                legends={[
+                  {
+                    anchor: "bottom-right",
+                    direction: "column",
+                    justify: false,
+                    translateX: 100,
+                    translateY: 0,
+                    itemsSpacing: 0,
+                    itemDirection: "left-to-right",
+                    itemWidth: 80,
+                    itemHeight: 20,
+                    itemOpacity: 0.75,
+                    symbolSize: 12,
+                    symbolShape: "circle",
+                    symbolBorderColor: "rgba(0, 0, 0, .5)",
+                    effects: [
+                      {
+                        on: "hover",
+                        style: {
+                          itemBackground: "rgba(0, 0, 0, .03)",
+                          itemOpacity: 1,
+                        },
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </div>
+          </ColAnt>
         </>
       ),
     },
