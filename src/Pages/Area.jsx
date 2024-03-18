@@ -26,6 +26,7 @@ import StatisticCard from "../Components/StatisticCard";
 import { ResponsivePie } from "@nivo/pie";
 import { Bar, ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
+import SearchAreaImage from "../Assets/img/areaSearch.svg";
 
 const Area = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
@@ -53,7 +54,6 @@ const Area = () => {
     if (selectedRoad.length > 0 && roads.includes(selectedRoad[0]) === false) {
       //location, road mismatch refresh state for filters
       setSelectedRoad([]);
-      console.log("road refresh ");
     }
     // if(filteredPropertyDetails.length===0&&)
     setFilteredPropertyDetails(propertyDetails);
@@ -65,8 +65,8 @@ const Area = () => {
     filteredPropertyDetails.length === 0
       ? []
       : filteredPropertyDetails.map((a) => {
-          let val = a["Market Price"].split(" ")[1].trim();
-          return parseFloat(val.replace(/,/g, ""));
+          let val = a["Market Price"];
+          return val;
         });
   const rentalYieldPicker =
     filteredPropertyDetails.length === 0
@@ -79,15 +79,15 @@ const Area = () => {
     filteredPropertyDetails.length === 0
       ? []
       : filteredPropertyDetails.map((a) => {
-          let val = a["Rent"].trim();
-          return parseFloat(val.replace(/,/g, ""));
+          let val = a["Rent"];
+          return val;
         });
   const unitValuePicker =
     filteredPropertyDetails.length === 0
       ? []
       : filteredPropertyDetails.map((a) => {
-          let val = a["Unit Price/SqM"].split(" ")[1].trim();
-          return parseFloat(val.replace(/,/g, ""));
+          let val = a["Unit Price/SqM"];
+          return val;
         });
 
   //dealing with properties
@@ -279,7 +279,7 @@ const Area = () => {
         setRoads(searchedRoads);
         if (propertyDataSearched) {
           const typologies = [
-            ...new Set(propertyDataSearched.map((item) => item["Typology "])),
+            ...new Set(propertyDataSearched.map((item) => item["Typology"])),
           ];
           // console.log(typologies);
           setTypology(typologies);
@@ -318,14 +318,14 @@ const Area = () => {
         setFilteredPropertyDetails(
           propertyDetails.filter(
             (el) =>
-              selectedTypology.includes(el["Typology "]) &&
+              selectedTypology.includes(el["Typology"]) &&
               propertyId.includes(el["PropertyID"])
           )
         );
         const overviewIds = propertyDetails
           .filter(
             (el) =>
-              selectedTypology.includes(el["Typology "]) &&
+              selectedTypology.includes(el["Typology"]) &&
               propertyId.includes(el["PropertyID"])
           )
           .map((a) => a["PropertyID"]);
@@ -339,11 +339,11 @@ const Area = () => {
         //filter property detail
         setFilteredPropertyDetails(
           propertyDetails.filter((el) =>
-            selectedTypology.includes(el["Typology "])
+            selectedTypology.includes(el["Typology"])
           )
         );
         const overviewIds = propertyDetails
-          .filter((el) => selectedTypology.includes(el["Typology "]))
+          .filter((el) => selectedTypology.includes(el["Typology"]))
           .map((a) => a["PropertyID"]);
         //filter property overview
         setFilteredPropertyOverview(
@@ -415,35 +415,35 @@ const Area = () => {
     },
     {
       id: "1BR",
-      value: filteredPropertyDetails.filter((el) => el["Typology "] === "1BR")
+      value: filteredPropertyDetails.filter((el) => el["Typology"] === "1BR")
         .length,
       label: "1BR",
       color: "hsl(280, 70%, 50%)",
     },
     {
       id: "2BR",
-      value: filteredPropertyDetails.filter((el) => el["Typology "] === "2BR")
+      value: filteredPropertyDetails.filter((el) => el["Typology"] === "2BR")
         .length,
       label: "2BR",
       color: "hsl(211, 70%, 50%)",
     },
     {
       id: "3BR",
-      value: filteredPropertyDetails.filter((el) => el["Typology "] === "3BR")
+      value: filteredPropertyDetails.filter((el) => el["Typology"] === "3BR")
         .length,
       label: "3BR",
       color: "hsl(65, 70%, 50%)",
     },
     {
       id: "4BR",
-      value: filteredPropertyDetails.filter((el) => el["Typology "] === "4BR")
+      value: filteredPropertyDetails.filter((el) => el["Typology"] === "4BR")
         .length,
       label: "4BR",
       color: "hsl(259, 70%, 50%)",
     },
     {
       id: "5BR",
-      value: filteredPropertyDetails.filter((el) => el["Typology "] === "5BR")
+      value: filteredPropertyDetails.filter((el) => el["Typology"] === "5BR")
         .length,
       label: "5BR",
       color: "hsl(278, 21%, 28%)",
@@ -470,7 +470,7 @@ const Area = () => {
   //studio
 
   const marketTotalProfileLineStudio =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+    filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
       .length === 0
       ? 0
       : filteredPropertyDetails
@@ -482,12 +482,12 @@ const Area = () => {
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLineStudio =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+    filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
       .length === 0
       ? 0
       : Math.round(
           (marketTotalProfileLineStudio /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "Studio")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
               .length +
             Number.EPSILON) *
             100
@@ -496,24 +496,24 @@ const Area = () => {
   //1br
 
   const marketTotalProfileLine1BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "1BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
     0
       ? 0
       : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "1BR")
+          .filter((el) => el["Typology"] === "1BR")
           .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
+            let val = a["Market Price"];
+            return val;
           })
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLine1BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "1BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
     0
       ? 0
       : Math.round(
           (marketTotalProfileLine1BR /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "1BR")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "1BR")
               .length +
             Number.EPSILON) *
             100
@@ -521,24 +521,24 @@ const Area = () => {
   //2br
 
   const marketTotalProfileLine2BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "2BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
     0
       ? 0
       : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "2BR")
+          .filter((el) => el["Typology"] === "2BR")
           .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
+            let val = a["Market Price"];
+            return val;
           })
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLine2BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "2BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
     0
       ? 0
       : Math.round(
           (marketTotalProfileLine2BR /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "2BR")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "2BR")
               .length +
             Number.EPSILON) *
             100
@@ -546,24 +546,24 @@ const Area = () => {
   //3br
 
   const marketTotalProfileLine3BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "3BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
     0
       ? 0
       : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "3BR")
+          .filter((el) => el["Typology"] === "3BR")
           .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
+            let val = a["Market Price"];
+            return val;
           })
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLine3BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "3BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
     0
       ? 0
       : Math.round(
           (marketTotalProfileLine3BR /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "3BR")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "3BR")
               .length +
             Number.EPSILON) *
             100
@@ -571,24 +571,24 @@ const Area = () => {
   //4br
 
   const marketTotalProfileLine4BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "4BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
     0
       ? 0
       : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "4BR")
+          .filter((el) => el["Typology"] === "4BR")
           .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
+            let val = a["Market Price"];
+            return val;
           })
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLine4BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "4BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
     0
       ? 0
       : Math.round(
           (marketTotalProfileLine4BR /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "4BR")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "4BR")
               .length +
             Number.EPSILON) *
             100
@@ -600,20 +600,20 @@ const Area = () => {
     0
       ? 0
       : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "5BR")
+          .filter((el) => el["Typology"] === "5BR")
           .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
+            let val = a["Market Price"];
+            return val;
           })
           .reduce((partialSum, a) => partialSum + a, 0);
 
   const marketTotalAvgLine5BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "5BR").length ===
+    filteredPropertyDetails.filter((el) => el["Typology"] === "5BR").length ===
     0
       ? 0
       : Math.round(
           (marketTotalProfileLine5BR /
-            filteredPropertyDetails.filter((el) => el["Typology "] === "5BR")
+            filteredPropertyDetails.filter((el) => el["Typology"] === "5BR")
               .length +
             Number.EPSILON) *
             100
@@ -659,10 +659,10 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "Studio")
+                .filter((el) => el["Typology"] === "Studio")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
         },
@@ -671,10 +671,10 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "1BR")
+                .filter((el) => el["Typology"] === "1BR")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
         },
@@ -683,10 +683,10 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "2BR")
+                .filter((el) => el["Typology"] === "2BR")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
         },
@@ -695,10 +695,10 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "3BR")
+                .filter((el) => el["Typology"] === "3BR")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
         },
@@ -707,10 +707,10 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "4BR")
+                .filter((el) => el["Typology"] === "4BR")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
         },
@@ -719,12 +719,42 @@ const Area = () => {
           y:
             medianCal(
               filteredPropertyDetails
-                .filter((el) => el["Typology "] === "5BR")
+                .filter((el) => el["Typology"] === "5BR")
                 .map((a) => {
-                  let val = a["Market Price"].split(" ")[1].trim();
-                  return parseFloat(val.replace(/,/g, ""));
+                  let val = a["Market Price"];
+                  return val;
                 })
             ) || 0,
+        },
+      ],
+    },
+    {
+      id: "Average Rental Yield",
+      color: "hsl(158, 49%, 47%)",
+      data: [
+        {
+          x: "Studio",
+          y: marketTotalAvgLineStudio,
+        },
+        {
+          x: "1BR",
+          y: marketTotalAvgLine1BR,
+        },
+        {
+          x: "2BR",
+          y: marketTotalAvgLine2BR,
+        },
+        {
+          x: "3BR",
+          y: marketTotalAvgLine3BR,
+        },
+        {
+          x: "4BR",
+          y: marketTotalAvgLine4BR,
+        },
+        {
+          x: "5BR",
+          y: marketTotalAvgLine5BR,
         },
       ],
     },
@@ -1014,13 +1044,21 @@ const Area = () => {
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Minimum No. of units in a development"}
-                value={Math.min(...propertyUnitPicker) || 0}
+                value={
+                  propertyUnitPicker.length === 0
+                    ? 0
+                    : Math.min(...propertyUnitPicker)
+                }
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Maximum No. of units in a development"}
-                value={Math.max(...propertyUnitPicker) || 0}
+                value={
+                  propertyUnitPicker.length === 0
+                    ? 0
+                    : Math.max(...propertyUnitPicker)
+                }
               />
             </ColAnt>
           </RowAnt>
@@ -1035,13 +1073,21 @@ const Area = () => {
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Min of Density (units/acre)"}
-                value={Math.min(...propertyDensityPicker) || 0}
+                value={
+                  propertyDensityPicker.length === 0
+                    ? 0
+                    : Math.min(...propertyDensityPicker)
+                }
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Max of Density (units/acre)"}
-                value={Math.max(...propertyDensityPicker) || 0}
+                value={
+                  propertyDensityPicker.length === 0
+                    ? 0
+                    : Math.max(...propertyDensityPicker)
+                }
               />
             </ColAnt>
           </RowAnt>
@@ -1056,13 +1102,21 @@ const Area = () => {
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Min of erf (acres)"}
-                value={Math.min(...propertyAcrePicker) || 0}
+                value={
+                  propertyAcrePicker.length === 0
+                    ? 0
+                    : Math.min(...propertyAcrePicker)
+                }
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Max of erf (acres)"}
-                value={Math.max(...propertyAcrePicker) || 0}
+                value={
+                  propertyAcrePicker.length === 0
+                    ? 0
+                    : Math.max(...propertyAcrePicker)
+                }
               />
             </ColAnt>
           </RowAnt>
@@ -1077,13 +1131,21 @@ const Area = () => {
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Min of Total No. of floors"}
-                value={Math.min(...propertySkylinePicker) || 0}
+                value={
+                  propertySkylinePicker.length === 0
+                    ? 0
+                    : Math.min(...propertySkylinePicker)
+                }
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={8}>
               <StatisticCard
                 title={"Max of Total No. of floors"}
-                value={Math.max(...propertySkylinePicker) || 0}
+                value={
+                  propertySkylinePicker.length === 0
+                    ? 0
+                    : Math.max(...propertySkylinePicker)
+                }
               />
             </ColAnt>
           </RowAnt>
@@ -1159,13 +1221,21 @@ const Area = () => {
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
                 title={"Min Floor area (SqM)"}
-                value={Math.min(...floorAreaPicker) || 0}
+                value={
+                  floorAreaPicker.length === 0
+                    ? 0
+                    : Math.min(...floorAreaPicker) || 0
+                }
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
                 title={"Max Floor area (SqM)"}
-                value={Math.max(...floorAreaPicker) || 0}
+                value={
+                  floorAreaPicker.length === 0
+                    ? 0
+                    : Math.max(...floorAreaPicker) || 0
+                }
               />
             </ColAnt>
           </RowAnt>
@@ -1412,7 +1482,8 @@ const Area = () => {
                     color: "hsl(47, 44%, 92%)",
                   }}
                   theme={theme}
-                  colors={{ scheme: "accent" }}
+                  colors={"#3eb489"}
+                  // colors={{ scheme: "nivo"}}
                   labelTextColor={{
                     from: "color",
                     modifiers: [["darker", 1.6]],
@@ -1519,8 +1590,14 @@ const Area = () => {
           {/* Section Start */}
           {selectedLocation.length === 0 ? (
             <Result
-              status="404"
-              title="Kindly select area to get area data results"
+              icon={
+                <img
+                  className="h-64 ml-auto mr-auto"
+                  src={SearchAreaImage}
+                  alt="Select area to get results"
+                />
+              }
+              title="Select area to get area data results"
               subTitle="1 search = 1 token."
             />
           ) : (

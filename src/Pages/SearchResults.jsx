@@ -105,7 +105,7 @@ const SearchResults = () => {
   let location = useLocation();
   let searchResults = location.state;
   let uniqueAvailableTypology = [
-    ...new Set(searchResults.propertyData.map((item) => item["Typology "])),
+    ...new Set(searchResults.propertyData.map((item) => item["Typology"])),
   ];
   let [filteredPropertyData, setFilteredPropertyData] = useState(
     searchResults.propertyData
@@ -116,7 +116,7 @@ const SearchResults = () => {
     // console.log("checked", checkedValues)
     setFilteredPropertyData(
       searchResults.propertyData.filter((el) =>
-        checkedValues.includes(el["Typology "])
+        checkedValues.includes(el["Typology"])
       )
     );
   }
@@ -150,22 +150,22 @@ const SearchResults = () => {
   });
   //search data specific to the overview
   let marketValuePicker = filteredPropertyData.map((a) => {
-    let val = a["Market Price"].split(" ")[1].trim();
-    return parseFloat(val.replace(/,/g, ""));
+    let val = a["Market Price"];
+    return val;
   });
   // let floorValuePicker = filteredPropertyData.map((a)=> a["Floor area (SqM)"])
   //unit
   let unitValuePicker = filteredPropertyData.map((a) => {
-    let val = a["Unit Price/SqM"].split(" ")[1].trim();
-    return parseFloat(val.replace(/,/g, ""));
+    let val = a["Unit Price/SqM"];
+    return val;
   });
   let rentalYieldValuePicker = filteredPropertyData.map((a) => {
     let val = a["Rental Yield"].trim();
     return parseFloat(val.replace(/,/g, ""));
   });
   let rentValuePicker = filteredPropertyData.map((a) => {
-    let val = a["Rent"].trim();
-    return parseFloat(val.replace(/,/g, ""));
+    let val = a["Rent"];
+    return val;
   });
   let grmYieldValuePicker = filteredPropertyData.map((a) => {
     let val = a["GRM (Years)"];
@@ -208,17 +208,15 @@ const SearchResults = () => {
     let road = searchResults.roadResults.filter(
       (el) => el["Property ID"] === item["PropertyID"]
     )[0]["Road"];
-    let unit = parseFloat(
-      item["Unit Price/SqM"].split(" ")[1].trim().replace(/,/g, "")
-    );
-    let marketPrice = parseFloat(
-      item["Market Price"].split(" ")[1].trim().replace(/,/g, "")
-    );
+    let unit = item["Unit Price/SqM"];
+
+    let marketPrice = item["Market Price"];
+
     return {
       propertyName: propertyName,
       floorArea: item["Floor area (SqM)"],
       marketPrice: marketPrice,
-      typology: item["Typology "],
+      typology: item["Typology"],
       saleType: saleType,
       dsq: item["DSQ"],
       ensuite: item["En-suite"],
@@ -236,7 +234,7 @@ const SearchResults = () => {
       return (
         <div
           style={{ background: "rgb(256, 256, 256, 0.85)" }}
-          className="rounded-md p-3 px-8 font-bold text-xs"
+          className="rounded-md p-3 px-8 font-bold text-xs text-black"
         >
           <RowAnt gutter={8}>
             <ColAnt flex="auto" className="gutter-row">
@@ -253,7 +251,7 @@ const SearchResults = () => {
             </ColAnt>
             <ColAnt flex="auto" className="gutter-row items-start">
               <span>
-                Ksh. {payload[0].payload["marketPrice"].toLocaleString().trim()}
+                Ksh. {payload[0].payload["marketPrice"].toLocaleString()}
               </span>
             </ColAnt>
           </RowAnt>
@@ -279,9 +277,7 @@ const SearchResults = () => {
               <span>Unit Price/Sqm:</span>
             </ColAnt>
             <ColAnt flex="auto" className="gutter-row items-start">
-              <span>
-                Ksh. {payload[0].payload["unit"].toLocaleString().trim()}
-              </span>
+              <span>Ksh. {payload[0].payload["unit"].toLocaleString()}</span>
             </ColAnt>
           </RowAnt>
 
@@ -515,6 +511,8 @@ const SearchResults = () => {
     { label: "Location", value: "location" },
     { label: "Road", value: "road" },
   ];
+
+  console.log("search result", searchResults);
 
   return (
     <div>
