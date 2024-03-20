@@ -1,8 +1,17 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .my-select-container .ant-select .ant-select-selector {
-    border-radius:3px;
-  }
+  border-radius: 3px;
+}
 
+.ant-tabs-ink-bar {
+  border-bottom: 3px solid #08415c;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #08415c !important;
+}
+.ant-tabs-tab-btn:hover {
+  color: #08415c !important;
+}

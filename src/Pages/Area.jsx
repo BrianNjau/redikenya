@@ -12,6 +12,7 @@ import {
   Tooltip,
   Button as ButtonAnt,
   Result,
+  Table,
 } from "antd";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Autoplay, Keyboard } from "swiper/modules";
@@ -20,11 +21,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { areaData } from "../Data/AreaDataText";
 import Kileimg from "../Assets/img/kileleshwa.jpg";
 import KilimaniImg from "../Assets/img/kilimani.jpg";
-import WestieImg from "../Assets/img/aboutImg.jpg";
+import WestieImg from "../Assets/img/westlands.jpg";
 import { Supabase } from "../Functions/SupabaseClient";
 import StatisticCard from "../Components/StatisticCard";
 import { ResponsivePie } from "@nivo/pie";
-import { Bar, ResponsiveBar } from "@nivo/bar";
+import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import SearchAreaImage from "../Assets/img/areaSearch.svg";
 
@@ -33,6 +34,16 @@ const Area = () => {
   const [selectedLocationLoading, setSelectedLocationLoading] = useState(false);
   const [locationOverview, setLocationOverview] = useState([]);
   const [propertyDetails, setPropertyDetails] = useState([]);
+  const [stockProperties, setStockProperties] = useState([]);
+  const [pipelineProperties, setPipelineProperties] = useState([]);
+  const [stockYear, setStockYear] = useState([]);
+  const [pipelineYear, setPipelineYear] = useState([]);
+  const [selectedStockYear, setSelectedStockYear] = useState([]);
+  const [selectedPipelineYear, setSelectedPipelineYear] = useState([]);
+  const [stockPropertyLoading, setStockPropertyLoading] = useState(false);
+  const [pipelinePropertyLoading, setPipelinePropertyLoading] = useState(false);
+  const [filteredStock, setFilteredStock] = useState([]);
+  const [filteredPipeline, setFilteredPipeline] = useState([]);
   const [filteredPropertyDetails, setFilteredPropertyDetails] = useState([]);
   const [filteredPropertyOverview, setFilteredPropertyOverview] = useState([]);
   const [roads, setRoads] = useState([]);
@@ -58,8 +69,17 @@ const Area = () => {
     // if(filteredPropertyDetails.length===0&&)
     setFilteredPropertyDetails(propertyDetails);
     setFilteredPropertyOverview(locationOverview);
+    setFilteredStock(stockProperties);
     setSelectedTypology(typology);
-  }, [roads, propertyDetails, typology, locationOverview]);
+    setSelectedStockYear(stockYear);
+  }, [
+    roads,
+    propertyDetails,
+    typology,
+    locationOverview,
+    stockYear,
+    stockProperties,
+  ]);
 
   const marketPricePicker =
     filteredPropertyDetails.length === 0
@@ -281,11 +301,31 @@ const Area = () => {
           const typologies = [
             ...new Set(propertyDataSearched.map((item) => item["Typology"])),
           ];
-          // console.log(typologies);
+
+          //STOCK Properties
+          const { data: stockProps } = await Supabase.from("Stock Per Year")
+            .select()
+            .in("propertyID", propertyId);
+
+          if (stockProps) {
+            const years = [...new Set(stockProps.map((item) => item["year"]))];
+            setStockYear(years);
+          }
+
+          //PIPELINE Properties
+          const { data: pipelineProperties } = await Supabase.from("Pipeline")
+            .select()
+            .eq("Location", selectedArea[0]["area"]);
+
+          if (pipelineProperties) {
+            setPipelineProperties(pipelineProperties);
+          }
+          // console.log("Stock property", stockProps);
+          setStockProperties(stockProps);
           setTypology(typologies);
           setPropertyDetails(propertyDataSearched);
-          console.log("Property overview", data);
-          console.log("Property detail", propertyDataSearched);
+          // console.log("Property overview", data);
+          // console.log("Property detail", propertyDataSearched);
         }
       }
       if (error) console.log(error);
@@ -302,6 +342,10 @@ const Area = () => {
 
   function handleTypologyFilter(checkedValues) {
     setSelectedTypology(checkedValues);
+  }
+
+  function handleStockPropertyFilter(checkedValues) {
+    setSelectedStockYear(checkedValues);
   }
 
   //do all filtering once
@@ -359,6 +403,28 @@ const Area = () => {
       setFilterLoading(false);
     }
   }
+
+  function handleFilterStock() {
+    try {
+      setStockPropertyLoading(true);
+
+      if (selectedStockYear.length > 0) {
+        setFilteredStock(
+          stockProperties.filter((el) => selectedStockYear.includes(el["year"]))
+        );
+      } else {
+        setFilteredStock([]);
+      }
+
+      console.log("filtered Stock", filteredStock);
+
+      setStockPropertyLoading(false);
+    } catch (error) {
+      setStockPropertyLoading(false);
+      console.log(error);
+    }
+  }
+
   const theme = {
     axis: {
       legend: {
@@ -728,36 +794,36 @@ const Area = () => {
         },
       ],
     },
-    {
-      id: "Average Rental Yield",
-      color: "hsl(158, 49%, 47%)",
-      data: [
-        {
-          x: "Studio",
-          y: marketTotalAvgLineStudio,
-        },
-        {
-          x: "1BR",
-          y: marketTotalAvgLine1BR,
-        },
-        {
-          x: "2BR",
-          y: marketTotalAvgLine2BR,
-        },
-        {
-          x: "3BR",
-          y: marketTotalAvgLine3BR,
-        },
-        {
-          x: "4BR",
-          y: marketTotalAvgLine4BR,
-        },
-        {
-          x: "5BR",
-          y: marketTotalAvgLine5BR,
-        },
-      ],
-    },
+    // {
+    //   id: "Average Rental Yield",
+    //   color: "hsl(158, 49%, 47%)",
+    //   data: [
+    //     {
+    //       x: "Studio",
+    //       y: marketTotalAvgLineStudio,
+    //     },
+    //     {
+    //       x: "1BR",
+    //       y: marketTotalAvgLine1BR,
+    //     },
+    //     {
+    //       x: "2BR",
+    //       y: marketTotalAvgLine2BR,
+    //     },
+    //     {
+    //       x: "3BR",
+    //       y: marketTotalAvgLine3BR,
+    //     },
+    //     {
+    //       x: "4BR",
+    //       y: marketTotalAvgLine4BR,
+    //     },
+    //     {
+    //       x: "5BR",
+    //       y: marketTotalAvgLine5BR,
+    //     },
+    //   ],
+    // },
   ];
 
   const filterOptions = [
@@ -772,6 +838,60 @@ const Area = () => {
           />
         </div>
       ),
+    },
+  ];
+  const stockFilterOptions = [
+    {
+      key: "2",
+      label: (
+        <div>
+          <Checkbox.Group
+            onChange={handleStockPropertyFilter}
+            options={stockYear.sort((a, b) => a - b)}
+            defaultValue={stockYear}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const stockTableColumns = [
+    {
+      title: "Property Name",
+      dataIndex: "propertyName",
+      key: "propertyName",
+    },
+    {
+      title: "Period Quarter",
+      dataIndex: "period",
+      key: "period",
+    },
+    {
+      title: "Year",
+      dataIndex: "year",
+      key: "year",
+    },
+  ];
+  const pipelineTableColumns = [
+    {
+      title: "Location",
+      dataIndex: "Location",
+      key: "Location",
+    },
+    {
+      title: "Road",
+      dataIndex: "Road",
+      key: "Road",
+    },
+    {
+      title: "No. of Units",
+      dataIndex: "No. of Units",
+      key: "No. of Units",
+    },
+    {
+      title: "Building Height (Floors)",
+      dataIndex: "Height",
+      key: "Height",
     },
   ];
 
@@ -1508,16 +1628,76 @@ const Area = () => {
     {
       key: "4",
       label: "Stock Growth",
-      children: "Content of Typology & Plinth",
+      children: (
+        <>
+          <div className="flex justify-between mb-8">
+            {/* Year Picker  */}
+            <span className=" text-base font-medium ">
+              Number of Properties: {filteredStock.length}
+            </span>
+            <div>
+              <Dropdown
+                trigger={["click"]}
+                className=""
+                menu={{
+                  items: stockFilterOptions,
+                }}
+              >
+                <Tooltip title="Filter">
+                  <ButtonAnt
+                    loading={selectedLocationLoading}
+                    icon={<i className="line-icon-Filter-2"></i>}
+                  />
+                </Tooltip>
+              </Dropdown>
+              <ButtonAnt
+                style={{ color: "#08415c" }}
+                onClick={handleFilterStock}
+                loading={stockPropertyLoading}
+                className="ml-8"
+              >
+                Check Properties Per Year
+              </ButtonAnt>
+            </div>
+          </div>
+          <div className="mt-4 ">
+            <Table columns={stockTableColumns} dataSource={filteredStock} />
+          </div>
+        </>
+      ),
     },
     {
       key: "5",
       label: "Pipeline",
-      children: "Content of Typology & Plinth",
+      children: (
+        <>
+          <div className="flex justify-between mb-8">
+            {/* Year Picker  */}
+            <div>
+              <span className="text-base font-medium mr-24">
+                Number of Properties in Pipeline: {pipelineProperties.length}
+              </span>
+            </div>
+
+            <div>
+              <span className=" text-base font-medium ">
+                Number of Units in Pipeline:{" "}
+                {pipelineProperties
+                  .map((a) => a["No. of Units"])
+                  .reduce((a, b) => a + b, 0)}
+              </span>
+            </div>
+          </div>
+          <div className="mt-4 ">
+            <Table
+              columns={pipelineTableColumns}
+              dataSource={pipelineProperties}
+            />
+          </div>
+        </>
+      ),
     },
   ];
-
-  // console.log("Selected location", selectedLocation);
 
   function truncateText(text, maxLength) {
     if (text.length > maxLength) {
@@ -1742,11 +1922,11 @@ marginBottom: 24,
                       sm={8}
                       className="mb-28 text-center px-[15px] md:mb-20"
                     >
-                      <span className="mb-[15px] font-serif font-medium text-[#08415c] text-md uppercase block">
+                      <span className="mb-[15px] font-serif font-medium text-[#3EB489] text-md uppercase block">
                         Insights at Your Fingertips
                       </span>
-                      <h6 className="tracking-[-1px] text-darkgray font-serif mb-0">
-                        Dive into the heart of Kenya with our interactive
+                      <h6 className="tracking-[-1px] text-[#08415c] font-serif mb-0">
+                        Dive into the heart of Nairobi with our interactive
                         charts, providing a deeper understanding of its diverse
                         regions.
                       </h6>

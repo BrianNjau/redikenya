@@ -46,6 +46,7 @@ import {
   Label,
 } from "recharts";
 import MapPin from "../Assets/img/CilLocationPin.svg";
+import CautionImage from "../Assets/img/cautionBack.svg";
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
@@ -485,14 +486,25 @@ const SearchResults = () => {
 
   const confirm = () => {
     modal.confirm({
-      title: "You are going back to the search page",
-      icon: <i className="line-icon-Danger m-2 text-red-600"></i>,
+      title: (
+        <img
+          className="h-48 ml-auto mr-auto"
+          src={CautionImage}
+          alt="Caution, you are going back"
+        />
+      ),
+      icon: <></>,
       content: (
-        <>
-          <p>Kindly note that every search costs a token.</p>
+        <div>
+          <br />
+          <div className="ml-auto mr-auto">
+            <p className="text-base font-semibold">
+              Caution you are going back to Search page.
+            </p>
 
-          <p>Do you want to return ? </p>
-        </>
+            <p className="text-sm font-light">Do you want to return ? </p>
+          </div>
+        </div>
       ),
       okText: "Yes Proceed",
       okType: "danger",
