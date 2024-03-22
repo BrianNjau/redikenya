@@ -37,13 +37,9 @@ const Area = () => {
   const [stockProperties, setStockProperties] = useState([]);
   const [pipelineProperties, setPipelineProperties] = useState([]);
   const [stockYear, setStockYear] = useState([]);
-  const [pipelineYear, setPipelineYear] = useState([]);
   const [selectedStockYear, setSelectedStockYear] = useState([]);
-  const [selectedPipelineYear, setSelectedPipelineYear] = useState([]);
   const [stockPropertyLoading, setStockPropertyLoading] = useState(false);
-  const [pipelinePropertyLoading, setPipelinePropertyLoading] = useState(false);
   const [filteredStock, setFilteredStock] = useState([]);
-  const [filteredPipeline, setFilteredPipeline] = useState([]);
   const [filteredPropertyDetails, setFilteredPropertyDetails] = useState([]);
   const [filteredPropertyOverview, setFilteredPropertyOverview] = useState([]);
   const [roads, setRoads] = useState([]);
@@ -51,6 +47,9 @@ const Area = () => {
   const [selectedRoad, setSelectedRoad] = useState([]);
   const [filterLoading, setFilterLoading] = useState(false);
   const [selectedTypology, setSelectedTypology] = useState([]);
+  const [marketValue, setMarketValue] = useState([]);
+  const [filteredMarketValue, setFilteredMarketValue] = useState([]);
+
   const swiperRef = React.useRef(null);
   // const swiperRef2 = React.useRef(null);
   // const [activeSlide, setActiveSlide] = useState(0);
@@ -72,6 +71,7 @@ const Area = () => {
     setFilteredStock(stockProperties);
     setSelectedTypology(typology);
     setSelectedStockYear(stockYear);
+    setFilteredMarketValue(marketValue);
   }, [
     roads,
     propertyDetails,
@@ -217,6 +217,14 @@ const Area = () => {
           (floorAreaTotal / floorAreaPicker.length + Number.EPSILON) * 100
         ) / 100;
 
+  //Market size
+  const marketSizeTotal =
+    filteredMarketValue.length === 0
+      ? 0
+      : filteredMarketValue
+          .map((a) => a["Est. Market Value Q1 2024"])
+          .reduce((partialSum, b) => partialSum + b, 0);
+
   const marketPriceTotal =
     marketPricePicker.length === 0
       ? 0
@@ -320,6 +328,15 @@ const Area = () => {
           if (pipelineProperties) {
             setPipelineProperties(pipelineProperties);
           }
+          //marketValue
+          const { data: marketValueData } = await Supabase.from("Market Value")
+            .select()
+            .in("Property ID", propertyId);
+          if (marketValueData) {
+            //
+            setMarketValue(marketValueData);
+          }
+
           // console.log("Stock property", stockProps);
           setStockProperties(stockProps);
           setTypology(typologies);
@@ -379,6 +396,11 @@ const Area = () => {
             overviewIds.includes(el["Property ID"])
           )
         );
+
+        //market value
+        setFilteredMarketValue(
+          marketValue.filter((el) => overviewIds.includes(el["Property ID"]))
+        );
       } else {
         //filter property detail
         setFilteredPropertyDetails(
@@ -394,6 +416,11 @@ const Area = () => {
           locationOverview.filter((el) =>
             overviewIds.includes(el["Property ID"])
           )
+        );
+
+        //market value
+        setFilteredMarketValue(
+          marketValue.filter((el) => overviewIds.includes(el["Property ID"]))
         );
       }
       // console.log("filteredOver", filteredPropertyOverview);
@@ -535,189 +562,159 @@ const Area = () => {
 
   //studio
 
-  const marketTotalProfileLineStudio =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
-      .length === 0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology "] === "Studio")
-          .map((a) => {
-            let val = a["Market Price"].split(" ")[1].trim();
-            return parseFloat(val.replace(/,/g, ""));
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLineStudio =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
+  //     .length === 0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology "] === "Studio")
+  //         .map((a) => {
+  //           let val = a["Market Price"].split(" ")[1].trim();
+  //           return parseFloat(val.replace(/,/g, ""));
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLineStudio =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
-      .length === 0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLineStudio /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
+  // const marketTotalAvgLineStudio =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
+  //     .length === 0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLineStudio /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "Studio")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
 
-  //1br
+  // //1br
 
-  const marketTotalProfileLine1BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
-    0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology"] === "1BR")
-          .map((a) => {
-            let val = a["Market Price"];
-            return val;
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLine1BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
+  //   0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology"] === "1BR")
+  //         .map((a) => {
+  //           let val = a["Market Price"];
+  //           return val;
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLine1BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
-    0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLine1BR /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "1BR")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
-  //2br
+  // const marketTotalAvgLine1BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "1BR").length ===
+  //   0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLine1BR /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "1BR")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
+  // //2br
 
-  const marketTotalProfileLine2BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
-    0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology"] === "2BR")
-          .map((a) => {
-            let val = a["Market Price"];
-            return val;
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLine2BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
+  //   0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology"] === "2BR")
+  //         .map((a) => {
+  //           let val = a["Market Price"];
+  //           return val;
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLine2BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
-    0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLine2BR /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "2BR")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
-  //3br
+  // const marketTotalAvgLine2BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "2BR").length ===
+  //   0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLine2BR /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "2BR")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
+  // //3br
 
-  const marketTotalProfileLine3BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
-    0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology"] === "3BR")
-          .map((a) => {
-            let val = a["Market Price"];
-            return val;
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLine3BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
+  //   0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology"] === "3BR")
+  //         .map((a) => {
+  //           let val = a["Market Price"];
+  //           return val;
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLine3BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
-    0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLine3BR /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "3BR")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
-  //4br
+  // const marketTotalAvgLine3BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "3BR").length ===
+  //   0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLine3BR /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "3BR")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
+  // //4br
 
-  const marketTotalProfileLine4BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
-    0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology"] === "4BR")
-          .map((a) => {
-            let val = a["Market Price"];
-            return val;
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLine4BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
+  //   0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology"] === "4BR")
+  //         .map((a) => {
+  //           let val = a["Market Price"];
+  //           return val;
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLine4BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
-    0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLine4BR /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "4BR")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
-  //5br
+  // const marketTotalAvgLine4BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "4BR").length ===
+  //   0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLine4BR /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "4BR")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
+  // //5br
 
-  const marketTotalProfileLine5BR =
-    filteredPropertyDetails.filter((el) => el["Typology "] === "5BR").length ===
-    0
-      ? 0
-      : filteredPropertyDetails
-          .filter((el) => el["Typology"] === "5BR")
-          .map((a) => {
-            let val = a["Market Price"];
-            return val;
-          })
-          .reduce((partialSum, a) => partialSum + a, 0);
+  // const marketTotalProfileLine5BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology "] === "5BR").length ===
+  //   0
+  //     ? 0
+  //     : filteredPropertyDetails
+  //         .filter((el) => el["Typology"] === "5BR")
+  //         .map((a) => {
+  //           let val = a["Market Price"];
+  //           return val;
+  //         })
+  //         .reduce((partialSum, a) => partialSum + a, 0);
 
-  const marketTotalAvgLine5BR =
-    filteredPropertyDetails.filter((el) => el["Typology"] === "5BR").length ===
-    0
-      ? 0
-      : Math.round(
-          (marketTotalProfileLine5BR /
-            filteredPropertyDetails.filter((el) => el["Typology"] === "5BR")
-              .length +
-            Number.EPSILON) *
-            100
-        ) / 100;
+  // const marketTotalAvgLine5BR =
+  //   filteredPropertyDetails.filter((el) => el["Typology"] === "5BR").length ===
+  //   0
+  //     ? 0
+  //     : Math.round(
+  //         (marketTotalProfileLine5BR /
+  //           filteredPropertyDetails.filter((el) => el["Typology"] === "5BR")
+  //             .length +
+  //           Number.EPSILON) *
+  //           100
+  //       ) / 100;
 
-  const marketProfileLineChartData = [
+  const medianGRISqmLine = [
     {
-      id: "Average Market Price",
-      color: "hsl(79, 70%, 50%)",
-      data: [
-        {
-          x: "Studio",
-          y: marketTotalAvgLineStudio,
-        },
-        {
-          x: "1BR",
-          y: marketTotalAvgLine1BR,
-        },
-        {
-          x: "2BR",
-          y: marketTotalAvgLine2BR,
-        },
-        {
-          x: "3BR",
-          y: marketTotalAvgLine3BR,
-        },
-        {
-          x: "4BR",
-          y: marketTotalAvgLine4BR,
-        },
-        {
-          x: "5BR",
-          y: marketTotalAvgLine5BR,
-        },
-      ],
-    },
-    {
-      id: "Median Market Price",
+      id: "Median of GRI/Sqm by Typology",
       color: "hsl(79, 70%, 50%)",
       data: [
         {
@@ -727,7 +724,7 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "Studio")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
@@ -739,7 +736,7 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "1BR")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
@@ -751,7 +748,7 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "2BR")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
@@ -763,7 +760,7 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "3BR")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
@@ -775,7 +772,7 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "4BR")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
@@ -787,44 +784,155 @@ const Area = () => {
               filteredPropertyDetails
                 .filter((el) => el["Typology"] === "5BR")
                 .map((a) => {
-                  let val = a["Market Price"];
+                  let val = a["GRI/Sqm"];
                   return val;
                 })
             ) || 0,
         },
       ],
     },
-    // {
-    //   id: "Average Rental Yield",
-    //   color: "hsl(158, 49%, 47%)",
-    //   data: [
-    //     {
-    //       x: "Studio",
-    //       y: marketTotalAvgLineStudio,
-    //     },
-    //     {
-    //       x: "1BR",
-    //       y: marketTotalAvgLine1BR,
-    //     },
-    //     {
-    //       x: "2BR",
-    //       y: marketTotalAvgLine2BR,
-    //     },
-    //     {
-    //       x: "3BR",
-    //       y: marketTotalAvgLine3BR,
-    //     },
-    //     {
-    //       x: "4BR",
-    //       y: marketTotalAvgLine4BR,
-    //     },
-    //     {
-    //       x: "5BR",
-    //       y: marketTotalAvgLine5BR,
-    //     },
-    //   ],
-    // },
   ];
+
+  // const marketProfileLineChartData = [
+  //   {
+  //     id: "Average Market Price",
+  //     color: "hsl(79, 70%, 50%)",
+  //     data: [
+  //       {
+  //         x: "Studio",
+  //         y: marketTotalAvgLineStudio,
+  //       },
+  //       {
+  //         x: "1BR",
+  //         y: marketTotalAvgLine1BR,
+  //       },
+  //       {
+  //         x: "2BR",
+  //         y: marketTotalAvgLine2BR,
+  //       },
+  //       {
+  //         x: "3BR",
+  //         y: marketTotalAvgLine3BR,
+  //       },
+  //       {
+  //         x: "4BR",
+  //         y: marketTotalAvgLine4BR,
+  //       },
+  //       {
+  //         x: "5BR",
+  //         y: marketTotalAvgLine5BR,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     id: "Median Market Price",
+  //     color: "hsl(79, 70%, 50%)",
+  //     data: [
+  //       {
+  //         x: "Studio",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "Studio")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //       {
+  //         x: "1BR",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "1BR")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //       {
+  //         x: "2BR",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "2BR")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //       {
+  //         x: "3BR",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "3BR")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //       {
+  //         x: "4BR",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "4BR")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //       {
+  //         x: "5BR",
+  //         y:
+  //           medianCal(
+  //             filteredPropertyDetails
+  //               .filter((el) => el["Typology"] === "5BR")
+  //               .map((a) => {
+  //                 let val = a["Market Price"];
+  //                 return val;
+  //               })
+  //           ) || 0,
+  //       },
+  //     ],
+  //   },
+  //   // {
+  //   //   id: "Average Rental Yield",
+  //   //   color: "hsl(158, 49%, 47%)",
+  //   //   data: [
+  //   //     {
+  //   //       x: "Studio",
+  //   //       y: marketTotalAvgLineStudio,
+  //   //     },
+  //   //     {
+  //   //       x: "1BR",
+  //   //       y: marketTotalAvgLine1BR,
+  //   //     },
+  //   //     {
+  //   //       x: "2BR",
+  //   //       y: marketTotalAvgLine2BR,
+  //   //     },
+  //   //     {
+  //   //       x: "3BR",
+  //   //       y: marketTotalAvgLine3BR,
+  //   //     },
+  //   //     {
+  //   //       x: "4BR",
+  //   //       y: marketTotalAvgLine4BR,
+  //   //     },
+  //   //     {
+  //   //       x: "5BR",
+  //   //       y: marketTotalAvgLine5BR,
+  //   //     },
+  //   //   ],
+  //   // },
+  // ];
 
   const filterOptions = [
     {
@@ -861,11 +969,11 @@ const Area = () => {
       dataIndex: "propertyName",
       key: "propertyName",
     },
-    {
-      title: "Period Quarter",
-      dataIndex: "period",
-      key: "period",
-    },
+    // {
+    //   title: "Period Quarter",
+    //   dataIndex: "period",
+    //   key: "period",
+    // },
     {
       title: "Year",
       dataIndex: "year",
@@ -983,11 +1091,11 @@ const Area = () => {
               <StatisticCard
                 title={"Est. Market Size"}
                 value={`Ksh. ${
-                  (marketPriceTotal.toString().length > 9
-                    ? (marketPriceTotal / 10 ** 9).toFixed(1).toString() + "B"
-                    : marketPriceTotal.toString().length > 6
-                    ? (marketPriceTotal / 10 ** 6).toFixed(1).toString() + "m"
-                    : marketPriceTotal
+                  (marketSizeTotal.toString().length > 9
+                    ? (marketSizeTotal / 10 ** 9).toFixed(1).toString() + "B"
+                    : marketSizeTotal.toString().length > 6
+                    ? (marketSizeTotal / 10 ** 6).toFixed(1).toString() + "m"
+                    : marketSizeTotal
                   ).toLocaleString() || 0
                 }`}
               />
@@ -1032,10 +1140,10 @@ const Area = () => {
               style={{ height: "50vh", width: "100%" }}
             >
               <span className="font-base text-[#f3efe0] text-sm ">
-                Market Profile Analysis
+                Median of GRI/Sqm by Typology
               </span>{" "}
               <ResponsiveLine
-                data={marketProfileLineChartData}
+                data={medianGRISqmLine}
                 theme={theme}
                 margin={{ top: 50, right: 150, bottom: 50, left: 60 }}
                 xScale={{ type: "point" }}
