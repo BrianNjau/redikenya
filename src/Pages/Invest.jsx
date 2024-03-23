@@ -17,6 +17,7 @@ import {
   Space,
   Spin,
   Tooltip,
+  Drawer,
 } from "antd";
 import GlobalContext from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
@@ -47,6 +48,7 @@ const Invest = () => {
   const [filterSearchResults, setFilterSearchResults] = useState([]);
   const [isConfirmSearchModalOpen, setIsConfirmSearchModalOpen] =
     useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const { setHeaderHeight } = useContext(GlobalContext);
 
@@ -239,6 +241,12 @@ const Invest = () => {
       </Space>
     );
   };
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
 
   const mapContainerStyle = {
     minWidth: "17vh",
@@ -300,6 +308,7 @@ const Invest = () => {
           <FloatButton
             badge={{ dot: true }}
             icon={<QuestionCircleOutlined />}
+            onClick={showDrawer}
           />
         </Tooltip>
 
@@ -313,6 +322,38 @@ const Invest = () => {
       badge={{ dot: true }}
      
     /> */}
+
+      {/* PDI INSIGHTS DRAWER */}
+      <Drawer
+        title={
+          <span className="text-base">
+            Let PDI algorithms help you match properties based on specific
+            strategies{" "}
+          </span>
+        }
+        placement={"top"}
+        width={500}
+        onClose={onClose}
+        open={openDrawer}
+      >
+        <div>
+          <div
+            className="items-start h-full justify-center flex flex-col p-[4.5rem] bg-neonorange bg-no-repeat bg-right-bottom lg:p-12"
+            style={{
+              backgroundImage:
+                "url(/assets/img/webp/blog-post-layout-01-img-11.webp)",
+            }}
+          >
+            <i className="fas fa-quote-left text-white text-[32px] mb-[30px]"></i>
+            <h6 className="text-darkgray -tracking-[0.5px] w-full">
+              Style is a way to say who you are without having to speak
+            </h6>
+            <span className="font-serif uppercase text-md text-white">
+              Rachel Landin
+            </span>
+          </div>
+        </div>
+      </Drawer>
 
       {/* Section Start */}
       <section className="shopping-right-left-sidebar pt-0 py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] mt-8">
