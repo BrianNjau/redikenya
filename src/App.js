@@ -6,45 +6,40 @@ import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
 import GlobalContext from "./Context/Context";
 
-
-
-
-
-//Import pages 
-const LandingPage = lazy(() => import("./Pages/Landingpage"))
-const LoginRegister = lazy(() => import("./Pages/LoginRegister"))
-const AboutUs = lazy(() => import("./Pages/AboutUs"))
-const Economics = lazy(() => import("./Pages/Economics"))
-const Search = lazy(() => import("./Pages/Search"))
-const SearchResults = lazy(() => import("./Pages/SearchResults"))
-const Invest = lazy(() => import("./Pages/Invest"))
-const Area = lazy(() => import("./Pages/Area"))
-
+//Import pages
+const LandingPage = lazy(() => import("./Pages/Landingpage"));
+const LoginRegister = lazy(() => import("./Pages/LoginRegister"));
+const AboutUs = lazy(() => import("./Pages/AboutUs"));
+const Economics = lazy(() => import("./Pages/Economics"));
+const Search = lazy(() => import("./Pages/Search"));
+const SearchResults = lazy(() => import("./Pages/SearchResults"));
+const Invest = lazy(() => import("./Pages/Invest"));
+const Area = lazy(() => import("./Pages/Area"));
+const YHAlgoPage = lazy(() => import("./Pages/YHAlgoPage"));
 
 function App() {
-
   const [headerHeight, setHeaderHeight] = useState(0);
   const [footerHeight, setFooterHeight] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [customModal, setCustomModal] = useState({
     el: null,
-    isOpen: false
-  })
+    isOpen: false,
+  });
   const location = useLocation();
 
   // RetinaJS
   useEffect(() => {
-    window.addEventListener('load', retina(document.querySelectorAll('img')));
-  }, [])
+    window.addEventListener("load", retina(document.querySelectorAll("img")));
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
-      import("./Functions/Utilities").then(module => {
-        module.SetHeaderMenuPos()
-        module.setDocumentFullHeight()
-      })
+      import("./Functions/Utilities").then((module) => {
+        module.SetHeaderMenuPos();
+        module.setDocumentFullHeight();
+      });
     }, 1000);
-  }, [location])
+  }, [location]);
 
   useEffect(() => {
     if (isModalOpen === true) {
@@ -65,50 +60,51 @@ function App() {
     setCustomModal({
       ...customModal,
       el: null,
-      isOpen: false
-    })
+      isOpen: false,
+    });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
-  
-
   return (
     <GlobalContext.Provider
-    value={{
-      headerHeight,
-      setHeaderHeight,
-      footerHeight,
-      setFooterHeight,
-      isModalOpen,
-      setIsModalOpen,
-      customModal,
-      setCustomModal,
-    }}
-  >
-    
-    <div
-     className="App" style={{ "--header-height": `${headerHeight}px` }}
-     >
-    {
-     <main  style={{ marginTop: headerHeight, marginBottom: footerHeight }} >
-     <AnimatePresence exitBeforeEnter>
-     <Suspense fallback={<></>}>
-      <Routes>
-        <Route path="/" element={<LandingPage style={{ "--base-color": "#e6994e" }}   />} />
-        <Route path="login-register" element={<LoginRegister />} />
-        <Route path="about-us" element={<AboutUs />} />
-        <Route path="economics" element={<Economics />} />
-        <Route path="search" element={<Search />} />
-        <Route path="search-results" element={<SearchResults />} />
-        <Route path="invest" element={<Invest />} />
-        <Route path="area-data" element={<Area />} />
-      </Routes>
-     </Suspense>
-     </AnimatePresence>
-     </main>
-    }
-    </div>
+      value={{
+        headerHeight,
+        setHeaderHeight,
+        footerHeight,
+        setFooterHeight,
+        isModalOpen,
+        setIsModalOpen,
+        customModal,
+        setCustomModal,
+      }}
+    >
+      <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
+        {
+          <main style={{ marginTop: headerHeight, marginBottom: footerHeight }}>
+            <AnimatePresence exitBeforeEnter>
+              <Suspense fallback={<></>}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <LandingPage style={{ "--base-color": "#e6994e" }} />
+                    }
+                  />
+                  <Route path="login-register" element={<LoginRegister />} />
+                  <Route path="about-us" element={<AboutUs />} />
+                  <Route path="economics" element={<Economics />} />
+                  <Route path="search" element={<Search />} />
+                  <Route path="search-results" element={<SearchResults />} />
+                  <Route path="invest" element={<Invest />} />
+                  <Route path="area-data" element={<Area />} />
+                  <Route path="yield-pdi-insights" element={<YHAlgoPage />} />
+                </Routes>
+              </Suspense>
+            </AnimatePresence>
+          </main>
+        }
+      </div>
     </GlobalContext.Provider>
   );
 }

@@ -18,6 +18,8 @@ import {
   Spin,
   Tooltip,
   Drawer,
+  Row as RowAnt,
+  Col as ColAnt,
 } from "antd";
 import GlobalContext from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
@@ -33,6 +35,11 @@ import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MapPin from "../Assets/img/CilLocationPin.svg";
 import InvestIcon from "../Assets/img/investIcon.svg";
 import SearchInvest from "../Assets/img/searchInvest.svg";
+import YieldImage from "../Assets/img/yield.svg";
+import priceInv from "../Assets/img/pricedInv.svg";
+import griImage from "../Assets/img/gri.svg";
+import offImage from "../Assets/img/offocc.svg";
+import { Link } from "react-router-dom";
 
 const Invest = () => {
   const [hasSearched, setHasSearched] = useState(false);
@@ -336,23 +343,73 @@ const Invest = () => {
         onClose={onClose}
         open={openDrawer}
       >
-        <div>
-          <div
-            className="items-start h-full justify-center flex flex-col p-[4.5rem] bg-neonorange bg-no-repeat bg-right-bottom lg:p-12"
-            style={{
-              backgroundImage:
-                "url(/assets/img/webp/blog-post-layout-01-img-11.webp)",
-            }}
-          >
-            <i className="fas fa-quote-left text-white text-[32px] mb-[30px]"></i>
-            <h6 className="text-darkgray -tracking-[0.5px] w-full">
-              Style is a way to say who you are without having to speak
-            </h6>
-            <span className="font-serif uppercase text-md text-white">
-              Rachel Landin
-            </span>
-          </div>
-        </div>
+        <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <ColAnt className="gutter-row" span={6}>
+            <Link to="/yield-pdi-insights">
+              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
+                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
+                <div className="">
+                  <img
+                    src={YieldImage}
+                    className="h-32 mb-4"
+                    alt="yield hotspot"
+                  />
+                  <h6 className=" text-[#3eb489] text-lg">Yield Hotspots</h6>
+                </div>
+                <span className="text-sm text-white mt-0">
+                  Properties for sale with the highest estimated rental yields
+                </span>
+              </div>
+            </Link>
+          </ColAnt>
+
+          <ColAnt className="gutter-row" span={6}>
+            <Link>
+              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
+                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
+                <div className="">
+                  <img
+                    src={priceInv}
+                    className="h-32 mb-4"
+                    alt="least price/sqm"
+                  />
+                  <h6 className=" text-[#3eb489] text-lg">Least Price/Sqm</h6>
+                </div>
+                <span className="text-sm text-white mt-0">
+                  Properties with the least priced Ksh/sqm
+                </span>
+              </div>
+            </Link>
+          </ColAnt>
+          <ColAnt className="gutter-row" span={6}>
+            <Link>
+              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
+                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
+                <div className="">
+                  <img src={griImage} className="h-32 mb-4" alt="gri/sqm" />
+                  <h6 className=" text-[#3eb489] text-lg">Highest GRI/Sqm</h6>
+                </div>
+                <span className="text-sm text-white mt-0">
+                  Properties with the highest gross rental income per sqm
+                </span>
+              </div>
+            </Link>
+          </ColAnt>
+          <ColAnt className="gutter-row" span={6}>
+            <Link>
+              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
+                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
+                <div className="">
+                  <img src={offImage} className="h-32 mb-4" alt="sale type" />
+                  <h6 className=" text-[#3eb489] text-lg">Sale type</h6>
+                </div>
+                <span className="text-sm text-white mt-0">
+                  View off-plan and occupation-ready properties
+                </span>
+              </div>
+            </Link>
+          </ColAnt>
+        </RowAnt>
       </Drawer>
 
       {/* Section Start */}
@@ -385,7 +442,7 @@ const Invest = () => {
                 <div>
                   <div>
                     <span className="float-right text-sm mb-12">
-                      Found results: {filterSearchResults.length}
+                      Found results: {filterSearchResults.length} units
                     </span>
                     <br />
                     <hr />
