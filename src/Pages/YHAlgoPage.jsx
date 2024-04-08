@@ -4,7 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { fadeIn, fadeInLeft, fadeInRight } from "../Functions/GlobalAnimations";
 import Overlap from "../Components/Overlap";
 import { TiltBox } from "../Components/TiltBox";
-import YieldImg from "../Assets/img/yieldImg.svg";
+
 import { Link } from "react-router-dom";
 import Buttons from "../Components/Buttons";
 const YHAlgoPage = () => {
@@ -29,12 +29,12 @@ const YHAlgoPage = () => {
                   <div className="mx-auto w-[1px] h-[110px] bg-black relative top-[25px]"></div>
                   <div className="text-start p-[6.5rem] bg-darkgray flex items-start flex-col justify-center lg:p-[52px] sm:py-16 sm:px-28 xs:p-16">
                     <h6 className="font-serif text-white w-[90%]">
-                      Rental yield refers to the annual return you get on a
-                      rental property, expressed as a percentage. It's basically
-                      a way to measure the profitability of a rental investment
+                      From your search, blablabl abalbal balba brlbds
+                      eddbdujbcsdccds sdc sdvc sdv sf f d fwe f fv sdf sd sd fsd
+                      f sdf ds f0 fsffwsf refwerfwse fwer fw e fweffwedf c
                     </h6>
                     <span className="font-serif uppercase -tracking-[1px] font-medium">
-                      PDI MARKETPLACE STRATEGIES
+                      PDI MARKETPLACE KENYA
                     </span>
                   </div>
                 </TiltBox>
@@ -50,7 +50,7 @@ const YHAlgoPage = () => {
                       a way to measure the profitability of a rental investment
                     </h6>
                     <span className="font-serif uppercase -tracking-[1px] font-medium">
-                      PDI MARKETPLACE STRATEGIES
+                      PDI MARKETPLACE KENYA
                     </span>
                   </div>
                   <div className="mx-auto w-[1px] h-[110px] bg-black relative top-[-25px]"></div>

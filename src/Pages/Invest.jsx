@@ -39,6 +39,9 @@ import YieldImage from "../Assets/img/yield.svg";
 import priceInv from "../Assets/img/pricedInv.svg";
 import griImage from "../Assets/img/gri.svg";
 import offImage from "../Assets/img/offocc.svg";
+import yHImage from "../Assets/img/yht.svg";
+import LsqImage from "../Assets/img/lsqm.svg";
+import HGRIImage from "../Assets/img/hgri.svg";
 import { Link } from "react-router-dom";
 
 const Invest = () => {
@@ -56,6 +59,7 @@ const Invest = () => {
   const [isConfirmSearchModalOpen, setIsConfirmSearchModalOpen] =
     useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [isAlgorithmModalOpen, setAlgorithmIsModalOpen] = useState(false);
 
   const { setHeaderHeight } = useContext(GlobalContext);
 
@@ -96,6 +100,18 @@ const Invest = () => {
       console.log(err);
     }
   }
+
+  const showAlgorithmModal = () => {
+    setAlgorithmIsModalOpen(true);
+  };
+
+  const handleAlgorithmModalOk = () => {
+    setAlgorithmIsModalOpen(false);
+  };
+
+  const handleAlgorithmModalCancel = () => {
+    setAlgorithmIsModalOpen(false);
+  };
 
   const marketPrices = propData.map((val) => val["Market Price"]);
   const rents = propData.map((val) => val["Rent"]);
@@ -315,7 +331,7 @@ const Invest = () => {
           <FloatButton
             badge={{ dot: true }}
             icon={<QuestionCircleOutlined />}
-            onClick={showDrawer}
+            onClick={showAlgorithmModal}
           />
         </Tooltip>
 
@@ -329,6 +345,110 @@ const Invest = () => {
       badge={{ dot: true }}
      
     /> */}
+
+      <Modal
+        // title="Basic Modal"
+        open={isAlgorithmModalOpen}
+        onOk={handleAlgorithmModalOk}
+        onCancel={handleAlgorithmModalCancel}
+        width={1350}
+        footer={null}
+        className=""
+      >
+        {/* <!-- main card --> */}
+        <div className="m-4 rounded-xl">
+          {/* <!-- headers content--> */}
+          <div className="p-4 flex flex-col justify-center items-center text-center">
+            <span className="font-bold font-sans text-xlg">
+              Let our algorithms help you match properties based on specific
+              strategies
+            </span>
+            <div className="font-light max-w-lg mt-5 text-sm">
+              PDI Algorithms will analyze properties based on the searched
+              investment results and apply the selected strategy
+            </div>
+          </div>
+
+          {/* <!-- subscriptions --> */}
+          <RowAnt className="" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
+              <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96  md:w-auto">
+                <img src={yHImage} className="w-24 h-16" alt="Yield Hotspots" />
+                <div className="mt-3 font-semibold text-lg">Yield Hotspots</div>
+                <div className="text-sm font-light">
+                  Properties with the highest estimated rental yields
+                </div>
+                <div className="my-4">
+                  <span className="font-bold text-base">Greater than 9%</span>
+                  <span className="font-light text-sm"> Rental Yield</span>
+                </div>
+
+                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                  Search
+                </button>
+              </div>
+            </ColAnt>
+
+            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
+              <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96 h-84 md:w-auto">
+                <img
+                  src={LsqImage}
+                  className="w-24 h-16 "
+                  alt="Least price per sqm"
+                />
+                <div className="mt-3 font-semibold text-lg">
+                  Least Price/Sqm
+                </div>
+                <div className="text-sm font-light w-60 md:w-auto">
+                  Search the least priced Ksh/sqm
+                </div>
+                <div className="my-4">
+                  <span className="font-bold text-base">
+                    Lower than ksh/sqm
+                  </span>
+                  <span className="font-light text-sm"> average</span>
+                </div>
+
+                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                  Search
+                </button>
+              </div>
+            </ColAnt>
+
+            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
+              <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96 h-84 md:w-auto">
+                <img
+                  src={HGRIImage}
+                  className="w-24 h-16"
+                  alt="Highest GRI/Sqm"
+                />
+                <div className="mt-3 font-semibold text-lg">
+                  Highest GRI/Sqm
+                </div>
+                <div className="text-sm font-light w-60 md:w-auto">
+                  Search the highest gri / sqm
+                </div>
+                <div className="my-4">
+                  <span className="font-bold text-base">
+                    Greater than gri/sqm
+                  </span>
+                  <span className="font-light text-sm"> average</span>
+                </div>
+
+                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                  Search
+                </button>
+              </div>
+            </ColAnt>
+          </RowAnt>
+
+          {/* <div className="flex justify-center">
+              <button className="mt-12 bg-slate-900 text-white px-4 rounded-full py-3">
+                See all subscriptions
+              </button>
+            </div> */}
+        </div>
+      </Modal>
 
       {/* PDI INSIGHTS DRAWER */}
       <Drawer

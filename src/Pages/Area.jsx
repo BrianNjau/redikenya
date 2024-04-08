@@ -1537,6 +1537,8 @@ const Area = () => {
                           .includes(prop["Property ID"])
                       ) {
                         return prop;
+                      } else {
+                        return null;
                       }
                     })
                     .map((a) => a["number_of_units"])
