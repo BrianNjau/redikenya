@@ -10,12 +10,11 @@
   @screen xs {
     padding: 10px 10px;
   }
-
 }
 
 //Dropscaps style 02
 .dropcaps-style02 span {
-  @apply font-medium bg-darkgray text-center;
+  @apply font-medium bg-[#08415c] text-center;
   float: left;
   font-size: 30px;
   height: 55px;

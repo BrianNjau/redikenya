@@ -17,9 +17,9 @@ import {
   Space,
   Spin,
   Tooltip,
-  Drawer,
   Row as RowAnt,
   Col as ColAnt,
+  ConfigProvider,
 } from "antd";
 import GlobalContext from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
@@ -35,14 +35,11 @@ import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MapPin from "../Assets/img/CilLocationPin.svg";
 import InvestIcon from "../Assets/img/investIcon.svg";
 import SearchInvest from "../Assets/img/searchInvest.svg";
-import YieldImage from "../Assets/img/yield.svg";
-import priceInv from "../Assets/img/pricedInv.svg";
-import griImage from "../Assets/img/gri.svg";
-import offImage from "../Assets/img/offocc.svg";
+
 import yHImage from "../Assets/img/yht.svg";
 import LsqImage from "../Assets/img/lsqm.svg";
 import HGRIImage from "../Assets/img/hgri.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Invest = () => {
   const [hasSearched, setHasSearched] = useState(false);
@@ -64,6 +61,7 @@ const Invest = () => {
   const { setHeaderHeight } = useContext(GlobalContext);
 
   const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
+  const navigate = useNavigate();
 
   useEffect(() => {
     setHeaderHeight(120);
@@ -113,9 +111,10 @@ const Invest = () => {
     setAlgorithmIsModalOpen(false);
   };
 
-  const marketPrices = propData.map((val) => val["Market Price"]);
-  const rents = propData.map((val) => val["Rent"]);
-  const locations = [...new Set(propOverview.map((val) => val["Location"]))];
+  const marketPrices = propData.map((val) => val["Market Price"]) || [];
+  const rents = propData.map((val) => val["Rent"]) || [];
+  const locations =
+    [...new Set(propOverview.map((val) => val["Location"]))] || [];
 
   const handleMarketPricePicker = (marketPrices) => {
     setSelectedMarketPrice(marketPrices);
@@ -264,12 +263,6 @@ const Invest = () => {
       </Space>
     );
   };
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-  const onClose = () => {
-    setOpenDrawer(false);
-  };
 
   const mapContainerStyle = {
     minWidth: "17vh",
@@ -284,7 +277,30 @@ const Invest = () => {
   });
 
   return (
-    <div>
+    <ConfigProvider
+      theme={{
+        components: {
+          Slider: {
+            dotActiveBorderColor: "#3eb489",
+            handleActiveColor: "#08415c",
+            handleColor: "#08415c",
+            trackBg: "#3eb489",
+            trackHoverBg: "#3eb489",
+            colorPrimaryBorderHover: "#08415c",
+          },
+          Button: {
+            colorPrimaryHover: "#3eb489",
+          },
+          Select: {
+            colorPrimaryHover: "#3eb489",
+          },
+          Checkbox: {
+            colorPrimaryHover: "#3eb489",
+            colorPrimary: "#08415c",
+          },
+        },
+      }}
+    >
       <GlobalHeader theme="light" />
       {/* TO DO Make this section a component */}
       <section className="bg-lightgray py-[25px]">
@@ -339,12 +355,8 @@ const Invest = () => {
           <FloatButton badge={{ dot: true }} icon={<CodeOutlined />} />
         </Tooltip>
       </FloatButton.Group>
-      {/* <FloatButton
-      icon={<MonitorOutlined />}
-      type="default"
-      badge={{ dot: true }}
-     
-    /> */}
+
+      {/* PDI INSIGHTS DRAWER */}
 
       <Modal
         // title="Basic Modal"
@@ -370,8 +382,8 @@ const Invest = () => {
           </div>
 
           {/* <!-- subscriptions --> */}
-          <RowAnt className="" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
+          <RowAnt className="mb-20" gutter={{ xs: 4, sm: 16, md: 24, lg: 32 }}>
+            <ColAnt span={7} className="bg-[#08415c] rounded-xl gutter-row m-4">
               <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96  md:w-auto">
                 <img src={yHImage} className="w-24 h-16" alt="Yield Hotspots" />
                 <div className="mt-3 font-semibold text-lg">Yield Hotspots</div>
@@ -383,14 +395,27 @@ const Invest = () => {
                   <span className="font-light text-sm"> Rental Yield</span>
                 </div>
 
-                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                <button
+                  onClick={() =>
+                    navigate("/yield-pdi-insights", {
+                      state: {
+                        investData: filterSearchResults,
+                        propOverview: propOverview,
+                      },
+                    })
+                  }
+                  style={{
+                    textAlign: "center",
+                  }}
+                  className="bg-[#08415c] text-[#f3efe0]  font-bold px-4 py-3 rounded-full hover:text-[#3eb489]  border border-[#F0F0F6] shadow-xl mt-4"
+                >
                   Search
                 </button>
               </div>
             </ColAnt>
 
-            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
-              <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96 h-84 md:w-auto">
+            <ColAnt span={7} className="bg-[#08415c] rounded-xl gutter-row m-4">
+              <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96 h-84 sm:w-auto md:w-auto">
                 <img
                   src={LsqImage}
                   className="w-24 h-16 "
@@ -409,33 +434,54 @@ const Invest = () => {
                   <span className="font-light text-sm"> average</span>
                 </div>
 
-                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                <button
+                  onClick={() =>
+                    navigate("/price-sqm-pdi-insights", {
+                      state: {
+                        investData: filterSearchResults,
+                        propOverview: propOverview,
+                      },
+                    })
+                  }
+                  style={{
+                    textAlign: "center",
+                  }}
+                  className="bg-[#08415c] text-[#f3efe0] hover:text-[#3eb489] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4"
+                >
                   Search
                 </button>
               </div>
             </ColAnt>
 
-            <ColAnt span={7} className="bg-[#7E989E] rounded-xl gutter-row m-4">
+            <ColAnt
+              span={7}
+              className="bg-[#08415c] rounded-xl  gutter-row m-4"
+            >
               <div className="flex flex-col p-8 rounded-xl bg-white shadow-xl translate-x-4 translate-y-4 w-96 h-84 md:w-auto">
-                <img
-                  src={HGRIImage}
-                  className="w-24 h-16"
-                  alt="Highest GRI/Sqm"
-                />
-                <div className="mt-3 font-semibold text-lg">
-                  Highest GRI/Sqm
-                </div>
+                <img src={HGRIImage} className="w-24 h-16" alt="Low GRM" />
+                <div className="mt-3 font-semibold text-lg">Low GRM</div>
                 <div className="text-sm font-light w-60 md:w-auto">
-                  Search the highest gri / sqm
+                  Search the lowest gross rent multiplier
                 </div>
                 <div className="my-4">
-                  <span className="font-bold text-base">
-                    Greater than gri/sqm
-                  </span>
+                  <span className="font-bold text-base">Lower than GRM</span>
                   <span className="font-light text-sm"> average</span>
                 </div>
 
-                <button className="bg-[#08415c] text-[#f3efe0] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4">
+                <button
+                  onClick={() =>
+                    navigate("/grm-pdi-insights", {
+                      state: {
+                        investData: filterSearchResults,
+                        propOverview: propOverview,
+                      },
+                    })
+                  }
+                  style={{
+                    textAlign: "center",
+                  }}
+                  className="bg-[#08415c] text-[#f3efe0] hover:text-[#3eb489] font-bold px-4 py-3 rounded-full  border border-[#F0F0F6] shadow-xl mt-4"
+                >
                   Search
                 </button>
               </div>
@@ -449,88 +495,6 @@ const Invest = () => {
             </div> */}
         </div>
       </Modal>
-
-      {/* PDI INSIGHTS DRAWER */}
-      <Drawer
-        title={
-          <span className="text-base">
-            Let PDI algorithms help you match properties based on specific
-            strategies{" "}
-          </span>
-        }
-        placement={"top"}
-        width={500}
-        onClose={onClose}
-        open={openDrawer}
-      >
-        <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <ColAnt className="gutter-row" span={6}>
-            <Link to="/yield-pdi-insights">
-              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
-                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
-                <div className="">
-                  <img
-                    src={YieldImage}
-                    className="h-32 mb-4"
-                    alt="yield hotspot"
-                  />
-                  <h6 className=" text-[#3eb489] text-lg">Yield Hotspots</h6>
-                </div>
-                <span className="text-sm text-white mt-0">
-                  Properties for sale with the highest estimated rental yields
-                </span>
-              </div>
-            </Link>
-          </ColAnt>
-
-          <ColAnt className="gutter-row" span={6}>
-            <Link>
-              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
-                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
-                <div className="">
-                  <img
-                    src={priceInv}
-                    className="h-32 mb-4"
-                    alt="least price/sqm"
-                  />
-                  <h6 className=" text-[#3eb489] text-lg">Least Price/Sqm</h6>
-                </div>
-                <span className="text-sm text-white mt-0">
-                  Properties with the least priced Ksh/sqm
-                </span>
-              </div>
-            </Link>
-          </ColAnt>
-          <ColAnt className="gutter-row" span={6}>
-            <Link>
-              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
-                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
-                <div className="">
-                  <img src={griImage} className="h-32 mb-4" alt="gri/sqm" />
-                  <h6 className=" text-[#3eb489] text-lg">Highest GRI/Sqm</h6>
-                </div>
-                <span className="text-sm text-white mt-0">
-                  Properties with the highest gross rental income per sqm
-                </span>
-              </div>
-            </Link>
-          </ColAnt>
-          <ColAnt className="gutter-row" span={6}>
-            <Link>
-              <div className=" relative cover-background p-4 bg-[#08415c] bg-no-repeat bg-right-bottom">
-                <div className="absolute top-0 left-0 h-full w-full hover:opacity-30 hover:bg-darkgray"></div>
-                <div className="">
-                  <img src={offImage} className="h-32 mb-4" alt="sale type" />
-                  <h6 className=" text-[#3eb489] text-lg">Sale type</h6>
-                </div>
-                <span className="text-sm text-white mt-0">
-                  View off-plan and occupation-ready properties
-                </span>
-              </div>
-            </Link>
-          </ColAnt>
-        </RowAnt>
-      </Drawer>
 
       {/* Section Start */}
       <section className="shopping-right-left-sidebar pt-0 py-[130px] lg:py-[90px] md:py-[75px] sm:py-[50px] mt-8">
@@ -895,6 +859,7 @@ const Invest = () => {
                   loading={filterSearchLoading}
                   onClick={showConfirmModal}
                   className="w-full"
+                  // type="primary"
                 >
                   Search
                 </Button>
@@ -910,7 +875,7 @@ const Invest = () => {
         </Container>
       </section>
       {/* Section End */}
-    </div>
+    </ConfigProvider>
   );
 };
 

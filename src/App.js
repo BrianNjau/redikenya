@@ -16,6 +16,8 @@ const SearchResults = lazy(() => import("./Pages/SearchResults"));
 const Invest = lazy(() => import("./Pages/Invest"));
 const Area = lazy(() => import("./Pages/Area"));
 const YHAlgoPage = lazy(() => import("./Pages/YHAlgoPage"));
+const LPAlgoPage = lazy(() => import("./Pages/LPAlgoPage.jsx"));
+const GRMAlgoPage = lazy(() => import("./Pages/GRMAlgoPage.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -99,6 +101,11 @@ function App() {
                   <Route path="invest" element={<Invest />} />
                   <Route path="area-data" element={<Area />} />
                   <Route path="yield-pdi-insights" element={<YHAlgoPage />} />
+                  <Route
+                    path="price-sqm-pdi-insights"
+                    element={<LPAlgoPage />}
+                  />
+                  <Route path="grm-pdi-insights" element={<GRMAlgoPage />} />
                 </Routes>
               </Suspense>
             </AnimatePresence>
