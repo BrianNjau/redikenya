@@ -3,7 +3,7 @@ import GlobalHeader from "../Components/GlobalHeader";
 import { Col, Container, Row } from "react-bootstrap";
 import Typed from "react-typed";
 import { fadeIn } from "../Functions/GlobalAnimations";
-
+// import { MockResponse } from "@/ProChat/mocks/streamResponse";
 import MultiRangeSlider from "../Components/MultiRangeSlider";
 import {
   Checkbox,
@@ -17,6 +17,7 @@ import {
   Space,
   Spin,
   Tooltip,
+  Drawer,
   Row as RowAnt,
   Col as ColAnt,
   ConfigProvider,
@@ -40,6 +41,9 @@ import yHImage from "../Assets/img/yht.svg";
 import LsqImage from "../Assets/img/lsqm.svg";
 import HGRIImage from "../Assets/img/hgri.svg";
 import { Link, useNavigate } from "react-router-dom";
+import { ProChat } from "@ant-design/pro-chat";
+import OpenAI from "openai";
+import { OpenAIStream, StreamingTextResponse } from "ai";
 
 const Invest = () => {
   const [hasSearched, setHasSearched] = useState(false);
@@ -61,7 +65,16 @@ const Invest = () => {
   const { setHeaderHeight } = useContext(GlobalContext);
 
   const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
+  const openAIKEY = process.env.REACT_APP_OPENAPIKEY;
   const navigate = useNavigate();
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+
+  const onCloseDrawer = () => {
+    setOpenDrawer(false);
+  };
 
   useEffect(() => {
     setHeaderHeight(120);
@@ -276,6 +289,73 @@ const Invest = () => {
     googleMapsApiKey: mapsApi,
   });
 
+  // AI SETUP
+
+  async function HandleAIMessages(messages) {
+    try {
+      const openai = new OpenAI({
+        apiKey: openAIKEY,
+        dangerouslyAllowBrowser: true,
+      });
+      // Ensure the messages format is appropriate for ChatGPT
+      const formattedMessages = [
+        {
+          role: "system",
+          content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this context. Context: ${JSON.stringify(
+            filterSearchResults
+          )}, and if the question can't be answered based on the context, say "Your question is not related to the investment search"\n\n`,
+        },
+        ...messages.map((message) => ({
+          role: "user", // Assuming all other messages are from the user
+          content: message.content,
+        })),
+      ];
+      // Make a request to your ChatGPT API endpoint with streaming enabled
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo", // Specify the model you want to use
+        messages: formattedMessages,
+        stream: true,
+      });
+
+      // Create a stream from the response and pipe it to the ProChat component
+      const stream = OpenAIStream(response);
+      return new StreamingTextResponse(stream);
+      // stream.pipe(onMessagesReceived);
+    } catch (err) {
+      console.log("Chat Error: ", err);
+      // throw err;
+    }
+
+    // const { messages = [] } = await request.json();
+
+    // const openai = new OpenAI({
+    //   apiKey: openAIKEY, // your openai key
+    //   // baseURL: "base url", // if u dont need change baseUrl，you can delete this line
+    // });
+
+    // const PickMessages = messages.map((message) => {
+    //   return {
+    //     role: message.role,
+    //     content: message.content,
+    //   };
+    // });
+
+    // const response = await openai.chat.completions.create({
+    //   model: "gpt-3.5-turbo",
+    //   messages: [
+    //     {
+    //       role: "system",
+    //       content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this context. Context: ${filterSearchResults}, and if the question can't be answered based on the context, say "Your question is not related to the investment search"\n\n`,
+    //     },
+    //     ...PickMessages,
+    //   ],
+    //   stream: true,
+    // });
+
+    // const stream = OpenAIStream(response);
+    // return new StreamingTextResponse(stream);
+  }
+
   return (
     <ConfigProvider
       theme={{
@@ -352,11 +432,29 @@ const Invest = () => {
         </Tooltip>
 
         <Tooltip title="Let our AI analyze your results">
-          <FloatButton badge={{ dot: true }} icon={<CodeOutlined />} />
+          <FloatButton
+            badge={{ dot: true }}
+            icon={<CodeOutlined />}
+            onClick={showDrawer}
+          />
         </Tooltip>
       </FloatButton.Group>
 
       {/* PDI INSIGHTS DRAWER */}
+
+      <Drawer
+        title="Analyze your results with PDI AI"
+        onClose={onCloseDrawer}
+        open={openDrawer}
+      >
+        <ProChat
+          locale="en-US"
+          helloMessage={
+            "Greetings, welcome to PDI AI. Let me help you understand PDI data and your search results."
+          }
+          request={HandleAIMessages}
+        />
+      </Drawer>
 
       <Modal
         // title="Basic Modal"
