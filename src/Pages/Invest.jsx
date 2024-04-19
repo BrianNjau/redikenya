@@ -270,7 +270,7 @@ const Invest = () => {
         };
       });
       // console.log("FILTERED By Typology", typologyFiltered);
-      console.log("enrichedData", enrichedData);
+      // console.log("enrichedData", enrichedData);
       setFilterSearchResults(enrichedData);
       setFilterSearchLoading(false);
       setHasSearched(true);
@@ -335,7 +335,7 @@ const Invest = () => {
       ];
       // Make a request to your ChatGPT API endpoint with streaming enabled
       const response = await openai.chat.completions.create({
-        model: "gpt-4-turbo", // Specify the model you want to use
+        model: "gpt-3.5-turbo", // Specify the model you want to use
         messages: [...formattedMessages],
         // stream: true,
       });
