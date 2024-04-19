@@ -44,7 +44,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-
+import { useCompletion } from "ai/react";
+import { useChatCompletion } from "openai-streaming-hooks";
 const Invest = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const [loadingPropData, setLoadingPropData] = useState([]);
@@ -229,26 +230,48 @@ const Invest = () => {
         selectedMarketPrice,
         "Market Price"
       ); // filter by marketprice
-      console.log("MarketPrice filtered result", filterByMarketPrice);
+      // console.log("MarketPrice filtered result", filterByMarketPrice);
       const filterByRent = filterByValue(
         filterByMarketPrice.filtered,
         selectedRentPrice,
         "Rent"
       );
-      console.log("Rent filtered result", filterByRent);
+      // console.log("Rent filtered result", filterByRent);
       const locationFiltered = filterByLocation(
         filterByRent.filtered,
         selectedLocation,
         propOverview
       );
-      console.log("FILTERED WITH LOcation", locationFiltered);
+      // console.log("FILTERED WITH LOcation", locationFiltered);
       const typologyFiltered = filterByTypology(
         locationFiltered,
         selectedTypology
       );
-      console.log("FILTERED By Typology", typologyFiltered);
-      console.log("prop overview", propOverview);
-      setFilterSearchResults(typologyFiltered);
+
+      const enrichedData = typologyFiltered.map((el) => {
+        let locationName = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Name"];
+        let location = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Location"];
+        let road = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Road"];
+        let saleType = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Sale type"];
+
+        return {
+          propertyName: locationName,
+          location: location,
+          road: road,
+          ...el,
+        };
+      });
+      // console.log("FILTERED By Typology", typologyFiltered);
+      console.log("enrichedData", enrichedData);
+      setFilterSearchResults(enrichedData);
       setFilterSearchLoading(false);
       setHasSearched(true);
     } catch (error) {
@@ -290,8 +313,8 @@ const Invest = () => {
   });
 
   // AI SETUP
-
   async function HandleAIMessages(messages) {
+    console.log("messages", messages);
     try {
       const openai = new OpenAI({
         apiKey: openAIKEY,
@@ -301,9 +324,9 @@ const Invest = () => {
       const formattedMessages = [
         {
           role: "system",
-          content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this context. Context: ${JSON.stringify(
+          content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this JSON context.\n\n Context: ${JSON.stringify(
             filterSearchResults
-          )}, and if the question can't be answered based on the context, say "Your question is not related to the investment search"\n\n`,
+          )}\n\n and if the question can't be answered based on the context, say "Your question is not related to the investment search."\n\n`,
         },
         ...messages.map((message) => ({
           role: "user", // Assuming all other messages are from the user
@@ -312,48 +335,23 @@ const Invest = () => {
       ];
       // Make a request to your ChatGPT API endpoint with streaming enabled
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo", // Specify the model you want to use
-        messages: formattedMessages,
-        stream: true,
+        model: "gpt-4-turbo", // Specify the model you want to use
+        messages: [...formattedMessages],
+        // stream: true,
       });
 
+      return new Response(response.choices[0].message["content"]);
+
       // Create a stream from the response and pipe it to the ProChat component
-      const stream = OpenAIStream(response);
-      return new StreamingTextResponse(stream);
-      // stream.pipe(onMessagesReceived);
+      // const stream = OpenAIStream(response);
+
+      // // console.log("Stream", stream);
+      // return new StreamingTextResponse(stream, {
+      //   headers: { "Content-Type": "text/plain; charset=utf-8" },
+      // });
     } catch (err) {
       console.log("Chat Error: ", err);
-      // throw err;
     }
-
-    // const { messages = [] } = await request.json();
-
-    // const openai = new OpenAI({
-    //   apiKey: openAIKEY, // your openai key
-    //   // baseURL: "base url", // if u dont need change baseUrl，you can delete this line
-    // });
-
-    // const PickMessages = messages.map((message) => {
-    //   return {
-    //     role: message.role,
-    //     content: message.content,
-    //   };
-    // });
-
-    // const response = await openai.chat.completions.create({
-    //   model: "gpt-3.5-turbo",
-    //   messages: [
-    //     {
-    //       role: "system",
-    //       content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this context. Context: ${filterSearchResults}, and if the question can't be answered based on the context, say "Your question is not related to the investment search"\n\n`,
-    //     },
-    //     ...PickMessages,
-    //   ],
-    //   stream: true,
-    // });
-
-    // const stream = OpenAIStream(response);
-    // return new StreamingTextResponse(stream);
   }
 
   return (
@@ -443,16 +441,20 @@ const Invest = () => {
       {/* PDI INSIGHTS DRAWER */}
 
       <Drawer
-        title="Analyze your results with PDI AI"
+        size="large"
+        title="PDI AI"
         onClose={onCloseDrawer}
         open={openDrawer}
       >
         <ProChat
           locale="en-US"
           helloMessage={
-            "Greetings, welcome to PDI AI. Let me help you understand PDI data and your search results."
+            "Greetings, I am your PDI assistant. Let me help you understand invest search results."
           }
-          request={HandleAIMessages}
+          request={async (message) => {
+            const response = await HandleAIMessages(message);
+            return response;
+          }}
         />
       </Drawer>
 

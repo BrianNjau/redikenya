@@ -10158,6 +10158,13 @@ open@^8.0.9, open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
+openai-streaming-hooks@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/openai-streaming-hooks/-/openai-streaming-hooks-2.0.0.tgz#fc0afdf3929d45fc5a525fa6ffeded7682ca4da3"
+  integrity sha512-HV5t04bZLAMRkphVtrQCpNmohnt5soNNuHeHicc+Sy1IR/gsmyIPv3PSdLNihHUj4j2ObqgoxT9HWJ49oc99Ow==
+  dependencies:
+    react "^18.2.0"
+
 openai@^4.33.1:
   version "4.35.0"
   resolved "https://registry.yarnpkg.com/openai/-/openai-4.35.0.tgz#3a9fa95e87d18df73ef3ff03ed40bd7b4e7770e9"
@@ -11969,7 +11976,7 @@ react-window@^1.8.10:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
 
-react@^18.1.0:
+react@^18.1.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
