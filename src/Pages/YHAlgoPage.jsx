@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import GlobalContext from "../Context/Context";
+import { GlobalContext } from "../Context/Context";
 import { Col, Container, Row } from "react-bootstrap";
 import { fadeIn } from "../Functions/GlobalAnimations";
 import Overlap from "../Components/Overlap";

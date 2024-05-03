@@ -25,7 +25,7 @@ import {
 import { useState } from "react";
 import "./search.css";
 import { useContext } from "react";
-import GlobalContext from "../Context/Context";
+import { GlobalContext } from "../Context/Context";
 import { useEffect } from "react";
 import {
   GoogleMap,

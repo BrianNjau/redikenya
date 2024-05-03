@@ -22,7 +22,7 @@ import {
   Col as ColAnt,
   ConfigProvider,
 } from "antd";
-import GlobalContext from "../Context/Context";
+import { GlobalContext } from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
 import {
   CodeOutlined,

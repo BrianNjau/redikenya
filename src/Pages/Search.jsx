@@ -15,7 +15,7 @@ import {
   Row as RowAnt,
   Col as ColAnt,
 } from "antd";
-import GlobalContext from "../Context/Context";
+import { GlobalContext } from "../Context/Context";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 

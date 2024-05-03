@@ -1,23 +1,52 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
 import { Formik, Form } from "formik";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-
 import { Checkbox, Input } from "../Components/Form";
 import Buttons from "../Components/Buttons";
 import { fadeIn } from "../Functions/GlobalAnimations";
 import { resetForm } from "../Functions/Utilities";
 import GlobalHeader from "../Components/GlobalHeader";
-import GlobalContext from "../Context/Context";
+import { GlobalContext } from "../Context/Context";
+import { Supabase } from "../Functions/SupabaseClient";
+import { Spin } from "antd";
+
 const LoginRegister = () => {
   const { setHeaderHeight } = useContext(GlobalContext);
   useEffect(() => {
     setHeaderHeight(120);
   });
+  const navigate = useNavigate();
+  const [registerLoading, setRegisterLoading] = useState(false);
+  // const [registerName, setRegisterName] = useState('');
+  // const [registerEmail, setRegisterEmail] = useState('');
+  // const [registerPassword, setRegisterPassword] = useState('');
+
+  async function registerUser(registerUserInfo) {
+    try {
+      setRegisterLoading(true);
+
+      const { data, error } = await Supabase.auth.signUp({
+        email: registerUserInfo.email,
+        password: registerUserInfo.password,
+        options: {
+          data: {
+            fullName: registerUserInfo.name,
+          },
+        },
+      });
+      // console.log("Register response=>", data);
+      // console.log("Register error response=>", error);
+      setRegisterLoading(false);
+      navigate("/verify-mail");
+    } catch (error) {
+      console.log(error);
+      setRegisterLoading(false);
+    }
+  }
 
   return (
     <div>
@@ -146,38 +175,49 @@ const LoginRegister = () => {
                   Create account to start your free trial
                 </h6>
 
+                {/* Handle registration */}
+
                 <div className="p-16 border border-mediumgray lg:mt-[35px] md:p-10">
                   <Formik
-                    initialValues={{ username: "", email: "", password: "" }}
+                    initialValues={{
+                      name: "",
+                      email: "",
+                      password: "",
+                    }}
                     validationSchema={Yup.object().shape({
-                      username: Yup.string().required("Field is required."),
+                      name: Yup.string()
+                        .min(3, "Must have at least 3 characters")
+                        .required("Please fill your full name"),
                       email: Yup.string()
                         .email("Invalid email.")
-                        .required("Field is required."),
-                      password: Yup.string().required("Field is required."),
+                        .required("Please fill your email"),
+                      password: Yup.string()
+                        .min(6, "Must be at least 6 characters")
+                        .required("Please fill your password"),
                     })}
                     onSubmit={async (values, actions) => {
-                      await new Promise((r) => setTimeout(r, 500));
-                      resetForm(actions);
+                      registerUser(values);
+                      resetForm(actions); //clear input field and values
                     }}
                   >
-                    {({ isSubmitting, status }) => (
+                    {(formik) => (
                       <Form>
                         <Input
-                          showErrorMsg={false}
+                          showErrorMsg={true}
                           name="name"
                           type="text"
                           labelClass="mb-[20px]"
                           label={
                             <div className="mb-[15px] text-[#08415c]">
-                              Name <span className="text-[#fb4f58]">*</span>
+                              Full Name{" "}
+                              <span className="text-[#fb4f58]">*</span>
                             </div>
                           }
                           className="py-[13px] px-[15px] w-full border-[1px] border-solid border-[#dfdfdf] text-md leading-[initial]"
-                          placeholder="Enter your name"
+                          placeholder="Enter your full name"
                         />
                         <Input
-                          showErrorMsg={false}
+                          showErrorMsg={true}
                           name="email"
                           type="email"
                           labelClass="mb-[20px]"
@@ -185,13 +225,14 @@ const LoginRegister = () => {
                             <div className="mb-[15px] text-[#08415c]">
                               Email address{" "}
                               <span className="text-[#fb4f58]">*</span>
+                              <br />
                             </div>
                           }
                           className="py-[13px] px-[15px] w-full border-[1px] border-solid border-[#dfdfdf] text-md leading-[initial]"
                           placeholder="Enter your email"
                         />
                         <Input
-                          showErrorMsg={false}
+                          showErrorMsg={true}
                           name="password"
                           type="password"
                           labelClass="mb-[20px]"
@@ -201,7 +242,7 @@ const LoginRegister = () => {
                             </div>
                           }
                           className="py-[13px] px-[15px] w-full border-[1px] border-solid border-[#dfdfdf] text-md leading-[initial]"
-                          placeholder="Enter your password"
+                          placeholder="Create your password"
                         />
                         <p className="mb-[25px] block text-sm">
                           As you create your account, you will be able to select
@@ -209,7 +250,7 @@ const LoginRegister = () => {
                           To view our terms of use you can read our{" "}
                           <Link
                             aria-label="privacy-policy-link"
-                            to="/privacy"
+                            to="/terms-of-use"
                             target="_blank"
                             className="underline"
                           >
@@ -218,15 +259,19 @@ const LoginRegister = () => {
                           </Link>
                           .
                         </p>
-                        <Buttons
-                          ariaLabel="register"
-                          type="submit"
-                          className="btn-fill btn-fancy w-full font-medium font-serif rounded-none uppercase md:mb-[15px] sm:mb-0"
-                          themeColor="#08415c"
-                          color="#fff"
-                          size="md"
-                          title="Create Account"
-                        />
+                        {registerLoading ? (
+                          <Spin />
+                        ) : (
+                          <Buttons
+                            ariaLabel="register"
+                            type="submit"
+                            className="btn-fill btn-fancy w-full font-medium font-serif rounded-none uppercase md:mb-[15px] sm:mb-0"
+                            themeColor="#08415c"
+                            color="#fff"
+                            size="md"
+                            title="Create Account"
+                          />
+                        )}
                       </Form>
                     )}
                   </Formik>

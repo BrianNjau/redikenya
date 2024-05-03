@@ -4,7 +4,7 @@ import React, { Suspense, useEffect, useState, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
-import GlobalContext from "./Context/Context";
+import { AuthProvider, GlobalContext } from "./Context/Context";
 
 //Import pages
 const LandingPage = lazy(() => import("./Pages/Landingpage"));
@@ -18,6 +18,7 @@ const Area = lazy(() => import("./Pages/Area"));
 const YHAlgoPage = lazy(() => import("./Pages/YHAlgoPage"));
 const LPAlgoPage = lazy(() => import("./Pages/LPAlgoPage.jsx"));
 const GRMAlgoPage = lazy(() => import("./Pages/GRMAlgoPage.jsx"));
+const VerifyMailPage = lazy(() => import("./Pages/VerifyMail.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -81,37 +82,42 @@ function App() {
         setCustomModal,
       }}
     >
-      <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
-        {
-          <main style={{ marginTop: headerHeight, marginBottom: footerHeight }}>
-            <AnimatePresence exitBeforeEnter>
-              <Suspense fallback={<></>}>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <LandingPage style={{ "--base-color": "#e6994e" }} />
-                    }
-                  />
-                  <Route path="login-register" element={<LoginRegister />} />
-                  <Route path="about-us" element={<AboutUs />} />
-                  <Route path="economics" element={<Economics />} />
-                  <Route path="search" element={<Search />} />
-                  <Route path="search-results" element={<SearchResults />} />
-                  <Route path="invest" element={<Invest />} />
-                  <Route path="area-data" element={<Area />} />
-                  <Route path="yield-pdi-insights" element={<YHAlgoPage />} />
-                  <Route
-                    path="price-sqm-pdi-insights"
-                    element={<LPAlgoPage />}
-                  />
-                  <Route path="grm-pdi-insights" element={<GRMAlgoPage />} />
-                </Routes>
-              </Suspense>
-            </AnimatePresence>
-          </main>
-        }
-      </div>
+      <AuthProvider>
+        <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
+          {
+            <main
+              style={{ marginTop: headerHeight, marginBottom: footerHeight }}
+            >
+              <AnimatePresence exitBeforeEnter>
+                <Suspense fallback={<></>}>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <LandingPage style={{ "--base-color": "#e6994e" }} />
+                      }
+                    />
+                    <Route path="login-register" element={<LoginRegister />} />
+                    <Route path="about-us" element={<AboutUs />} />
+                    <Route path="economics" element={<Economics />} />
+                    <Route path="search" element={<Search />} />
+                    <Route path="search-results" element={<SearchResults />} />
+                    <Route path="invest" element={<Invest />} />
+                    <Route path="area-data" element={<Area />} />
+                    <Route path="yield-pdi-insights" element={<YHAlgoPage />} />
+                    <Route
+                      path="price-sqm-pdi-insights"
+                      element={<LPAlgoPage />}
+                    />
+                    <Route path="grm-pdi-insights" element={<GRMAlgoPage />} />
+                    <Route path="verify-mail" element={<VerifyMailPage />} />
+                  </Routes>
+                </Suspense>
+              </AnimatePresence>
+            </main>
+          }
+        </div>
+      </AuthProvider>
     </GlobalContext.Provider>
   );
 }
