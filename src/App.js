@@ -4,11 +4,10 @@ import React, { Suspense, useEffect, useState, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
-import { AuthProvider, GlobalContext } from "./Context/Context";
+import { GlobalContext, SupabaseAuthProvider } from "./Context/Context";
 
 //Import pages
 const LandingPage = lazy(() => import("./Pages/Landingpage"));
-const LoginRegister = lazy(() => import("./Pages/LoginRegister"));
 const AboutUs = lazy(() => import("./Pages/AboutUs"));
 const Economics = lazy(() => import("./Pages/Economics"));
 const Search = lazy(() => import("./Pages/Search"));
@@ -19,6 +18,9 @@ const YHAlgoPage = lazy(() => import("./Pages/YHAlgoPage"));
 const LPAlgoPage = lazy(() => import("./Pages/LPAlgoPage.jsx"));
 const GRMAlgoPage = lazy(() => import("./Pages/GRMAlgoPage.jsx"));
 const VerifyMailPage = lazy(() => import("./Pages/VerifyMail.jsx"));
+const Register = lazy(() => import("./Pages/Register.jsx"));
+const Login = lazy(() => import("./Pages/Login.jsx"));
+const Confirm = lazy(() => import("./Pages/Confirm.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -70,19 +72,19 @@ function App() {
   }, [location]);
 
   return (
-    <GlobalContext.Provider
-      value={{
-        headerHeight,
-        setHeaderHeight,
-        footerHeight,
-        setFooterHeight,
-        isModalOpen,
-        setIsModalOpen,
-        customModal,
-        setCustomModal,
-      }}
-    >
-      <AuthProvider>
+    <SupabaseAuthProvider>
+      <GlobalContext.Provider
+        value={{
+          headerHeight,
+          setHeaderHeight,
+          footerHeight,
+          setFooterHeight,
+          isModalOpen,
+          setIsModalOpen,
+          customModal,
+          setCustomModal,
+        }}
+      >
         <div className="App" style={{ "--header-height": `${headerHeight}px` }}>
           {
             <main
@@ -97,7 +99,6 @@ function App() {
                         <LandingPage style={{ "--base-color": "#e6994e" }} />
                       }
                     />
-                    <Route path="login-register" element={<LoginRegister />} />
                     <Route path="about-us" element={<AboutUs />} />
                     <Route path="economics" element={<Economics />} />
                     <Route path="search" element={<Search />} />
@@ -111,14 +112,17 @@ function App() {
                     />
                     <Route path="grm-pdi-insights" element={<GRMAlgoPage />} />
                     <Route path="verify-mail" element={<VerifyMailPage />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="confirm" element={<Confirm />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>
             </main>
           }
         </div>
-      </AuthProvider>
-    </GlobalContext.Provider>
+      </GlobalContext.Provider>
+    </SupabaseAuthProvider>
   );
 }
 

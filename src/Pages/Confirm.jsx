@@ -6,9 +6,11 @@ import { animated, useSpring, easings } from "@react-spring/web";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Result } from "antd";
-import MailIcon from "../Assets/img/mail-icon.svg";
+import ActivatedIcon from "../Assets/img/activated-icon.svg";
+import { useSupabaseAuth } from "../Context/Context";
+import Buttons from "../Components/Buttons";
 
-const VerifyMail = () => {
+const Confirm = () => {
   const springs = useSpring({
     from: {
       opacity: 0.3,
@@ -22,15 +24,19 @@ const VerifyMail = () => {
     },
   });
 
+  const session = useSupabaseAuth();
+
+  const { user_metadata } = session.user;
+
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-full opacity-75 bg-gradient-to-tr from-[#08415c] via-[#3EB489] to-[#08415c]"></div>
       <Container className="relative mt-[15vh]">
         <Row className="justify-center">
           <Col xl={7} lg={8} md={10} className="xs:px-0">
-            {/* <Link to="/" className="text-white mb-2">
-              <i className="line-icon-Arrow-OutLeft mr-2"></i>
-              <span>back</span>
+            {/* <Link to="/login" className="text-white mb-2">
+              <i className="line-icon-Arrow-OutRight mr-2"></i>
+              <span>User Dashboard</span>
             </Link> */}
 
             <div className="text-center font-serif font-medium bg-white rounded-[6px] p-28 sm:p-20 xs:p-16">
@@ -39,12 +45,24 @@ const VerifyMail = () => {
                   icon={
                     <img
                       className="h-64 ml-auto mr-auto"
-                      src={MailIcon}
-                      alt="mail-icon"
+                      src={ActivatedIcon}
+                      alt="activation-icon"
                     />
                   }
-                  title="Successfully Created Account! Please Verify Your Email"
-                  subTitle="We have sent an email to your inbox"
+                  title={`Welcome to PDI Marketplace  ${
+                    user_metadata.fullName.split(" ")[0]
+                  }!`}
+                  subTitle="Begin
+  Exploring Our Property Data Solutions"
+                />
+                <Buttons
+                  ariaLabel="login"
+                  type="submit"
+                  className="btn-fill btn-fancy w-1/2 font-medium font-serif rounded-none uppercase"
+                  themeColor="#000000"
+                  color="#fff"
+                  size="sm"
+                  title="User Dashboard"
                 />
               </animated.div>
             </div>
@@ -55,4 +73,4 @@ const VerifyMail = () => {
   );
 };
 
-export default VerifyMail;
+export default Confirm;

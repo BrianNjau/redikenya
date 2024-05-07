@@ -1,4 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
+import { Supabase } from "../Functions/SupabaseClient";
 
 // set the defaults
 export const GlobalContext = createContext({
@@ -15,32 +16,26 @@ export const GlobalContext = createContext({
   setCustomModal: () => {},
 });
 
-const AuthContext = createContext();
+const SupabaseSessionContext = createContext(null);
+export const useSupabaseAuth = () => useContext(SupabaseSessionContext);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export const SupabaseAuthProvider = ({ children }) => {
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
     // Check local storage for user data on component mount (page refresh)
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const subscription = Supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        setSession(null);
+      } else if (session) {
+        setSession(session);
+      }
+    });
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-  };
-
-  const logout = () => {
-    setUser(null); //reset user upon logout
-    //clear localstorage
-    localStorage.removeItem("user");
-  };
-
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <SupabaseSessionContext.Provider value={session}>
       {children}
-    </AuthContext.Provider>
+    </SupabaseSessionContext.Provider>
   );
 };

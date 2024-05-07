@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // Libraries
 import { Col, Navbar } from "react-bootstrap";
@@ -8,8 +8,60 @@ import HeroCarousel from "../Components/HeroCarousel";
 import Logo from "../Assets/img/darkL.png";
 import LogoWhite from "../Assets/img/lightL.png";
 import Buttons from "../Components/Buttons";
-import { Image } from "antd";
+import { Avatar, Button, Dropdown, Image } from "antd";
+import { useSupabaseAuth } from "../Context/Context";
+
+const items = [
+  {
+    label: (
+      <Link to="/">
+        {" "}
+        <i className="feather-compass mr-1"> </i> Dashboard
+      </Link>
+    ),
+    key: "0",
+  },
+  {
+    label: (
+      <Link to="/">
+        {" "}
+        <i className="feather-credit-card mr-1"></i> Billing
+      </Link>
+    ),
+    key: "1",
+  },
+  {
+    label: (
+      <Link to="/">
+        {" "}
+        <i className="feather-edit-2 mr-1"></i> Profile
+      </Link>
+    ),
+    key: "2",
+  },
+  {
+    type: "divider",
+  },
+  {
+    label: (
+      <Link to="/">
+        {" "}
+        <i className="feather-power"></i> Logout
+      </Link>
+    ),
+    key: "3",
+  },
+];
+
 const Landingpage = (props) => {
+  const session = useSupabaseAuth();
+  useEffect(() => {}, [session]);
+  let userMeta;
+  if (session) {
+    const { user_metadata } = session.user;
+    userMeta = user_metadata;
+  }
+
   return (
     <div style={props.style}>
       {/**<SideButtons /> */}
@@ -67,28 +119,52 @@ const Landingpage = (props) => {
               type="full"
               {...props}
             />
-            <Col
-              lg={2}
-              xs={"auto"}
-              className="justify-end pe-0 flex items-center"
-            >
-              <Link
-                to="/login-register"
-                className="text-[#f3efe0] font-serif hover:text-[#3EB489]  mr-[2rem]"
+
+            {/* Check login */}
+            {session ? (
+              <Col
+                lg={2}
+                xs={"auto"}
+                className="justify-end pe-0 flex items-center"
               >
-                <i className="mr-[1rem]"></i>LOGIN
-              </Link>
-              <Buttons
-                ariaLabel="button"
-                href="/login-register"
-                className="btn-fill mx-[8px] font-medium uppercase rounded-[80px]"
-                themeColor="#3EB489"
-                color="#F3EFE0"
-                size="md"
-                title="Try for free"
-              />
-              {/*<SocialIcons theme="social-icon-style-01 block text-center" iconColor="light" size="xs" data={SocialIconsData} />*/}
-            </Col>
+                <Dropdown
+                  placement="bottomLeft"
+                  menu={{
+                    items,
+                  }}
+                  trigger={["click"]}
+                >
+                  <button className=" btn-fill font-serif bg-[#08415c] text-[#f3efe0] border p-2 rounded-[6px] hover:bg-[#1f3f4e]">
+                    <Avatar className="mr-2">
+                      {userMeta.fullName.split(" ")[0][0]}
+                    </Avatar>{" "}
+                    {userMeta.fullName}
+                  </button>
+                </Dropdown>
+              </Col>
+            ) : (
+              <Col
+                lg={2}
+                xs={"auto"}
+                className="justify-end pe-0 flex items-center"
+              >
+                <Link
+                  to="/login"
+                  className="text-[#f3efe0] font-serif hover:text-[#3EB489]  mr-[2rem]"
+                >
+                  <i className="mr-[1rem]"></i>LOGIN
+                </Link>
+                <Buttons
+                  ariaLabel="button"
+                  href="/register"
+                  className="btn-fill mx-[8px] font-medium uppercase rounded-[80px]"
+                  themeColor="#3EB489"
+                  color="#F3EFE0"
+                  size="md"
+                  title="Try for free"
+                />
+              </Col>
+            )}
           </HeaderNav>
         </Header>
         {/* Header End */}
