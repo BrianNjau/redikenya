@@ -2,64 +2,80 @@ import React, { useEffect } from "react";
 
 // Libraries
 import { Col, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header, { HeaderNav, Menu, MobileMenu } from "../Components/Header";
 import HeroCarousel from "../Components/HeroCarousel";
 import Logo from "../Assets/img/darkL.png";
 import LogoWhite from "../Assets/img/lightL.png";
 import Buttons from "../Components/Buttons";
-import { Avatar, Button, Dropdown, Image } from "antd";
+import { Avatar, Dropdown, Image } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
-
-const items = [
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-compass mr-1"> </i> Dashboard
-      </Link>
-    ),
-    key: "0",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-credit-card mr-1"></i> Billing
-      </Link>
-    ),
-    key: "1",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-edit-2 mr-1"></i> Profile
-      </Link>
-    ),
-    key: "2",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-power"></i> Logout
-      </Link>
-    ),
-    key: "3",
-  },
-];
+import { Supabase } from "../Functions/SupabaseClient";
 
 const Landingpage = (props) => {
+  const navigate = useNavigate();
   const session = useSupabaseAuth();
   useEffect(() => {}, [session]);
   let userMeta;
   if (session) {
     const { user_metadata } = session.user;
     userMeta = user_metadata;
+  }
+
+  //dropdown
+  const items = [
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-compass mr-1"> </i> Dashboard
+        </Link>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-credit-card mr-1"></i> Billing
+        </Link>
+      ),
+      key: "1",
+    },
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-edit-2 mr-1"></i> Profile
+        </Link>
+      ),
+      key: "2",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <button onClick={Logout}>
+          {" "}
+          <i className="feather-power"></i> Logout
+        </button>
+      ),
+      key: "3",
+    },
+  ];
+
+  async function Logout() {
+    try {
+      //
+      const { error } = await Supabase.auth.signOut();
+
+      navigate("/login");
+
+      console.log("logged out!");
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

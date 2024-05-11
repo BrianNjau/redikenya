@@ -10,6 +10,7 @@ import { resetForm } from "../Functions/Utilities";
 import { Supabase } from "../Functions/SupabaseClient";
 import { Spin } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
@@ -128,9 +129,22 @@ const Register = () => {
                       <button
                         aria-label="subscribe"
                         type="submit"
-                        className={`text-xs py-[12px] px-[28px] uppercase`}
+                        className={`text-xs py-[12px] px-[28px] uppercase${
+                          isSubmitting ? " loading" : ""
+                        } `}
                       >
-                        {registerLoading ? <Spin /> : `Create Account`}
+                        {registerLoading ? (
+                          <Spin
+                            indicator={
+                              <LoadingOutlined
+                                style={{ fontSize: 24, color: "white" }}
+                                spin
+                              />
+                            }
+                          />
+                        ) : (
+                          "Create Account"
+                        )}
                       </button>
 
                       <p className="mt-2 block text-sm">

@@ -3,61 +3,78 @@ import Header, { HeaderNav, Menu, MobileMenu } from "./Header";
 import { Col, Navbar } from "react-bootstrap";
 import LogoLight from "../Assets/img/lightL.png";
 import LogoDark from "../Assets/img/darkL.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Dropdown, Image } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
 import Buttons from "./Buttons";
-
-const items = [
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-compass mr-1"> </i> Dashboard
-      </Link>
-    ),
-    key: "0",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-credit-card mr-1"></i> Billing
-      </Link>
-    ),
-    key: "1",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-edit-2 mr-1"></i> Profile
-      </Link>
-    ),
-    key: "2",
-  },
-  {
-    type: "divider",
-  },
-  {
-    label: (
-      <Link to="/">
-        {" "}
-        <i className="feather-power"></i> Logout
-      </Link>
-    ),
-    key: "3",
-  },
-];
+import { Supabase } from "../Functions/SupabaseClient";
 
 const GlobalHeader = (props) => {
   const session = useSupabaseAuth();
+  const navigate = useNavigate();
   useEffect(() => {}, [session]);
   let userMeta;
   if (session) {
     const { user_metadata } = session.user;
     userMeta = user_metadata;
   }
+
+  //dropdown
+  const items = [
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-compass mr-1"> </i> Dashboard
+        </Link>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-credit-card mr-1"></i> Billing
+        </Link>
+      ),
+      key: "1",
+    },
+    {
+      label: (
+        <Link to="/">
+          {" "}
+          <i className="feather-edit-2 mr-1"></i> Profile
+        </Link>
+      ),
+      key: "2",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <button onClick={Logout}>
+          {" "}
+          <i className="feather-power"></i> Logout
+        </button>
+      ),
+      key: "3",
+    },
+  ];
+
+  async function Logout() {
+    try {
+      //
+      const { error } = await Supabase.auth.signOut();
+
+      navigate("/login");
+
+      console.log("logged out!");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <section>
       {/**   theme can be configured as 'light' or 'dark' */}
