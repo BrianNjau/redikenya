@@ -28,8 +28,11 @@ import { ResponsivePie } from "@nivo/pie";
 import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import SearchAreaImage from "../Assets/img/areaSearch.svg";
+import { useSupabaseAuth } from "../Context/Context";
+import { useNavigate } from "react-router-dom";
 
 const Area = () => {
+  const [user, setUser] = useState();
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedLocationLoading, setSelectedLocationLoading] = useState(false);
   const [locationOverview, setLocationOverview] = useState([]);
@@ -50,6 +53,10 @@ const Area = () => {
   const [marketValue, setMarketValue] = useState([]);
   const [filteredMarketValue, setFilteredMarketValue] = useState([]);
 
+  const session = useSupabaseAuth();
+
+  const navigate = useNavigate();
+
   const swiperRef = React.useRef(null);
   // const swiperRef2 = React.useRef(null);
   // const [activeSlide, setActiveSlide] = useState(0);
@@ -61,6 +68,9 @@ const Area = () => {
   });
 
   useEffect(() => {
+    if (session) {
+      setUser(session.user.user_metadata); // set user
+    }
     if (selectedRoad.length > 0 && roads.includes(selectedRoad[0]) === false) {
       //location, road mismatch refresh state for filters
       setSelectedRoad([]);
@@ -79,6 +89,7 @@ const Area = () => {
     locationOverview,
     stockYear,
     stockProperties,
+    session,
   ]);
 
   const marketPricePicker =
@@ -283,69 +294,78 @@ const Area = () => {
 
   async function onSelectArea(e) {
     try {
-      if (roads.length > 0) {
-        setRoads([]);
-      }
-      setSelectedLocationLoading(true);
-      const selectedArea = areaData.filter(
-        (areadata) => areadata["area"] === e
-      );
-      setSelectedLocation(selectedArea);
-      //TO DO: PULL AREA SPECIFIC DATA FROM DB HERE
-      const { data, error } = await Supabase.from("Property Overview")
-        .select("*")
-        .eq("Location", selectedArea[0]["area"]);
-      if (data) {
-        const propertyId = data.map((a) => a["Property ID"]);
-        const { data: propertyDataSearched } = await Supabase.from("PropData")
-          .select()
-          .in("PropertyID", propertyId);
-        setLocationOverview(data);
-        //set roads from selected location
-        const searchedRoads = [...new Set(data.map((item) => item["Road"]))];
-        // console.log("Roads", searchedRoads);
-        setRoads(searchedRoads);
-        if (propertyDataSearched) {
-          const typologies = [
-            ...new Set(propertyDataSearched.map((item) => item["Typology"])),
-          ];
-
-          //STOCK Properties
-          const { data: stockProps } = await Supabase.from("Stock Per Year")
-            .select()
-            .in("propertyID", propertyId);
-
-          if (stockProps) {
-            const years = [...new Set(stockProps.map((item) => item["year"]))];
-            setStockYear(years);
-          }
-
-          //PIPELINE Properties
-          const { data: pipelineProperties } = await Supabase.from("Pipeline")
-            .select()
-            .eq("Location", selectedArea[0]["area"]);
-
-          if (pipelineProperties) {
-            setPipelineProperties(pipelineProperties);
-          }
-          //marketValue
-          const { data: marketValueData } = await Supabase.from("Market Value")
-            .select()
-            .in("Property ID", propertyId);
-          if (marketValueData) {
-            //
-            setMarketValue(marketValueData);
-          }
-
-          // console.log("Stock property", stockProps);
-          setStockProperties(stockProps);
-          setTypology(typologies);
-          setPropertyDetails(propertyDataSearched);
-          // console.log("Property overview", data);
-          // console.log("Property detail", propertyDataSearched);
+      if (session) {
+        if (roads.length > 0) {
+          setRoads([]);
         }
+        setSelectedLocationLoading(true);
+        const selectedArea = areaData.filter(
+          (areadata) => areadata["area"] === e
+        );
+        setSelectedLocation(selectedArea);
+        //TO DO: PULL AREA SPECIFIC DATA FROM DB HERE
+        const { data, error } = await Supabase.from("Property Overview")
+          .select("*")
+          .eq("Location", selectedArea[0]["area"]);
+        if (data) {
+          const propertyId = data.map((a) => a["Property ID"]);
+          const { data: propertyDataSearched } = await Supabase.from("PropData")
+            .select()
+            .in("PropertyID", propertyId);
+          setLocationOverview(data);
+          //set roads from selected location
+          const searchedRoads = [...new Set(data.map((item) => item["Road"]))];
+          // console.log("Roads", searchedRoads);
+          setRoads(searchedRoads);
+          if (propertyDataSearched) {
+            const typologies = [
+              ...new Set(propertyDataSearched.map((item) => item["Typology"])),
+            ];
+
+            //STOCK Properties
+            const { data: stockProps } = await Supabase.from("Stock Per Year")
+              .select()
+              .in("propertyID", propertyId);
+
+            if (stockProps) {
+              const years = [
+                ...new Set(stockProps.map((item) => item["year"])),
+              ];
+              setStockYear(years);
+            }
+
+            //PIPELINE Properties
+            const { data: pipelineProperties } = await Supabase.from("Pipeline")
+              .select()
+              .eq("Location", selectedArea[0]["area"]);
+
+            if (pipelineProperties) {
+              setPipelineProperties(pipelineProperties);
+            }
+            //marketValue
+            const { data: marketValueData } = await Supabase.from(
+              "Market Value"
+            )
+              .select()
+              .in("Property ID", propertyId);
+            if (marketValueData) {
+              //
+              setMarketValue(marketValueData);
+            }
+
+            // console.log("Stock property", stockProps);
+            setStockProperties(stockProps);
+            setTypology(typologies);
+            setPropertyDetails(propertyDataSearched);
+            // console.log("Property overview", data);
+            // console.log("Property detail", propertyDataSearched);
+          }
+        }
+        if (error) console.log(error);
+      } else {
+        navigate("/login"); // user must login
       }
-      if (error) console.log(error);
+
       setSelectedLocationLoading(false);
     } catch (error) {
       setSelectedLocationLoading(false);

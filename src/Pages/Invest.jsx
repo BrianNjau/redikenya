@@ -22,7 +22,7 @@ import {
   Col as ColAnt,
   ConfigProvider,
 } from "antd";
-import { GlobalContext } from "../Context/Context";
+import { GlobalContext, useSupabaseAuth } from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
 import {
   CodeOutlined,
@@ -40,13 +40,14 @@ import SearchInvest from "../Assets/img/searchInvest.svg";
 import yHImage from "../Assets/img/yht.svg";
 import LsqImage from "../Assets/img/lsqm.svg";
 import HGRIImage from "../Assets/img/hgri.svg";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
-import { useCompletion } from "ai/react";
-import { useChatCompletion } from "openai-streaming-hooks";
+// import { OpenAIStream, StreamingTextResponse } from "ai";
+// import { useCompletion } from "ai/react";
+// import { useChatCompletion } from "openai-streaming-hooks";
 const Invest = () => {
+  const [user, setUser] = useState();
   const [hasSearched, setHasSearched] = useState(false);
   const [loadingPropData, setLoadingPropData] = useState([]);
   const [loadingPropOverview, setLoadingPropOverview] = useState([]);
@@ -69,6 +70,8 @@ const Invest = () => {
   const openAIKEY = process.env.REACT_APP_OPENAPIKEY;
   const navigate = useNavigate();
 
+  const session = useSupabaseAuth();
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -81,7 +84,10 @@ const Invest = () => {
     setHeaderHeight(120);
     fetchPropData();
     fetchPropOverview();
-  }, []);
+    if (session) {
+      setUser(session.user.user_metadata); // set user
+    }
+  }, [session]);
 
   async function fetchPropData() {
     try {
@@ -214,7 +220,7 @@ const Invest = () => {
       const filteredResults = data.filter((property) =>
         typologies.includes(property["Typology"])
       );
-      console.log("in typology", filteredResults);
+      // console.log("in typology", filteredResults);
 
       return filteredResults;
     } catch (err) {
@@ -283,8 +289,12 @@ const Invest = () => {
     setIsConfirmSearchModalOpen(true);
   };
   const handleOkSearch = () => {
-    filterProperties();
-    setIsConfirmSearchModalOpen(false);
+    if (session) {
+      filterProperties();
+      setIsConfirmSearchModalOpen(false);
+    } else {
+      navigate("/login"); // user must login first
+    }
   };
 
   const handleCancelSearch = () => {
@@ -415,28 +425,32 @@ const Invest = () => {
         </Container>
       </section>
 
-      <FloatButton.Group
-        trigger="click"
-        type="default"
-        badge={{ dot: true }}
-        icon={<MonitorOutlined />}
-      >
-        <Tooltip title="Generate PDI investment insights">
-          <FloatButton
-            badge={{ dot: true }}
-            icon={<QuestionCircleOutlined />}
-            onClick={showAlgorithmModal}
-          />
-        </Tooltip>
+      {filterSearchResults.length === 0 && !hasSearched ? (
+        ""
+      ) : (
+        <FloatButton.Group
+          trigger="click"
+          type="default"
+          badge={{ dot: true }}
+          icon={<MonitorOutlined />}
+        >
+          <Tooltip title="Generate PDI investment insights">
+            <FloatButton
+              badge={{ dot: true }}
+              icon={<QuestionCircleOutlined />}
+              onClick={showAlgorithmModal}
+            />
+          </Tooltip>
 
-        <Tooltip title="Let our AI analyze your results">
-          <FloatButton
-            badge={{ dot: true }}
-            icon={<CodeOutlined />}
-            onClick={showDrawer}
-          />
-        </Tooltip>
-      </FloatButton.Group>
+          <Tooltip title="Let our AI analyze your results">
+            <FloatButton
+              badge={{ dot: true }}
+              icon={<CodeOutlined />}
+              onClick={showDrawer}
+            />
+          </Tooltip>
+        </FloatButton.Group>
+      )}
 
       {/* PDI INSIGHTS DRAWER */}
 

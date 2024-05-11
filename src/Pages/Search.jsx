@@ -15,11 +15,12 @@ import {
   Row as RowAnt,
   Col as ColAnt,
 } from "antd";
-import { GlobalContext } from "../Context/Context";
+import { GlobalContext, useSupabaseAuth } from "../Context/Context";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 
 const Search = () => {
+  const [user, setUser] = useState();
   const navigate = useNavigate();
   let [location, setLocation] = useState([]);
   let [propertyRoad, setPropertyRoad] = useState([]);
@@ -29,10 +30,15 @@ const Search = () => {
   let [selectedRoad, setSelectedRoad] = useState("");
   let [selectedLocation, setSelectedLocation] = useState("");
 
+  const session = useSupabaseAuth();
+
   const { setHeaderHeight } = useContext(GlobalContext);
   useEffect(() => {
     setHeaderHeight(120);
-  });
+    if (session) {
+      setUser(session.user.user_metadata); // set user
+    }
+  }, [session]);
 
   const onChange = async (value) => {
     try {
@@ -78,46 +84,54 @@ const Search = () => {
     try {
       e.preventDefault();
       setLoadingSubmit(true);
-      // road specific search
-      if (selectedRoad) {
-        const { data: searchedRoadResults } = await Supabase.from(
-          "Property Overview"
-        )
-          .select()
-          .eq("Road", selectedRoad);
-        const propertyId = searchedRoadResults.map((a) => a["Property ID"]);
 
-        //search data specific to the overview
-        const { data: propertyDataSearched } = await Supabase.from("PropData")
-          .select()
-          .in("PropertyID", propertyId);
+      if (session) {
+        // road specific search
+        if (selectedRoad) {
+          const { data: searchedRoadResults } = await Supabase.from(
+            "Property Overview"
+          )
+            .select()
+            .eq("Road", selectedRoad);
+          const propertyId = searchedRoadResults.map((a) => a["Property ID"]);
 
-        let searched = {
-          roadResults: searchedRoadResults,
-          road: selectedRoad,
-          propertyData: propertyDataSearched,
-        };
-        navigate("/search-results", { state: searched });
+          //search data specific to the overview
+          const { data: propertyDataSearched } = await Supabase.from("PropData")
+            .select()
+            .in("PropertyID", propertyId);
+
+          let searched = {
+            roadResults: searchedRoadResults,
+            road: selectedRoad,
+            propertyData: propertyDataSearched,
+          };
+          navigate("/search-results", { state: searched });
+        } else {
+          const { data: searchedLocationResults } = await Supabase.from(
+            "Property Overview"
+          )
+            .select()
+            .eq("Location", selectedLocation);
+          // console.log(searchedLocationResults)
+          const propertyId = searchedLocationResults.map(
+            (a) => a["Property ID"]
+          );
+          //search data specific to the overview
+          const { data: propertyDataSearched } = await Supabase.from("PropData")
+            .select()
+            .in("PropertyID", propertyId);
+          // console.log(propertyDataSearched);
+          let searched = {
+            roadResults: searchedLocationResults,
+            location: selectedLocation,
+            propertyData: propertyDataSearched,
+          };
+          navigate("/search-results", { state: searched });
+        }
       } else {
-        const { data: searchedLocationResults } = await Supabase.from(
-          "Property Overview"
-        )
-          .select()
-          .eq("Location", selectedLocation);
-        // console.log(searchedLocationResults)
-        const propertyId = searchedLocationResults.map((a) => a["Property ID"]);
-        //search data specific to the overview
-        const { data: propertyDataSearched } = await Supabase.from("PropData")
-          .select()
-          .in("PropertyID", propertyId);
-        // console.log(propertyDataSearched);
-        let searched = {
-          roadResults: searchedLocationResults,
-          location: selectedLocation,
-          propertyData: propertyDataSearched,
-        };
-        navigate("/search-results", { state: searched });
+        navigate("/login"); // user must login
       }
+
       setLoadingSubmit(false);
     } catch (err) {
       console.log(err);
