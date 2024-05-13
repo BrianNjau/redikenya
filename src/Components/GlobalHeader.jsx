@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header, { HeaderNav, Menu, MobileMenu } from "./Header";
 import { Col, Navbar } from "react-bootstrap";
 import LogoLight from "../Assets/img/lightL.png";
 import LogoDark from "../Assets/img/darkL.png";
 import { Link, useNavigate } from "react-router-dom";
-import { Avatar, Dropdown, Image } from "antd";
+import { Avatar, Dropdown, Image, Spin } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
 import Buttons from "./Buttons";
 import { Supabase } from "../Functions/SupabaseClient";
@@ -13,6 +13,7 @@ const GlobalHeader = (props) => {
   const session = useSupabaseAuth();
   const navigate = useNavigate();
   useEffect(() => {}, [session]);
+  const [loading, setLoading] = useState(false);
   let userMeta;
   if (session) {
     const { user_metadata } = session.user;
@@ -23,7 +24,7 @@ const GlobalHeader = (props) => {
   const items = [
     {
       label: (
-        <Link to="/">
+        <Link to="/user-dashboard">
           {" "}
           <i className="feather-compass mr-1"> </i> Dashboard
         </Link>
@@ -65,11 +66,12 @@ const GlobalHeader = (props) => {
   async function Logout() {
     try {
       //
+      setLoading(true);
       const { error } = await Supabase.auth.signOut();
 
+      if (error) console.log(error);
+      setLoading(false);
       navigate("/login");
-
-      console.log("logged out!");
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +81,7 @@ const GlobalHeader = (props) => {
     <section>
       {/**   theme can be configured as 'light' or 'dark' */}
       {/* Header Start */}
+      <Spin spinning={loading} fullscreen />
       <Header topSpace={{ desktop: true }} type="reverse-scroll">
         <HeaderNav
           fluid="fluid"
@@ -133,7 +136,7 @@ const GlobalHeader = (props) => {
                 }}
                 trigger={["click"]}
               >
-                <button className=" btn-fill font-serif font-semibold  text-[#08415c] border-solid border-2 p-2 border-[#3EB489] rounded-[6px] ">
+                <button className="btn-fill text-[#08415c] ">
                   <Avatar
                     style={{
                       backgroundColor: "#08415c",

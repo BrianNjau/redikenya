@@ -21,6 +21,7 @@ const VerifyMailPage = lazy(() => import("./Pages/VerifyMail.jsx"));
 const Register = lazy(() => import("./Pages/Register.jsx"));
 const Login = lazy(() => import("./Pages/Login.jsx"));
 const Confirm = lazy(() => import("./Pages/Confirm.jsx"));
+const UserDashboard = lazy(() => import("./Pages/UserDashboard.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -115,6 +116,7 @@ function App() {
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
                     <Route path="confirm" element={<Confirm />} />
+                    <Route path="user-dashboard" element={<UserDashboard />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

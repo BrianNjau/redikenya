@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // Libraries
 import { Col, Navbar } from "react-bootstrap";
@@ -8,7 +8,7 @@ import HeroCarousel from "../Components/HeroCarousel";
 import Logo from "../Assets/img/darkL.png";
 import LogoWhite from "../Assets/img/lightL.png";
 import Buttons from "../Components/Buttons";
-import { Avatar, Dropdown, Image } from "antd";
+import { Avatar, Dropdown, Image, Spin } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
 
@@ -16,6 +16,7 @@ const Landingpage = (props) => {
   const navigate = useNavigate();
   const session = useSupabaseAuth();
   useEffect(() => {}, [session]);
+  const [loading, setLoading] = useState(false);
   let userMeta;
   if (session) {
     const { user_metadata } = session.user;
@@ -26,7 +27,7 @@ const Landingpage = (props) => {
   const items = [
     {
       label: (
-        <Link to="/">
+        <Link to="/user-dashboard">
           {" "}
           <i className="feather-compass mr-1"> </i> Dashboard
         </Link>
@@ -68,11 +69,12 @@ const Landingpage = (props) => {
   async function Logout() {
     try {
       //
+      setLoading(true);
       const { error } = await Supabase.auth.signOut();
+      if (error) console.log(error);
 
+      setLoading(false);
       navigate("/login");
-
-      console.log("logged out!");
     } catch (error) {
       console.log(error);
     }
@@ -80,6 +82,7 @@ const Landingpage = (props) => {
 
   return (
     <div style={props.style}>
+      <Spin spinning={loading} fullscreen />
       {/**<SideButtons /> */}
       <div className="bg-white">
         {/* Header Start */}

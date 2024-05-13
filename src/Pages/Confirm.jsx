@@ -4,7 +4,6 @@ import { animated, useSpring, easings } from "@react-spring/web";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { Result } from "antd";
 import ActivatedIcon from "../Assets/img/activated-icon.svg";
 import { useSupabaseAuth } from "../Context/Context";
@@ -57,6 +56,7 @@ const Confirm = () => {
                 />
                 <Buttons
                   ariaLabel="login"
+                  href="/user-dashboard"
                   type="submit"
                   className="btn-fill btn-fancy w-1/2 font-medium font-serif rounded-none uppercase"
                   themeColor="#000000"
