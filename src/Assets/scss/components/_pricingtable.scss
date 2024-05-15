@@ -87,7 +87,7 @@
 
   &.popular {
     border-radius: 6px;
-    position: relative;  
+    position: relative;
     z-index: 2;
 
     .pricing-wrapper {
@@ -96,8 +96,8 @@
       left: -10px;
       width: calc(100% + 20px);
       @screen sm {
-        width:100%;
-        left:0;
+        width: 100%;
+        left: 0;
       }
 
       i {
@@ -115,7 +115,7 @@
         width: 120px;
         transform-origin: 0;
         padding: 10px 0 8px;
-      }      
+      }
     }
   }
 
@@ -207,7 +207,7 @@
       border: 1px solid #e4e4e4;
       border-radius: 6px;
       background-color: #fff;
-      overflow: hidden;      
+      overflow: hidden;
     }
 
     .title {
@@ -233,7 +233,7 @@
       li {
         padding: 15px 0;
         border-bottom: 1px solid #e4e4e4;
-        
+
         strong {
           font-weight: 500;
           color: #232323;
@@ -255,7 +255,7 @@
       position: relative;
       z-index: 1;
       @apply xs:px-[20px];
-      
+
       > div {
         box-shadow: 0 0 30px rgb(0 0 0 / 8%);
         width: calc(100% + 20px);
@@ -283,7 +283,7 @@
 // pricing-table-style-04
 .pricing-table-style-04 {
   .price-wrap {
-    color: var(--base-color, #0038e3);
+    color: var(--base-color, #08415c);
     letter-spacing: -2px;
   }
 
@@ -312,11 +312,11 @@
       padding: 10px 0;
       border-bottom: 1px solid #e4e4e4;
       color: #828282;
-  
+
       &:last-child {
         border-bottom: 0px;
       }
-  
+
       strong {
         @apply text-black;
       }
@@ -345,7 +345,17 @@
       box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 30px 0px;
       transition: var(--default-transition);
       border-radius: 6px;
-      background: var(--popular-bg, linear-gradient(to right top, #0039e3, #4132e0, #5e28dd, #741bd9, #8600d4));
+      background: var(
+        --popular-bg,
+        linear-gradient(
+          to right top,
+          #0039e3,
+          #4132e0,
+          #5e28dd,
+          #741bd9,
+          #8600d4
+        )
+      );
 
       .pricing-sub-head {
         opacity: 0.7;
@@ -364,12 +374,12 @@
 
       .plans-wrapper li {
         @apply text-white;
-        border-color: rgba(255,255,255,.2);
+        border-color: rgba(255, 255, 255, 0.2);
       }
 
       .pricing-terms {
         @apply text-white mt-[10px] mb-[7px];
-       }
+      }
     }
   }
 }
