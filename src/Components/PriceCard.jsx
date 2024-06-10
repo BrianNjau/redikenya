@@ -1,14 +1,31 @@
-import { Badge, Card, ConfigProvider, Slider, Switch } from "antd";
+import { Card, ConfigProvider, Slider, Switch } from "antd";
 import React, { useState } from "react";
 import Buttons from "./Buttons";
 import { CheckOutlined } from "@ant-design/icons";
 
 const PriceCard = () => {
-  const [tokenValue, setTokenValue] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [tokenValue, setTokenValue] = useState(3);
+  const [monthlyPrice, setMonthlyPrice] = useState(450);
+  const [yearlyPrice, setYearlyPrice] = useState(
+    monthlyPrice * 12 - 0.25 * monthlyPrice * 12
+  );
+  const [billYearly, setBillYearly] = useState(false);
 
   function handlePrice(val) {
     try {
+      //onswipe
+      setTokenValue(val);
+      const monthlyPrice = val * 150;
+      setYearlyPrice(monthlyPrice * 12 - 0.25 * monthlyPrice * 12);
+      setMonthlyPrice(monthlyPrice);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function handleSwitcher(el) {
+    try {
+      setBillYearly(el);
     } catch (e) {
       console.log(e);
     }
@@ -32,13 +49,13 @@ const PriceCard = () => {
       <Card bordered={true} className="p-4 shadow-2xl">
         <div className="flex justify-between">
           <span className="mt-2 font-bold  text-[16px] tracking-[1px] uppercase text-[#989898]">
-            4 Tokens
+            {tokenValue} Tokens
           </span>
           <span className=" tracking-[-0.5px] text-[#08415c]  text-[30px] font-bold">
-            Ksh. 600{" "}
+            Ksh. {billYearly ? yearlyPrice : monthlyPrice}{" "}
             <span className="text-[16px] font-semibold text-[#989898] ">
               {" "}
-              / month{" "}
+              / {billYearly ? "year" : "month"}{" "}
             </span>
           </span>
         </div>
@@ -50,15 +67,20 @@ const PriceCard = () => {
                     )} 100%)`,
             },
           }}
-          min={1}
-          max={10}
+          min={3}
+          max={40}
+          defaultValue={3}
+          tooltip={{
+            formatter: null,
+          }}
+          onChange={handlePrice}
           className="mt-8"
         />
         <div>
           <span className="text-[12px] font-medium text-[#989898] mr-6">
             Monthly
           </span>
-          <Switch defaultChecked className="" />
+          <Switch onChange={handleSwitcher} />
 
           <span className="text-[12px] font-medium text-[#989898] ml-6">
             Yearly
