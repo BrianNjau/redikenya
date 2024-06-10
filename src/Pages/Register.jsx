@@ -8,12 +8,13 @@ import * as Yup from "yup";
 import { Input } from "../Components/Form";
 import { resetForm } from "../Functions/Utilities";
 import { Supabase } from "../Functions/SupabaseClient";
-import { Spin } from "antd";
+import { Spin, notification } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const session = useSupabaseAuth();
 
@@ -38,18 +39,30 @@ const Register = () => {
       });
       if (data.user) {
         //user obj returned on successful account creation
-        setRegisterLoading(false);
+
         navigate("/verify-mail");
       }
-      if (error) console.log(error);
+      setRegisterLoading(false);
+      if (error) {
+        api.error({
+          message: error.code,
+          description: error.message,
+        });
+      }
     } catch (error) {
       console.log(error);
       setRegisterLoading(false);
+
+      api.error({
+        message: error.code,
+        description: error.message,
+      });
     }
   }
 
   return (
     <>
+      {contextHolder}
       <div className="absolute top-0 left-0 w-full h-full opacity-75 bg-gradient-to-tr from-[#08415c] via-[#3EB489] to-[#08415c]"></div>
       <Container className="relative mt-[15vh]">
         <Row className="justify-center">

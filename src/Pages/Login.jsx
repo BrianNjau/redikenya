@@ -30,7 +30,7 @@ const Login = () => {
       description: "Incorrect email or password. Please try again",
     });
   };
-  const loginSuccessNotification = () => {
+  const loginSuccessNotification = async () => {
     api.success({
       message: "Login Successful",
       description: "Welcome back",
@@ -50,15 +50,17 @@ const Login = () => {
       }
 
       if (data.session && data.user) {
-        loginSuccessNotification();
-        navigate("/");
+        await loginSuccessNotification();
+        navigate("/user-dashboard");
       }
-
-      console.log("login info", data);
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
+      api.error({
+        message: error.code,
+        description: error.message,
+      });
     }
   }
 
