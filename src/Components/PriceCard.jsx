@@ -5,6 +5,7 @@ import { CheckOutlined } from "@ant-design/icons";
 
 const PriceCard = () => {
   const [tokenValue, setTokenValue] = useState(3);
+  const [yearlyToken, setYearlyTokenValue] = useState(tokenValue * 12);
   const [monthlyPrice, setMonthlyPrice] = useState(450);
   const [yearlyPrice, setYearlyPrice] = useState(
     monthlyPrice * 12 - 0.25 * monthlyPrice * 12
@@ -15,6 +16,7 @@ const PriceCard = () => {
     try {
       //onswipe
       setTokenValue(val);
+      setYearlyTokenValue(val * 12);
       const monthlyPrice = val * 150;
       setYearlyPrice(monthlyPrice * 12 - 0.25 * monthlyPrice * 12);
       setMonthlyPrice(monthlyPrice);
@@ -49,7 +51,7 @@ const PriceCard = () => {
       <Card bordered={true} className="p-4 shadow-2xl">
         <div className="flex justify-between">
           <span className="mt-2 font-bold  text-[16px] tracking-[1px] uppercase text-[#989898]">
-            {tokenValue} Tokens
+            {billYearly ? yearlyToken : tokenValue} Tokens
           </span>
           <span className=" tracking-[-0.5px] text-[#08415c]  text-[30px] font-bold">
             Ksh. {billYearly ? yearlyPrice : monthlyPrice}{" "}
