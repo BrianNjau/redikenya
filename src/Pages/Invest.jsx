@@ -334,7 +334,7 @@ const Invest = () => {
       const formattedMessages = [
         {
           role: "system",
-          content: `PDI-AI is an intelligent property investment assistant. You can answer questions based on this JSON context.\n\n Context: ${JSON.stringify(
+          content: `PDI-AI is an intelligent property investment assistant. You can only answer questions based on this context.\n\n Context: ${JSON.stringify(
             filterSearchResults
           )}\n\n and if the question can't be answered based on the context, say "Your question is not related to the investment search."\n\n`,
         },
@@ -345,7 +345,7 @@ const Invest = () => {
       ];
       // Make a request to your ChatGPT API endpoint with streaming enabled
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo", // Specify the model you want to use
+        model: "gpt-4o", // Specify the model you want to use
         messages: [...formattedMessages],
         // stream: true,
       });

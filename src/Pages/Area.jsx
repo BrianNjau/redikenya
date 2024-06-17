@@ -19,9 +19,11 @@ import { Autoplay, Keyboard } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import { Link } from "react-router-dom";
 import { areaData } from "../Data/AreaDataText";
-import Kileimg from "../Assets/img/kileleshwa.jpg";
-import KilimaniImg from "../Assets/img/kilimani.jpg";
+import Kileimg from "../Assets/img/kilelesh.jpg";
+import KilimaniImg from "../Assets/img/kileleshwa.jpg";
 import WestieImg from "../Assets/img/westlands.jpg";
+import RiverImg from "../Assets/img/riverside.jpg";
+import LaviImg from "../Assets/img/lavi.jpg";
 import { Supabase } from "../Functions/SupabaseClient";
 import StatisticCard from "../Components/StatisticCard";
 import { ResponsivePie } from "@nivo/pie";
@@ -1707,6 +1709,12 @@ const Area = () => {
                               : selectedLocation[0]["area"] ===
                                 "Nairobi Westlands"
                               ? `url(${WestieImg})`
+                              : selectedLocation[0]["area"] ===
+                                "Nairobi Riverside"
+                              ? `url(${RiverImg})`
+                              : selectedLocation[0]["area"] ===
+                                "Nairobi Lavington"
+                              ? `url(${LaviImg})`
                               : `url(https://via.placeholder.com/1300x850)`,
                         }}
                       ></div>
