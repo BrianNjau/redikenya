@@ -19,8 +19,10 @@ import MessageBox from "../Components/MessageBox";
 import PricingTable from "../Components/PricingTable";
 import Pricing from "../Components/Pricing";
 import Buttons from "../Components/Buttons";
-import { SolutionOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, SolutionOutlined } from "@ant-design/icons";
 import PriceCard from "../Components/PriceCard";
+import subscriptionImg from "../Assets/img/subscriptionDash.gif";
+import payAsYouImg from "../Assets/img/payGoDash.gif";
 
 const UserDashboard = () => {
   const session = useSupabaseAuth();
@@ -104,11 +106,12 @@ const UserDashboard = () => {
     <>
       <UserDashLayout>
         <h6 className=" font-medium text-darkgray -tracking-[1px]">
-          Welcome back to PDI,&ensp;
+          Welcome back to PDI, &ensp;
           {/* <span className="text-gradient bg-gradient-to-tr from-[#ff6052] to-[#ff367c] font-semibold"></span>{" "} */}
           <span className="text-gradient bg-gradient-to-tr from-[#3EB489] to-[#08415c] font-semibold">
             {userMeta.fullName.split(" ")[0]}
           </span>
+          👋
         </h6>
         <Row
           gutter={{
@@ -130,30 +133,11 @@ const UserDashboard = () => {
                 //   prefix={<ArrowUpOutlined />}
                 //   suffix="%"
               />
-              <Buttons
-                ariaLabel="subscribe"
-                className="btn-fill btn-fancy bg-gradient-to-tr from-[#3EB489] to-[#08415c] hover:text-white font-medium font-serif rounded-none uppercase mt-2"
-                themeColor="#fff"
-                color="#fff"
-                size="sm"
-                title="Recharge"
-              />
             </Card>
           </Col>
           <Col span={8}>
             <Card bordered={true}>
               <Statistic title="Subscription Tokens" value={0} />
-              <Link to="/billing">
-                <Buttons
-                  ariaLabel="subscribe"
-                  className="btn-fill btn-fancy bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-medium font-serif rounded-none uppercase mt-2"
-                  themeColor="#3EB489"
-                  color="#fff"
-                  size="sm"
-                  title="Manage"
-                  href={"/billing"}
-                />
-              </Link>
             </Card>
           </Col>
           <Col span={8}>
@@ -167,14 +151,6 @@ const UserDashboard = () => {
                 //   }}
                 //   prefix={<ArrowDownOutlined />}
                 //   suffix="%"
-              />
-              <Buttons
-                ariaLabel="subscribe"
-                className="btn-fill btn-fancy bg-gradient-to-tr from-[#3EB489] to-[#08415c] hover:text-white  font-medium font-serif rounded-none uppercase mt-2"
-                themeColor="#fff"
-                color="#fff"
-                size="sm"
-                title="Change"
               />
             </Card>
           </Col>
@@ -214,7 +190,7 @@ const UserDashboard = () => {
         )}
       </div> */}
 
-        <div className="mt-8 text-center  ">
+        {/* <div className="mt-8 text-center  ">
           <span className="text-[26px] tracking-[1px] text-gradient mt-2 bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-semibold">
             Simple & Transparent Token-Based Pricing
           </span>
@@ -226,7 +202,88 @@ const UserDashboard = () => {
           <div className="w-[50%] ml-auto mr-auto mt-8">
             <PriceCard />
           </div>
-        </div>
+        </div> */}
+
+        <Card bordered={true} className="mt-24 bg-slate-200">
+          <Row
+            gutter={{
+              xs: 8,
+              sm: 16,
+              md: 24,
+              lg: 32,
+            }}
+            className="m-8"
+          >
+            <Col span={8}>
+              <h5 className="font-medium text-darkgray -tracking-[1px]">
+                Top Up Your PDI Tokens Today 🚀
+              </h5>
+              <span className="mt-8">
+                Gain access to PDI Marketplace cutting edge <br />
+                features using tokens
+              </span>
+            </Col>
+
+            <Col span={8}>
+              <Card bordered={true} className="p-2 shadow-2xl">
+                <div className="flex">
+                  <div className="">
+                    <h6 className="font-medium text-darkgray">
+                      Save By Subscribing
+                    </h6>
+                    <span>
+                      Select to a yearly subscription plan to receive a 25%
+                      discount
+                    </span>
+                  </div>
+                  <img
+                    className="h-40 ml-auto mr-auto"
+                    src={subscriptionImg}
+                    alt="Go to subscription tokens"
+                  />
+                </div>
+                <Buttons
+                  ariaLabel="subscribe"
+                  type="submit"
+                  className="btn-fill btn-fancy bg-black font-medium hover:bg-white font-serif rounded-2xl uppercase mt-4"
+                  themeColor="#fff"
+                  color="#fff"
+                  size="lg"
+                  title="Subscribe"
+                  href={"/billing"}
+                />
+              </Card>
+            </Col>
+
+            <Col span={8}>
+              <Card bordered={true} className="p-2 shadow-2xl">
+                <div className="flex">
+                  <div className="">
+                    <h6 className="font-medium text-darkgray">
+                      Buy With Convinience
+                    </h6>
+                    <span>Buy non-expiring tokens as you use the platform</span>
+                  </div>
+                  <img
+                    className="h-40 ml-auto mr-auto"
+                    src={payAsYouImg}
+                    alt="Go to subscription tokens"
+                  />
+                </div>
+                <Buttons
+                  ariaLabel="subscribe"
+                  type="submit"
+                  className="btn-fill btn-fancy bg-black font-medium hover:bg-white font-serif rounded-2xl uppercase mt-4"
+                  themeColor="#fff"
+                  color="#fff"
+                  size="lg"
+                  title="Buy Tokens"
+                  href={"/billing"}
+                />
+              </Card>
+            </Col>
+          </Row>
+        </Card>
 
         {/* <Pricing /> */}
       </UserDashLayout>

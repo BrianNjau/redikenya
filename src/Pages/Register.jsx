@@ -40,6 +40,8 @@ const Register = () => {
       if (data.user) {
         //user obj returned on successful account creation
 
+        console.log(data);
+
         navigate("/verify-mail");
       }
       setRegisterLoading(false);
@@ -150,7 +152,7 @@ const Register = () => {
                           <Spin
                             indicator={
                               <LoadingOutlined
-                                style={{ fontSize: 24, color: "white" }}
+                                style={{ fontSize: 24, color: "#3EB489" }}
                                 spin
                               />
                             }
