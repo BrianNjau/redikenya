@@ -1,6 +1,6 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CompassOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { Avatar, ConfigProvider, Image, Layout, Menu, theme } from "antd";
+import { Avatar, ConfigProvider, Image, Layout, Menu, Spin, theme } from "antd";
 import LogoWhite from "../Assets/img/lightL.png";
 import { GlobalContext, useSupabaseAuth } from "../Context/Context";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ const UserDashLayout = ({ children }) => {
   const session = useSupabaseAuth();
   const navigate = useNavigate();
   const { setHeaderHeight } = useContext(GlobalContext);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (!session) {
       navigate("/");
@@ -31,32 +32,55 @@ const UserDashLayout = ({ children }) => {
       label: <Link to="/user-dashboard">Dashboard</Link>,
     },
     {
-      key: "2",
-      icon: React.createElement(CompassOutlined),
-      label: <Link to="/billing">Billing</Link>,
-    },
-    {
-      key: "3",
-      icon: React.createElement(CompassOutlined),
-      label: <Link to="/profile">Profile</Link>,
+      key: "billing1",
+      label: "Billing",
+      icon: <i className="feather-credit-card mr-1"></i>,
+      children: [
+        {
+          key: "billingSub1",
+          label: "Manage Plan",
+        },
+        {
+          key: "billingSub2",
+          label: "Buy Tokens",
+        },
+        {
+          key: "billingSub3",
+          label: "Billing History",
+        },
+      ],
     },
     {
       type: "divider",
     },
     {
-      key: "5",
-      icon: React.createElement(PoweroffOutlined),
-      label: <button onClick={Logout}>Logout</button>,
+      key: "account1",
+      label: "Account",
+      icon: <i className="feather-settings mr-1"></i>,
+      children: [
+        {
+          key: "accountSub1",
+          label: "Edit Profile",
+        },
+        {
+          key: "accountSub2",
+          label: "Account Status",
+        },
+        {
+          key: "accountSub3",
+          label: <button onClick={Logout}>Sign Out</button>,
+        },
+      ],
     },
   ];
   async function Logout() {
     try {
       //
-      //   setLoading(true);
+      setLoading(true);
       const { error } = await Supabase.auth.signOut();
 
       if (error) console.log(error);
-      //   setLoading(false);
+      setLoading(false);
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -104,6 +128,7 @@ const UserDashLayout = ({ children }) => {
             theme="dark"
             mode="inline"
             defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["billing1", "account1"]}
             items={items}
           />
         </Sider>
@@ -114,6 +139,7 @@ const UserDashLayout = ({ children }) => {
               background: colorBgContainer,
             }}
           >
+            <Spin spinning={loading} fullscreen />
             <div className="float-right mr-4 ">
               <button>
                 <Avatar

@@ -22,6 +22,7 @@ const Register = lazy(() => import("./Pages/Register.jsx"));
 const Login = lazy(() => import("./Pages/Login.jsx"));
 const Confirm = lazy(() => import("./Pages/Confirm.jsx"));
 const UserDashboard = lazy(() => import("./Pages/UserDashboard.jsx"));
+const ResetPassword = lazy(() => import("./Pages/ResetPassword.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -117,6 +118,7 @@ function App() {
                     <Route path="login" element={<Login />} />
                     <Route path="confirm" element={<Confirm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
+                    <Route path="reset" element={<ResetPassword />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>
