@@ -8,6 +8,8 @@ import { Result } from "antd";
 import ActivatedIcon from "../Assets/img/activated-icon.svg";
 import { useSupabaseAuth } from "../Context/Context";
 import Buttons from "../Components/Buttons";
+import Celebrate from "../Assets/img/celebrate.svg";
+import { useNavigate } from "react-router-dom";
 
 const Confirm = () => {
   const springs = useSpring({
@@ -24,6 +26,7 @@ const Confirm = () => {
   });
 
   const session = useSupabaseAuth();
+  const navigate = useNavigate();
 
   const checkWindow = window.location.href;
 
@@ -52,7 +55,7 @@ const Confirm = () => {
                     />
                   }
                   title={`Ooops, this link seems to have been alredy used or expired`}
-                  subTitle="If you suspect this something is not right, please reach out to support"
+                  subTitle="If you suspect something is not right, please reach out to support"
                 />
                 <Buttons
                   ariaLabel="home"
@@ -81,29 +84,37 @@ const Confirm = () => {
               <span>User Dashboard</span>
             </Link> */}
 
-            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-28 sm:p-20 xs:p-16">
+            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-20 sm:p-20 xs:p-16">
               <animated.div style={{ ...springs }}>
                 <Result
                   icon={
                     <img
                       className="h-64 ml-auto mr-auto"
-                      src={ActivatedIcon}
+                      src={Celebrate}
                       alt="activation-icon"
                     />
                   }
-                  title={`Welcome to PDI Marketplace !`}
+                  title={`Welcome to PDI Marketplace Kenya !`}
                   subTitle="Begin
   Exploring Our Property Data Solutions"
+                  className="ml-auto mr-auto"
                 />
                 <Buttons
+                  onClick={() =>
+                    navigate("/user-dashboard", {
+                      state: {
+                        firstTimeUser: true,
+                      },
+                    })
+                  }
                   ariaLabel="login"
-                  href="/user-dashboard"
+                  // href="/user-dashboard"
                   type="submit"
                   className="btn-fill btn-fancy w-1/2 font-medium font-serif rounded-none uppercase"
                   themeColor="#000000"
                   color="#fff"
                   size="sm"
-                  title="User Dashboard"
+                  title="Explore PDI"
                 />
               </animated.div>
             </div>

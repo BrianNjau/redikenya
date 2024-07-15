@@ -12,6 +12,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { useSupabaseAuth } from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
 import { Spin, notification } from "antd";
+import LoginImg from "../Assets/img/logini.svg";
 const Login = () => {
   const session = useSupabaseAuth();
   const navigate = useNavigate();
@@ -76,12 +77,17 @@ const Login = () => {
               <span>back</span>
             </Link>
 
-            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-28 sm:p-20 xs:p-16">
+            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-20 sm:p-20 xs:p-16">
+              <img
+                src={LoginImg}
+                alt="welcome to pdi"
+                className="h-32 ml-auto mr-auto mb-2"
+              />
               <span className="text-[#3EB489] block uppercase mb-[10px]">
                 Sign In
               </span>
               <h6 className="inline-block text-[#08415c] -tracking-[1px] w-[80%] mb-14 lg:w-[85%] sm:w-[55%] xs:w-full">
-                Harness Comprehensive Insights <br />
+                Discover Comprehensive Insights <br />
                 Drive Informed Decisions
               </h6>
               <Formik

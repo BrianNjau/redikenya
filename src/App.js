@@ -23,6 +23,8 @@ const Login = lazy(() => import("./Pages/Login.jsx"));
 const Confirm = lazy(() => import("./Pages/Confirm.jsx"));
 const UserDashboard = lazy(() => import("./Pages/UserDashboard.jsx"));
 const ResetPassword = lazy(() => import("./Pages/ResetPassword.jsx"));
+const UpdatePassword = lazy(() => import("./Pages/UpdatePassword.jsx"));
+const ManagePlan = lazy(() => import("./Pages/ManagePlan.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -119,6 +121,11 @@ function App() {
                     <Route path="confirm" element={<Confirm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="reset" element={<ResetPassword />} />
+                    <Route
+                      path="update-password"
+                      element={<UpdatePassword />}
+                    />
+                    <Route path="manage-plan" element={<ManagePlan />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

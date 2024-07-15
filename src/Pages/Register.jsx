@@ -11,7 +11,7 @@ import { Supabase } from "../Functions/SupabaseClient";
 import { Spin, notification } from "antd";
 import { useSupabaseAuth } from "../Context/Context";
 import { LoadingOutlined } from "@ant-design/icons";
-
+import Welcome from "../Assets/img/welcome.svg";
 const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
@@ -37,6 +37,7 @@ const Register = () => {
           },
         },
       });
+      console.log("register response", data);
       if (data.user) {
         //user obj returned on successful account creation
 
@@ -74,12 +75,18 @@ const Register = () => {
               <span>back</span>
             </Link>
 
-            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-28 sm:p-20 xs:p-16">
-              <span className="text-[#3EB489] block uppercase mb-[10px]">
-                Sign Up
+            <div className="text-center font-serif font-medium bg-white rounded-[6px] p-20 sm:p-20 xs:p-16">
+              <img
+                src={Welcome}
+                alt="welcome to pdi"
+                className="h-32 ml-auto mr-auto mb-2"
+              />
+              <span className="text-[#3EB489] block font-serif uppercase mb-[10px]">
+                Sign Up For Free
               </span>
               <h6 className="inline-block text-[#08415c] -tracking-[1px] w-[80%] mb-14 lg:w-[85%] sm:w-[55%] xs:w-full">
-                Unlock the Power of Data <br /> Create Account for a Free Trial
+                Unlock the Power of Property Data <br /> Create Account to
+                Receive Free Tokens
               </h6>
               <Formik
                 initialValues={{
@@ -128,9 +135,9 @@ const Register = () => {
                         placeholder="Create your password"
                       />
                       <p className="mb-[25px] block text-sm">
-                        After you sign up, you will be able to select the
-                        package that works for you and start a free trial. To
-                        view our terms of use you can read our{" "}
+                        After you sign up, you will be granted free tokens to
+                        try PDI for free, no contract, no commitments. To view
+                        our terms of use you can read our{" "}
                         <Link
                           aria-label="privacy-policy-link"
                           to="/terms-of-use"

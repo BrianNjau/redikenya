@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CompassOutlined, PoweroffOutlined } from "@ant-design/icons";
+import { CompassOutlined } from "@ant-design/icons";
 import { Avatar, ConfigProvider, Image, Layout, Menu, Spin, theme } from "antd";
 import LogoWhite from "../Assets/img/lightL.png";
 import { GlobalContext, useSupabaseAuth } from "../Context/Context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Supabase } from "../Functions/SupabaseClient";
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -12,6 +12,8 @@ const UserDashLayout = ({ children }) => {
   const navigate = useNavigate();
   const { setHeaderHeight } = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+
   useEffect(() => {
     if (!session) {
       navigate("/");
@@ -27,7 +29,7 @@ const UserDashLayout = ({ children }) => {
 
   const items = [
     {
-      key: "1",
+      key: "user-dashboard",
       icon: React.createElement(CompassOutlined),
       label: <Link to="/user-dashboard">Dashboard</Link>,
     },
@@ -37,8 +39,8 @@ const UserDashLayout = ({ children }) => {
       icon: <i className="feather-credit-card mr-1"></i>,
       children: [
         {
-          key: "billingSub1",
-          label: "Manage Plan",
+          key: "manage-plan",
+          label: <Link to="/manage-plan">Manage Plan</Link>,
         },
         {
           key: "billingSub2",
@@ -105,10 +107,10 @@ const UserDashLayout = ({ children }) => {
           breakpoint="lg"
           collapsedWidth="0"
           onBreakpoint={(broken) => {
-            console.log(broken);
+            // console.log(broken);
           }}
           onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
+            // console.log(collapsed, type);
           }}
         >
           <div className="demo-logo-vertical mt-2 mb-16">
@@ -127,7 +129,7 @@ const UserDashLayout = ({ children }) => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={[location.pathname.split("/")[1]]}
             defaultOpenKeys={["billing1", "account1"]}
             items={items}
           />

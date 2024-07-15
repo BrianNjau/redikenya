@@ -2,6 +2,10 @@ import { Card, ConfigProvider, Slider, Switch } from "antd";
 import React, { useState } from "react";
 import Buttons from "./Buttons";
 import { CheckOutlined } from "@ant-design/icons";
+// import { Flutterwave } from "flutterwave-node-v3";
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import { useSupabaseAuth } from "../Context/Context";
+// import { CreatePaymentPlan } from "../Functions/FlutterwaveFunctions";
 
 const PriceCard = () => {
   const [tokenValue, setTokenValue] = useState(3);
@@ -11,6 +15,19 @@ const PriceCard = () => {
     monthlyPrice * 12 - 0.25 * monthlyPrice * 12
   );
   const [billYearly, setBillYearly] = useState(false);
+
+  //handle subscription logic
+  const public_key = process.env.REACT_APP_FLW_PUBLIC_KEY;
+  const flw_secret_key = process.env.REACT_APP_FLW_SECRET_KEY;
+  const session = useSupabaseAuth();
+
+  console.log(session);
+  // const flw = new Flutterwave(public_key, flw_secret_key);
+  // const subscriptionDet = {
+  //   amount: billYearly ? yearlyPrice : monthlyPrice,
+  //   name: "PDI Custom Customer Subscription Plan",
+  //   interval: billYearly ? "yearly" : "monthly",
+  // };
 
   function handlePrice(val) {
     try {
@@ -22,6 +39,53 @@ const PriceCard = () => {
       setMonthlyPrice(monthlyPrice);
     } catch (e) {
       console.log(e);
+    }
+  }
+  const flwConfig = {
+    public_key: public_key,
+    tx_ref: Date.now(),
+    amount: billYearly ? yearlyPrice : monthlyPrice,
+    currency: "KSH",
+    payment_options: "card,mobilemoney,ussd",
+    // payment_plan: "",
+    customer: {
+      email: session.user.email,
+      phone_number: session.user.phone,
+      name: session.user.user_metadata.fullName,
+    },
+    customizations: {
+      title: "PDI Subscription ",
+      description: "Payment for Selected PDI Subscription",
+      logo: "https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg",
+    },
+  };
+  const handleFlutterPayment = useFlutterwave(flwConfig);
+  // useFlutterwave();
+
+  async function handleSubscription() {
+    //
+    try {
+      // if no plan create
+
+      //check db for plan if no plan create
+
+      // const plan = CreatePaymentPlan({
+      //   amount: billYearly ? yearlyPrice : monthlyPrice,
+      //   name: "PDI Subscription Plan",
+      //   interval: billYearly ? "yearly" : "monthly",
+      // });
+
+      // if (plan) console.log(plan);
+
+      handleFlutterPayment({
+        callback: (response) => {
+          console.log(response);
+          closePaymentModal(); // this will close the modal programmatically
+        },
+        onClose: () => {},
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -98,6 +162,15 @@ const PriceCard = () => {
             <li>
               <span>
                 {" "}
+                <CheckOutlined className="text-[#3eb489]" />{" "}
+                {billYearly
+                  ? "Tokens will expire after 365 Days"
+                  : "Tokens will expire after 30 days"}
+              </span>
+            </li>
+            <li>
+              <span>
+                {" "}
                 <CheckOutlined className="text-[#3eb489]" /> AI Powered
                 Investment Insights{" "}
               </span>
@@ -116,12 +189,13 @@ const PriceCard = () => {
             </li>
           </ul>
           <Buttons
+            onClick={handleSubscription}
             ariaLabel="subscribe"
-            className="btn-fill btn-fancy  bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-medium  rounded-2xl "
+            className="btn-fill btn-fancy   bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-medium   "
             themeColor="#fff"
             color="#fff"
-            size="md"
-            title="Start Plan"
+            size="xl"
+            title="CREATE PLAN"
           />
         </div>
       </Card>

@@ -14,53 +14,41 @@ import { Supabase } from "../Functions/SupabaseClient";
 import { Spin, notification } from "antd";
 import LoginImg from "../Assets/img/login.svg";
 
-const ResetPassword = () => {
+const UpdatePassword = () => {
   const session = useSupabaseAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [countdown, setCountdown] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
 
-  useEffect(() => {
-    if (session) {
-      navigate("/");
-    }
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-  }, [session, intervalId]);
+  //   useEffect(() => {
+  //     if (!session.user) {
+  //       navigate("/reset");
+  //     }
+  //   }, []);
+  //   console.log(session);
 
   const [api, contextHolder] = notification.useNotification();
   const resetErrorNotification = () => {
     api.error({
-      message: "Reset Failed",
-      description: "Incorrect email. Please try again",
+      message: "Update Password Failed",
+      description: "Seems something is wrong. Please try again later",
     });
   };
   const resetSuccessNotification = async () => {
     api.success({
-      message: "Reset Mail Sent",
+      message: "Password Update Successful",
       description:
-        "Please check your email we have sent an update password link to you",
+        "Your password has been changed successfully. Logging you in...",
     });
   };
 
-  async function Reset(email) {
+  async function Reset(password) {
     try {
       setLoading(true);
-      setCountdown(30);
-      const { data, error } = await Supabase.auth.resetPasswordForEmail(
-        email.email
-      );
+      const { data, error } = await Supabase.auth.updateUser({
+        password: password.password,
+      });
 
-      // Set an interval to update the countdown every second
-      const interval = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000);
-
-      // Store the interval ID to clear it if necessary
-      setIntervalId(interval);
-
+      console.log(data);
       if (error) {
         api.error({
           message: error.code,
@@ -71,15 +59,13 @@ const ResetPassword = () => {
         console.log("reset data ->", data);
         await resetSuccessNotification();
       }
-      // Set a timeout to re-enable the button after 30 seconds
       setTimeout(() => {
         setLoading(false);
-        clearInterval(interval);
-      }, 30000);
+        navigate("/user-dashboard");
+      }, 5000);
     } catch (error) {
       setLoading(false);
       console.log(error);
-      resetErrorNotification();
     }
   }
 
@@ -102,21 +88,23 @@ const ResetPassword = () => {
                 className="h-32 ml-auto mr-auto mb-2"
               />
               <span className="text-[#3EB489] block uppercase mb-[10px]">
-                Reset Account Password
+                Update Account Password
               </span>
               <h6 className="inline-block text-[#08415c] -tracking-[1px] w-[80%] mb-14 lg:w-[85%] sm:w-[55%] xs:w-full">
                 Recover Your Account <br />
               </h6>
               <Formik
                 initialValues={{
-                  email: "",
-                  // password: "",
+                  //   email: "",
+                  password: "",
                 }}
                 validationSchema={Yup.object().shape({
-                  email: Yup.string()
-                    .email("Invalid email.")
-                    .required("Please fill your email"),
-                  // password: Yup.string().required("Please fill your password"),
+                  //   email: Yup.string()
+                  // .email("Invalid email.")
+                  // .required("Please fill your email"),
+                  password: Yup.string()
+                    .min(6, "Must be at least 6 characters")
+                    .required("Please fill your password"),
                 })}
                 onSubmit={async (values, actions) => {
                   await Reset(values);
@@ -126,50 +114,39 @@ const ResetPassword = () => {
                 {({ isSubmitting, status }) => (
                   <div className="relative subscribe-style-08">
                     <Form className="relative">
-                      <Input
+                      {/* <Input
                         showErrorMsg={true}
                         type="email"
                         name="email"
                         className="border-[1px] medium-input border-solid border-transparent font-sans"
                         placeholder="Your email address"
-                      />
-                      {/* <Input
+                      /> */}
+                      <Input
                         showErrorMsg={true}
                         type="password"
                         name="password"
                         className="border-[1px] medium-input border-solid border-transparent font-sans"
-                        placeholder="Create your password"
-                      /> */}
+                        placeholder="Enter New Password"
+                      />
 
                       <button
                         aria-label="subscribe"
                         type="submit"
                         className={`text-xs py-[12px] px-[28px] uppercase`}
-                        disabled={loading}
                       >
                         {loading ? (
-                          <>
-                            <Spin
-                              indicator={
-                                <LoadingOutlined
-                                  style={{ fontSize: 24, color: "white" }}
-                                  spin
-                                />
-                              }
-                            />
-                          </>
+                          <Spin
+                            indicator={
+                              <LoadingOutlined
+                                style={{ fontSize: 24, color: "white" }}
+                                spin
+                              />
+                            }
+                          />
                         ) : (
-                          "Reset Password"
+                          "Update Password"
                         )}
                       </button>
-                      {loading ? (
-                        <>
-                          Please wait {countdown} seconds before sending email
-                          again
-                        </>
-                      ) : (
-                        ""
-                      )}
 
                       {/* <p className="mt-2 block text-sm">
                         Remember your account?{" "}
@@ -189,4 +166,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default UpdatePassword;
