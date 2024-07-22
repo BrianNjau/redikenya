@@ -1,6 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import { CompassOutlined } from "@ant-design/icons";
-import { Avatar, ConfigProvider, Image, Layout, Menu, Spin, theme } from "antd";
+import { CompassOutlined, WalletOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Badge,
+  ConfigProvider,
+  Image,
+  Layout,
+  Menu,
+  Popover,
+  Skeleton,
+  Spin,
+  theme,
+} from "antd";
 import LogoWhite from "../Assets/img/lightL.png";
 import { GlobalContext, useSupabaseAuth } from "../Context/Context";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -12,20 +23,37 @@ const UserDashLayout = ({ children }) => {
   const navigate = useNavigate();
   const { setHeaderHeight } = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
+  const [loadingTokens, setLoadingTokens] = useState(false);
   const location = useLocation();
+  const [tokenCount, setTokenCount] = useState();
 
   useEffect(() => {
     if (!session) {
       navigate("/");
     }
-    setHeaderHeight(0);
-  }, []);
 
-  let userMeta;
-  if (session) {
-    const { user_metadata } = session.user;
-    userMeta = user_metadata;
-  }
+    setHeaderHeight(0);
+    getTokenCount(session.user.id);
+  }, [tokenCount, session]);
+
+  const getTokenCount = async (userId) => {
+    try {
+      setLoadingTokens(true);
+      const { data, error } = await Supabase.from("tokens")
+        .select("token_count")
+        .eq("user_id", userId)
+        .single();
+      if (error) console.error("Error fetching token count:", error.message);
+
+      if (data) {
+        setTokenCount(data.token_count);
+      }
+      setLoadingTokens(false);
+    } catch (err) {
+      console.log(err);
+      setLoadingTokens(false);
+    }
+  };
 
   const items = [
     {
@@ -43,8 +71,8 @@ const UserDashLayout = ({ children }) => {
           label: <Link to="/manage-plan">Manage Plan</Link>,
         },
         {
-          key: "billingSub2",
-          label: "Buy Tokens",
+          key: "purchase-token",
+          label: <Link to="/purchase-token">Purchase Tokens</Link>,
         },
         {
           key: "billingSub3",
@@ -142,18 +170,48 @@ const UserDashLayout = ({ children }) => {
             }}
           >
             <Spin spinning={loading} fullscreen />
-            <div className="float-right mr-4 ">
+            <div className="float-right mr-8">
               <button>
-                <Avatar
-                  style={{
-                    backgroundColor: "#08415c",
-                    color: "#3EB489",
-                  }}
-                  className="mr-2"
+                <Popover
+                  placement="bottom"
+                  title={
+                    <>
+                      <span className="font-serif ml-12">Recent activity</span>
+                      <hr className=" w-[80%] h-0.5 mx-auto my-2 bg-gray-400 border-0 rounded md:my-10 dark:bg-gray-700" />
+                    </>
+                  }
+                  trigger="click"
                 >
-                  {userMeta.fullName.split(" ")[0][0]}
-                </Avatar>
-                {userMeta.fullName}
+                  <Badge dot>
+                    <Avatar
+                      style={{
+                        backgroundColor: "#08415c",
+                        color: "#3EB489",
+                      }}
+                      className=""
+                      shape="square"
+                    >
+                      <i className="feather-bell"></i>
+                      {/*  {userMeta.fullName.split(" ")[0][0]} */}
+                    </Avatar>
+                  </Badge>
+                </Popover>
+
+                {/* {userMeta.fullName} */}
+                <span className="ml-4">
+                  {" "}
+                  <i className="line-icon-Wallet-2 mr-2"></i> {tokenCount}{" "}
+                  {/* <Avatar
+                    style={{
+                      backgroundColor: "#08415c",
+                      color: "#3EB489",
+                    }}
+                    className="ml-1"
+                    shape="square"
+                  ></Avatar> */}
+                </span>
+
+                {/* Tokens: */}
               </button>
             </div>
           </Header>

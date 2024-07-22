@@ -25,6 +25,7 @@ const UserDashboard = lazy(() => import("./Pages/UserDashboard.jsx"));
 const ResetPassword = lazy(() => import("./Pages/ResetPassword.jsx"));
 const UpdatePassword = lazy(() => import("./Pages/UpdatePassword.jsx"));
 const ManagePlan = lazy(() => import("./Pages/ManagePlan.jsx"));
+const PurchaseToken = lazy(() => import("./Pages/PurchaseToken.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -126,6 +127,7 @@ function App() {
                       element={<UpdatePassword />}
                     />
                     <Route path="manage-plan" element={<ManagePlan />} />
+                    <Route path="purchase-token" element={<PurchaseToken />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

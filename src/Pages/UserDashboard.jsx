@@ -546,7 +546,7 @@ const UserDashboard = () => {
                   color="#fff"
                   size="lg"
                   title="Buy Tokens"
-                  href={"/billing"}
+                  href={"/purchase-token"}
                 />
               </Card>
             </Col>

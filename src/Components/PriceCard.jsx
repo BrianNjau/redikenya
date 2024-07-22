@@ -5,6 +5,7 @@ import { CheckOutlined } from "@ant-design/icons";
 // import { Flutterwave } from "flutterwave-node-v3";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
 import { useSupabaseAuth } from "../Context/Context";
+import axios from "axios";
 // import { CreatePaymentPlan } from "../Functions/FlutterwaveFunctions";
 
 const PriceCard = () => {
@@ -21,7 +22,7 @@ const PriceCard = () => {
   const flw_secret_key = process.env.REACT_APP_FLW_SECRET_KEY;
   const session = useSupabaseAuth();
 
-  console.log(session);
+  // console.log(session);
   // const flw = new Flutterwave(public_key, flw_secret_key);
   // const subscriptionDet = {
   //   amount: billYearly ? yearlyPrice : monthlyPrice,
@@ -62,13 +63,46 @@ const PriceCard = () => {
   const handleFlutterPayment = useFlutterwave(flwConfig);
   // useFlutterwave();
 
+  const fwConfig = {
+    ...flwConfig,
+    text: "Pay with Flutterwave!",
+    callback: (response) => {
+      console.log(response);
+      closePaymentModal(); // this will close the modal programmatically
+    },
+    onClose: () => {},
+  };
+
   async function handleSubscription() {
     //
     try {
       // if no plan create
 
       //check db for plan if no plan create
+      const options = {
+        amount: billYearly ? yearlyPrice : monthlyPrice,
+        name: "PDI Subscription",
+        interval: `${billYearly ? "yearly" : "monthly"}`,
+        currency: "KSH",
+      };
 
+      const { data } = await axios.post(
+        `https://api.flutterwave.com/v3/payment-plans`,
+        {
+          amount: billYearly ? yearlyPrice : monthlyPrice,
+          name: "PDI Subscription",
+          interval: `${billYearly ? "yearly" : "monthly"}`,
+          currency: "KES",
+        },
+        {
+          headers: {
+            Authorization: `Bearer FLWSECK-75553c5aa90a98c440c55111fdd6667d-190b5af428cvt-X`,
+            "Content-Type": "application/json", // Adjust the Content-Type if necessary
+          },
+        }
+      );
+
+      console.log("data", data);
       // const plan = CreatePaymentPlan({
       //   amount: billYearly ? yearlyPrice : monthlyPrice,
       //   name: "PDI Subscription Plan",
@@ -112,14 +146,14 @@ const PriceCard = () => {
         },
       }}
     >
-      <Card bordered={true} className="p-4 shadow-2xl">
+      <Card bordered={true} className="p-4 shadow-2xl  ">
         <div className="flex justify-between">
-          <span className="mt-2 font-bold  text-[16px] tracking-[1px] uppercase text-[#989898]">
+          <span className="mt-2 font-bold  text-[16px] tracking-[1px] uppercase text-[#a8a8a8]">
             {billYearly ? yearlyToken : tokenValue} Tokens
           </span>
-          <span className=" tracking-[-0.5px] text-[#08415c]  text-[30px] font-bold">
+          <span className=" tracking-[-0.5px] text-[slate-800]  text-[30px] font-bold">
             Ksh. {billYearly ? yearlyPrice : monthlyPrice}{" "}
-            <span className="text-[16px] font-semibold text-[#989898] ">
+            <span className="text-[16px] font-semibold text-[slate-800] ">
               {" "}
               / {billYearly ? "year" : "month"}{" "}
             </span>
@@ -134,7 +168,7 @@ const PriceCard = () => {
             },
           }}
           min={3}
-          max={40}
+          max={80}
           defaultValue={3}
           tooltip={{
             formatter: null,
@@ -143,12 +177,12 @@ const PriceCard = () => {
           className="mt-8"
         />
         <div>
-          <span className="text-[12px] font-medium text-[#989898] mr-6">
+          <span className="text-[12px] font-medium text-slate-800 mr-6">
             Monthly
           </span>
           <Switch onChange={handleSwitcher} />
 
-          <span className="text-[12px] font-medium text-[#989898] ml-6">
+          <span className="text-[12px] font-medium text-slate-800 ml-6">
             Yearly
             <span className="ml-2 text-[9px] rounded-xl p-1 bg-[#3eb489] bg-opacity-[0.2] text-[#3eb489] ">
               25% <span className="hide">discount</span>
@@ -158,7 +192,7 @@ const PriceCard = () => {
         <hr className="mt-8" />
 
         <div className="flex  mt-8 justify-between ">
-          <ul className="text-left text-[9px] text-[#989898]">
+          <ul className="text-left text-[9px] text-slate-800">
             <li>
               <span>
                 {" "}
@@ -188,14 +222,15 @@ const PriceCard = () => {
               </span>
             </li>
           </ul>
+
           <Buttons
             onClick={handleSubscription}
             ariaLabel="subscribe"
             className="btn-fill btn-fancy   bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-medium   "
-            themeColor="#fff"
+            themeColor="#08415c"
             color="#fff"
             size="xl"
-            title="CREATE PLAN"
+            title="Create Plan"
           />
         </div>
       </Card>
