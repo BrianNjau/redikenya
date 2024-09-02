@@ -35,6 +35,7 @@ const UserDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [firstTime, setFirstTime] = useState(false);
   const [tokenCount, setTokenCount] = useState(0);
+  const [subscription, setSubscription] = useState();
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
@@ -126,11 +127,28 @@ const UserDashboard = () => {
   const getTokenCount = async (userId) => {
     try {
       setLoading(true);
+      //check paygo
       const { data, error } = await Supabase.from("tokens")
         .select("token_count")
         .eq("user_id", userId)
         .single();
       if (error) console.error("Error fetching token count:", error.message);
+      //check subscription
+      const { data: subscriptionData, error: subscriptionError } =
+        await Supabase.from("subscriptions")
+          .select("*")
+          .eq("user_id", userId)
+          .single();
+      if (subscriptionError)
+        console.error(
+          "error fetching subscription info:",
+          subscriptionError.message
+        );
+
+      if (subscriptionData) {
+        setSubscription(subscriptionData);
+        // console.log("Subscription data =>", subscriptionData);
+      }
 
       if (data) {
         setTokenCount(data.token_count);
@@ -232,7 +250,7 @@ const UserDashboard = () => {
           <Col span={8}>
             <Card ref={ref1} bordered={true}>
               <Statistic
-                title="Token Balance"
+                title="Pay As You Go Token Balance"
                 value={loading ? "" : tokenCount}
                 //   precision={2}
                 //   valueStyle={{
@@ -245,14 +263,19 @@ const UserDashboard = () => {
           </Col>
           <Col span={8}>
             <Card bordered={true}>
-              <Statistic title="Token Expiry Date" value={"No expiry"} />
+              <Statistic
+                title="Subscription Token Balance"
+                value={subscription ? subscription.tokens : "N/A"}
+              />
             </Card>
           </Col>
           <Col span={8}>
             <Card bordered={true}>
               <Statistic
-                title="Active Subscription"
-                value={"No Active Plan"}
+                title="Subscription Renewal Date"
+                value={
+                  subscription ? subscription.expires_at.split("T")[0] : "N/A"
+                }
                 //   precision={2}
                 //   valueStyle={{
                 //     color: "#cf1322",

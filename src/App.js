@@ -6,6 +6,9 @@ import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
 import { GlobalContext, SupabaseAuthProvider } from "./Context/Context";
 
+//vercel page tracking and performance
+import { inject } from "@vercel/analytics";
+// import { SpeedInsights } from "@vercel/speed-insights/react";
 //Import pages
 const LandingPage = lazy(() => import("./Pages/Landingpage"));
 const AboutUs = lazy(() => import("./Pages/AboutUs"));
@@ -26,6 +29,7 @@ const ResetPassword = lazy(() => import("./Pages/ResetPassword.jsx"));
 const UpdatePassword = lazy(() => import("./Pages/UpdatePassword.jsx"));
 const ManagePlan = lazy(() => import("./Pages/ManagePlan.jsx"));
 const PurchaseToken = lazy(() => import("./Pages/PurchaseToken.jsx"));
+const BillingHistory = lazy(() => import("./Pages/BillingHistory.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -76,8 +80,11 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
+  inject();
+
   return (
     <SupabaseAuthProvider>
+      {/* <SpeedInsights /> */}
       <GlobalContext.Provider
         value={{
           headerHeight,
@@ -128,6 +135,7 @@ function App() {
                     />
                     <Route path="manage-plan" element={<ManagePlan />} />
                     <Route path="purchase-token" element={<PurchaseToken />} />
+                    <Route path="billing" element={<BillingHistory />} />
                   </Routes>
                 </Suspense>
               </AnimatePresence>

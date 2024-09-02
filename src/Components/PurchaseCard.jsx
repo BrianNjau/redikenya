@@ -7,10 +7,11 @@ import { useSupabaseAuth } from "../Context/Context";
 import Logo from "../Assets/img/darkL.png";
 import { Supabase } from "../Functions/SupabaseClient";
 import { useNavigate } from "react-router-dom";
+import { PaystackButton } from "react-paystack";
 const PurchaseCard = () => {
   const [tokenValue, setTokenValue] = useState(1);
   const [tokenPrice, setTokenPrice] = useState(155);
-  const public_key = process.env.REACT_APP_FLW_PUBLIC_KEY;
+  const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const test_public_key = process.env.REACT_APP_FLW_TEST_PUBLIC_KEY;
   const flw_secret_key = process.env.REACT_APP_FLW_SECRET_KEY;
   const session = useSupabaseAuth();
@@ -48,6 +49,35 @@ const PurchaseCard = () => {
     },
   };
 
+  // you can call this function anything
+  const handlePaystackSuccessAction = (reference) => {
+    // Implementation for whatever you want to do with reference and after success call.
+    alert("Thanks for doing business with us! Come back soon!!");
+    console.log(reference);
+  };
+
+  // you can call this function anything
+  const handlePaystackCloseAction = () => {
+    // implementation for  whatever you want to do when the Paystack dialog closed.
+    console.log("closed");
+  };
+
+  const paystackProps = {
+    email: session.user.email,
+    amount: tokenPrice * 100,
+    currency: "KES",
+    metadata: {
+      name: session.user.user_metadata.fullName,
+      phone: session.user.phone,
+    },
+    publicKey: public_key,
+    text: "Pay Now",
+    label: "PDI Marketplace Kenya",
+    onSuccess: (reference) => handlePaystackSuccessAction(reference),
+
+    onClose: () => alert("Wait! You need this oil, don't go!!!!"),
+  };
+
   const purchaseToken = useFlutterwave(flwConfig);
 
   return (
@@ -65,7 +95,7 @@ const PurchaseCard = () => {
         },
       }}
     >
-      <Card bordered={true} className="p-4 shadow-2xl  ">
+      <Card bordered={true} className="p-4 bg-lightgray rounded-2xl  ">
         <div className="flex justify-between">
           {contextHolder}
           <span className="mt-2 font-bold  text-[16px] tracking-[1px] uppercase text-[#a8a8a8]">
@@ -128,6 +158,11 @@ const PurchaseCard = () => {
               </span>
             </li>
           </ul>
+
+          <PaystackButton
+            className="btn-fill btn-fancy bg-gradient-to-tr from-[#3EB489] to-[#08415c] font-medium"
+            {...paystackProps}
+          />
 
           <Buttons
             onClick={() => {
