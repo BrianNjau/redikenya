@@ -70,7 +70,7 @@ const SubscribeCard = () => {
       name: session.user.user_metadata.fullName,
       phone: session.user.phone,
       user_id: session.user.id,
-      token_amount: 10,
+      token_amount: 15,
     },
     plan: std_plan,
     publicKey: test_key,
