@@ -8,7 +8,7 @@ import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 const BuyCard = () => {
   const [tokenValue, setTokenValue] = useState(3);
-  const [tokenPrice, setTokenPrice] = useState(160);
+  const [tokenPrice, setTokenPrice] = useState(480);
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
   const [tokenCount, setTokenCount] = useState(0);
