@@ -432,8 +432,8 @@ const Invest = () => {
           trigger="click"
           type="default"
           badge={{ dot: true }}
-          icon={<MonitorOutlined className="animate-pulse" />}
-          className="animate-bounce text-slate-600"
+          icon={<MonitorOutlined />}
+          className="motion-safe:animate-pulse text-slate-600"
         >
           <Tooltip title="Generate PDI investment insights">
             <FloatButton

@@ -330,8 +330,8 @@ export const Menu = memo((props) => {
               {item.megamenu && (
                 <div
                   style={{
-                    backgroundColor: "#000",
-                    backgroundImage: `url(${Pattern})`,
+                    backgroundColor: "#22333b",
+                    // backgroundImage: `url(${Pattern})`,
                   }}
                   className="flex megamenu"
                   ref={megamenu_ref}

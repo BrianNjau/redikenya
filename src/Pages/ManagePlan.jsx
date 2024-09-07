@@ -37,7 +37,8 @@ const ManagePlan = () => {
           <div className="w-[30%]">
             {subscriptionWallet ? (
               subscriptionWallet?.status === "Not Renewing" ||
-              subscriptionWallet?.status === "Disabled" ? (
+              subscriptionWallet?.status === "Disabled" ||
+              subscriptionWallet?.status === "expired" ? (
                 // renew card
 
                 <RenewCard />

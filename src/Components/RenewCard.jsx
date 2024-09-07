@@ -9,7 +9,7 @@ const RenewCard = () => {
   return (
     <Card className="bg-slate-800" bordered={true}>
       <span className="font-medium mb-8 text-slate-200 ml-4">
-        You cancelled your subscription
+        Subscription will not auto-renew
       </span>
       <div className="mt-12 mb-12 text-center ">
         {" "}
@@ -30,6 +30,7 @@ const RenewCard = () => {
             " ml-4 mt-3 w-full font-base font-sans text-slate-300 border-[1px] border-solid border-white hover:text-slate-900 "
           }
           type="default"
+          disabled={subscriptionWallet.status === "expired" ? false : true}
         >
           Resubscribe
         </Button>
