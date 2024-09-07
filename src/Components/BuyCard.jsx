@@ -1,7 +1,7 @@
 import { Card, InputNumber } from "antd";
 import React, { useEffect, useState } from "react";
 import Buttons from "./Buttons";
-import { useSupabaseAuth } from "../Context/Context";
+import { useSupabaseAuth, useUserWallet } from "../Context/Context";
 import { PaystackButton } from "react-paystack";
 import { Supabase } from "../Functions/SupabaseClient";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
@@ -11,33 +11,9 @@ const BuyCard = () => {
   const [tokenPrice, setTokenPrice] = useState(480);
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
-  const [tokenCount, setTokenCount] = useState(0);
-  const [loadingTokens, setLoadingTokens] = useState(false);
+
   const session = useSupabaseAuth();
-
-  useEffect(() => {
-    getTokenCount(session.user.id);
-  }, [tokenCount, session.user.id]);
-
-  const getTokenCount = async (userId) => {
-    try {
-      setLoadingTokens(true);
-      const { data, error } = await Supabase.from("tokens")
-        .select("token_count")
-        .eq("user_id", userId)
-        .single();
-      if (error) console.error("Error fetching token count:", error.message);
-
-      if (data) {
-        setTokenCount(data.token_count);
-      }
-
-      setLoadingTokens(false);
-    } catch (err) {
-      console.log(err);
-      setLoadingTokens(false);
-    }
-  };
+  const { payGoWallet, updatePayGoWallet } = useUserWallet();
 
   function handlePrice(val) {
     try {
@@ -50,15 +26,18 @@ const BuyCard = () => {
       console.log(e);
     }
   }
+  // console.log("paygo=>", payGoWallet);
   // you can call this function anything
   const handlePaystackSuccessAction = async (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
 
     try {
       if (reference["status"] === "success") {
-        setTimeout(function () {
-          getTokenCount(session.user.id);
-        }, 2000);
+        // setTimeout(function () {
+        //   // update the state and local storage
+        //   // const newPayGoBalance = tokenValue + payGoWallet.token_count;
+        //   // updatePayGoWallet(newPayGoBalance);
+        // }, 2000);
       }
     } catch (error) {
       console.log(error);
@@ -72,14 +51,32 @@ const BuyCard = () => {
   };
 
   const paystackProps = {
-    email: session.user.email,
+    email: session?.user.email,
     amount: tokenPrice * 100,
     currency: "KES",
     metadata: {
-      name: session.user.user_metadata.fullName,
-      phone: session.user.phone,
-      user_id: session.user.id,
-      token_amount: tokenValue,
+      customer: [
+        {
+          display_name: "Customer Name",
+          variable_name: "customerName",
+          value: session?.user.user_metadata.fullName,
+        },
+        {
+          display_name: "Customer Phone",
+          variable_name: "customerPhone",
+          value: session?.user.phone,
+        },
+        {
+          display_name: "User ID",
+          variable_name: "userID",
+          value: session?.user.id,
+        },
+        {
+          display_name: "Token Amount",
+          variable_name: "tokenAmount",
+          value: tokenValue,
+        },
+      ],
     },
     publicKey: test_key,
     text: (
@@ -106,9 +103,7 @@ const BuyCard = () => {
 
         <div className="mt-8 mb-4 text-center ">
           {" "}
-          <span className="text-[32px] text-white ml-2">
-            {loadingTokens ? <Loading3QuartersOutlined spin /> : tokenCount}
-          </span>
+          <span className="text-[32px] text-white ml-2">{payGoWallet}</span>
           <span className="text-[12px] text-slate-300 ml-2">TOKENS</span>
         </div>
 

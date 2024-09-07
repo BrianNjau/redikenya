@@ -38,6 +38,9 @@ const BillingHistory = () => {
     {
       title: "Billing Date",
       dataIndex: "created_at",
+      defaultSortOrder: "descend",
+      render: (val) => val.split("T")[0],
+      sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
     },
     {
       title: "Transaction Type",
@@ -76,29 +79,12 @@ const BillingHistory = () => {
       if (error) {
         console.log("error on billing data", error.message);
       }
-      //   setTableParams({
-      //     ...tableParams,
-      //     pagination: {
-      //       ...tableParams.pagination,
-      //     },
-      //   });
+
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  };
-  const handleTableChange = (pagination, filters, sorter) => {
-    // setTableParams({
-    //   pagination,
-    //   filters,
-    //   sortOrder: Array.isArray(sorter) ? undefined : sorter.order,
-    //   sortField: Array.isArray(sorter) ? undefined : sorter.field,
-    // });
-    // `dataSource` is useless since `pageSize` changed
-    // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-    //   setBillingData([]);
-    // }
   };
 
   return (
@@ -116,7 +102,6 @@ const BillingHistory = () => {
         <Table
           className="mt-8"
           columns={columns}
-          onChange={handleTableChange}
           dataSource={billingData}
           loading={loading}
         />

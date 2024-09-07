@@ -26,43 +26,32 @@ const Landingpage = (props) => {
   //dropdown
   const items = [
     {
-      label: (
-        <Link to="/user-dashboard">
-          {" "}
-          <i className="feather-compass mr-1"> </i> Dashboard
-        </Link>
-      ),
+      label: <Link to="/user-dashboard"> Dashboard</Link>,
       key: "0",
     },
     {
-      label: (
-        <Link to="/">
-          {" "}
-          <i className="feather-credit-card mr-1"></i> Billing
-        </Link>
-      ),
+      label: <Link to="/manage-plan"> Manage Plan</Link>,
       key: "1",
     },
     {
-      label: (
-        <Link to="/">
-          {" "}
-          <i className="feather-edit-2 mr-1"></i> Profile
-        </Link>
-      ),
+      label: <Link to="/purchase-token"> Purchase Tokens</Link>,
       key: "2",
+    },
+    {
+      label: <Link to="/billing"> Billing History</Link>,
+      key: "3",
+    },
+
+    {
+      label: <Link to="/"> Profile</Link>,
+      key: "4",
     },
     {
       type: "divider",
     },
     {
-      label: (
-        <button onClick={Logout}>
-          {" "}
-          <i className="feather-power"></i> Logout
-        </button>
-      ),
-      key: "3",
+      label: <button onClick={Logout}> Logout</button>,
+      key: "5",
     },
   ];
 
@@ -133,6 +122,7 @@ const Landingpage = (props) => {
               className="justify-center col-auto col-lg-8 md:hidden"
               {...props}
             />
+
             <MobileMenu
               className="order-last d-lg-none"
               type="full"

@@ -1,47 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
 import UserDashLayout from "../Components/UserDashLayout";
-import {
-  Avatar,
-  // Button,
-  Card,
-  Col,
-  Row,
-  Statistic,
-  Tour,
-  // Steps,
-  // Tabs,
-  // message,
-  // notification,
-  theme,
-} from "antd";
-import { useSupabaseAuth } from "../Context/Context";
+import { Avatar, Card, Col, Row, Statistic, Tour, theme } from "antd";
+import { useSupabaseAuth, useUserWallet } from "../Context/Context";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-// import MessageBox from "../Components/MessageBox";
-// import PricingTable from "../Components/PricingTable";
-// import Pricing from "../Components/Pricing";
 import Buttons from "../Components/Buttons";
 import PriceCard from "../Components/PriceCard";
 import subscriptionImg from "../Assets/img/subscriptionDash.gif";
 import payAsYouImg from "../Assets/img/payGoDash.gif";
 import freeTokens from "../Assets/img/freetokens.gif";
-import { Supabase } from "../Functions/SupabaseClient";
 import Card1bg from "../Assets/img/algoImg.jpg";
 const UserDashboard = () => {
   const session = useSupabaseAuth();
   const { token } = theme.useToken();
   const location = useLocation();
   const firstTimeUserCheck = location.state;
-  const [loading, setLoading] = useState(false);
   const [firstTime, setFirstTime] = useState(false);
-  const [tokenCount, setTokenCount] = useState(0);
-  const [subscription, setSubscription] = useState();
+
+  const { subscriptionWallet, payGoWallet } = useUserWallet();
   const ref1 = useRef(null);
   const ref2 = useRef(null);
   const ref3 = useRef(null);
   const ref4 = useRef(null);
   const [openTour, setOpenTour] = useState(true);
-  // console.log(firstTimeUserCheck);
 
   const tourSteps = [
     {
@@ -124,41 +105,6 @@ const UserDashboard = () => {
   ];
 
   const navigate = useNavigate();
-  const getTokenCount = async (userId) => {
-    try {
-      setLoading(true);
-      //check paygo
-      const { data, error } = await Supabase.from("tokens")
-        .select("token_count")
-        .eq("user_id", userId)
-        .single();
-      if (error) console.error("Error fetching token count:", error.message);
-      //check subscription
-      const { data: subscriptionData, error: subscriptionError } =
-        await Supabase.from("subscriptions")
-          .select("*")
-          .eq("user_id", userId)
-          .single();
-      if (subscriptionError)
-        console.error(
-          "error fetching subscription info:",
-          subscriptionError.message
-        );
-
-      if (subscriptionData) {
-        setSubscription(subscriptionData);
-        // console.log("Subscription data =>", subscriptionData);
-      }
-
-      if (data) {
-        setTokenCount(data.token_count);
-      }
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (!session) {
@@ -167,8 +113,6 @@ const UserDashboard = () => {
     if (firstTimeUserCheck) {
       setFirstTime(true);
     }
-
-    getTokenCount(session.user.id);
   }, [session, firstTimeUserCheck]);
 
   let userMeta;
@@ -234,10 +178,11 @@ const UserDashboard = () => {
           Welcome back to PDI, &ensp;
           {/* <span className="text-gradient bg-gradient-to-tr from-[#ff6052] to-[#ff367c] font-semibold"></span>{" "} */}
           <span className="text-gradient bg-gradient-to-tr from-[#3EB489] to-[#08415c] font-semibold">
-            {userMeta.fullName.split(" ")[0]}
+            {userMeta?.fullName.split(" ")[0]}
           </span>
           👋
         </h6>
+
         <Row
           ref={ref2}
           gutter={{
@@ -251,7 +196,7 @@ const UserDashboard = () => {
             <Card ref={ref1} bordered={true}>
               <Statistic
                 title="Pay As You Go Token Balance"
-                value={loading ? "" : tokenCount}
+                value={payGoWallet}
                 //   precision={2}
                 //   valueStyle={{
                 //     color: "#3f8600",
@@ -265,17 +210,15 @@ const UserDashboard = () => {
             <Card bordered={true}>
               <Statistic
                 title="Subscription Token Balance"
-                value={subscription ? subscription.tokens : "N/A"}
+                value={subscriptionWallet?.tokens || 0}
               />
             </Card>
           </Col>
           <Col span={8}>
             <Card bordered={true}>
               <Statistic
-                title="Subscription Renewal Date"
-                value={
-                  subscription ? subscription.expires_at.split("T")[0] : "N/A"
-                }
+                title="Subscription Status"
+                value={subscriptionWallet?.status || "Not subscribed"}
                 //   precision={2}
                 //   valueStyle={{
                 //     color: "#cf1322",
@@ -288,52 +231,6 @@ const UserDashboard = () => {
         </Row>
 
         {/* If user is logging in for the first time show tour  */}
-
-        {/* <Steps className="mt-6" size="small" current={current} items={items} />
-      <div style={contentStyle}>{steps[current].content}</div>
-      <div
-        style={{
-          marginTop: 24,
-        }}
-      >
-        {current < steps.length - 1 && (
-          <Button type="secondary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button
-            type="secondary"
-            onClick={() => message.success("Processing complete!")}
-          >
-            Done
-          </Button>
-        )}
-        {current > 0 && (
-          <Button
-            style={{
-              margin: "0 8px",
-            }}
-            onClick={() => prev()}
-          >
-            Previous
-          </Button>
-        )}
-      </div> */}
-
-        {/* <div className="mt-8 text-center  ">
-          <span className="text-[26px] tracking-[1px] text-gradient mt-2 bg-gradient-to-tr from-[#3EB489] to-[#08415c]  font-semibold">
-            Simple & Transparent Token-Based Pricing
-          </span>
-          <br />
-          <span className="text-[12px]  tracking-[0.5px] font-serif text-[#08415c]">
-            Select token plan to begin your monthly or yearly rolling
-            subscription
-          </span>
-          <div className="w-[50%] ml-auto mr-auto mt-8">
-            <PriceCard />
-          </div>
-        </div> */}
         <div ref={ref3}>
           <h6 className="text-lg font-medium text-darkgray -tracking-[-0.1px] mt-8">
             Property Data at Your Fingertips
@@ -523,8 +420,8 @@ const UserDashboard = () => {
                       Save By Subscribing
                     </h6>
                     <span>
-                      Select a yearly subscription plan to receive a 25%
-                      discount
+                      Select a subscription plan to receive a 6% discount on
+                      tokens
                     </span>
                   </div>
                   <img

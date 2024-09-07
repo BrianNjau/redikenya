@@ -8,6 +8,7 @@ import { useScroll } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Accordion, Container, Navbar } from "react-bootstrap";
 import useOnClickOutside from "../Functions/UseOnClickOutside";
+import Pattern from "../Assets/img/pattern.webp";
 
 // Component
 import { Input } from "./Form";
@@ -327,7 +328,14 @@ export const Menu = memo((props) => {
                 </ul>
               )}
               {item.megamenu && (
-                <div className="flex megamenu" ref={megamenu_ref}>
+                <div
+                  style={{
+                    backgroundColor: "#000",
+                    backgroundImage: `url(${Pattern})`,
+                  }}
+                  className="flex megamenu"
+                  ref={megamenu_ref}
+                >
                   {item.megamenu.map((item, i) => {
                     return (
                       <ul
