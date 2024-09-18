@@ -1,16 +1,10 @@
-import { Card, Skeleton } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import Buttons from "./Buttons";
 import { useSupabaseAuth } from "../Context/Context";
+import { Card } from "antd";
 import { PaystackButton } from "react-paystack";
-import { Supabase } from "../Functions/SupabaseClient";
-import { createClient } from "@supabase/supabase-js";
 
-// const supabase = createClient(
-//   `http://127.0.0.1:54321`,
-//   `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0`
-// );
-const SubscribeCard = () => {
+const ExpiredSubCard = () => {
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const std_plan = process.env.REACT_APP_PAYSTACK_STANDARD_SUBSCRIPTION_PLAN;
   const hourlyplan = "PLN_nnca2e92pr76h7q";
@@ -21,17 +15,11 @@ const SubscribeCard = () => {
   // you can call this function anything
   const handlePaystackSuccessAction = async () => {
     // Implementation for whatever you want to do with reference and after success call.
-    // wait for 1.5 seconds to allow for webhook response
-    // setTimeout(function () {
-    //   // refresh the page
-    //   window.location.reload(false);
-    // }, 1500);
   };
 
   // you can call this function anything
   const handleOnClose = (ref) => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log("closed", ref);
   };
 
   const paystackProps = {
@@ -69,11 +57,11 @@ const SubscribeCard = () => {
     text: (
       <Buttons
         className={
-          "w-[100%] mt-3 bg-[#3EB489] btn-fill btn-fancy font-medium font-sans"
+          "w-[100%] mt-3 bg-white btn-fill btn-fancy font-medium font-sans"
         }
-        themeColor="#3EB489"
-        color="#fff"
-        title={"Subscribe"}
+        themeColor="#000"
+        color="#000"
+        title={"Renew subscription"}
         size={"md"}
       />
     ),
@@ -85,9 +73,9 @@ const SubscribeCard = () => {
 
   return (
     <>
-      <Card className="bg-slate-800" bordered={true}>
-        <span className="font-medium mb-8 text-slate-200 ml-4">
-          Standard Plan
+      <Card className="bg-[#45062e]" bordered={true}>
+        <span className="font-medium mb-8 text-white ml-4">
+          Your Plan Expired
         </span>
         <div className="mt-12 mb-12 text-center ">
           {" "}
@@ -97,9 +85,7 @@ const SubscribeCard = () => {
           <span className="text-[11px] text-slate-300 ml-2">/ month</span>
         </div>
         <div className="flex justify-between  ">
-          <span className="text-[12px] text-slate-300 ml-2">
-            Monthly rolling
-          </span>
+          <span className="text-[12px] text-slate-300 ml-2">Renew Now</span>
           <span className="text-[14px] text-white ml-2"> 15 Tokens </span>
         </div>
         <div className="flex justify-between">
@@ -110,4 +96,4 @@ const SubscribeCard = () => {
   );
 };
 
-export default SubscribeCard;
+export default ExpiredSubCard;

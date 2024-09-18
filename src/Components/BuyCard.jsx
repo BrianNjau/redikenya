@@ -7,8 +7,8 @@ import { Supabase } from "../Functions/SupabaseClient";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 const BuyCard = () => {
-  const [tokenValue, setTokenValue] = useState(3);
-  const [tokenPrice, setTokenPrice] = useState(480);
+  const [tokenValue, setTokenValue] = useState(1);
+  const [tokenPrice, setTokenPrice] = useState(160);
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
 
@@ -81,10 +81,10 @@ const BuyCard = () => {
     publicKey: test_key,
     text: (
       <Buttons
-        className={"ml-4 mt-2  font-medium font-sans "}
-        themeColor="#fff"
+        className={"ml-4 mt-2 bg-[#3EB489] btn-fill  font-medium font-sans "}
+        themeColor="#3EB489"
         color="#fff"
-        title={<i className="text-[18px] feather-arrow-right"></i>}
+        title={"Buy"}
         size={"md"}
       />
     ),
@@ -101,13 +101,13 @@ const BuyCard = () => {
           Pay As You Go Balance
         </span>
 
-        <div className="mt-8 mb-4 text-center ">
+        <div className="mt-12 mb-12 text-center ">
           {" "}
           <span className="text-[32px] text-white ml-2">{payGoWallet}</span>
           <span className="text-[12px] text-slate-300 ml-2">TOKENS</span>
         </div>
 
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-1">
           <span className="text-[12px] text-slate-300 ml-2">
             {" "}
             Top up your account here{" "}

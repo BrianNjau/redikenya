@@ -431,9 +431,8 @@ const Invest = () => {
         <FloatButton.Group
           trigger="click"
           type="default"
-          badge={{ dot: true }}
           icon={<MonitorOutlined />}
-          className="motion-safe:animate-pulse text-slate-600"
+          className=" text-slate-600"
         >
           <Tooltip title="Generate PDI investment insights">
             <FloatButton

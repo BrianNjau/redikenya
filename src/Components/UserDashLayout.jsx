@@ -57,12 +57,12 @@ const UserDashLayout = ({ children }) => {
       icon: <i className="feather-settings mr-1"></i>,
       children: [
         {
-          key: "accountSub1",
-          label: "Edit Profile",
+          key: "profile",
+          label: <Link to="/profile">User Profile</Link>,
         },
         {
-          key: "accountSub2",
-          label: "Account Status",
+          key: "account",
+          label: <Link to="/account">Account Status</Link>,
         },
         {
           key: "accountSub3",

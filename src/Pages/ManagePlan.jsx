@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import SubscribeCard from "../Components/SubscribeCard";
 import { useSupabaseAuth, useUserWallet } from "../Context/Context";
 import ManageSub from "../Components/ManageSub";
-import RenewCard from "../Components/RenewCard";
+import NotRenewingCard from "../Components/NotRenewingCard";
+import ExpiredSubCard from "../Components/ExpiredSubCard";
 
 const ManagePlan = () => {
   const session = useSupabaseAuth();
@@ -31,21 +32,28 @@ const ManagePlan = () => {
         <hr className="mt-16 h-0.5 mx-auto my-4 bg-gray-400 border-0 rounded md:my-10 dark:bg-gray-700" />
         <span className="text-[11px] ml-8   text-gray-700">
           Save upto 6% on tokens by subscribing to the PDI monthly standard
-          plan. Tokens will renew after 1 month.
+          plan. Monthly tokens will expire after one month. You can cancel your
+          subscription anytime.
         </span>{" "}
         <div className="flex mt-12 justify-start">
           <div className="w-[30%]">
             {subscriptionWallet ? (
-              subscriptionWallet?.status === "Not Renewing" ||
-              subscriptionWallet?.status === "Disabled" ||
-              subscriptionWallet?.status === "expired" ? (
-                // renew card
-
-                <RenewCard />
-              ) : (
+              subscriptionWallet?.status === "Not Renewing" ? (
+                //user has subscription that is within the expiry period but has cancelled the renewal
+                // create Not renewing card
+                <NotRenewingCard />
+              ) : subscriptionWallet?.status === "active" ? (
+                //subscription is active and renewing
+                //manage sub is ok
                 <ManageSub />
+              ) : (
+                //subscription is disabled or expired
+                //create expired card with same function as sub card
+                <ExpiredSubCard />
               )
             ) : (
+              //user has never subscribed before and is subscribing for the first time
+              //ok
               <SubscribeCard />
             )}
             {/* {subscription ? <ManageSub /> : <SubscribeCard />} */}

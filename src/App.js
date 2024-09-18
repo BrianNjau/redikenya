@@ -6,12 +6,14 @@ import retina from "retinajs";
 import { AnimatePresence } from "framer-motion";
 import {
   GlobalContext,
+  NotificationProvider,
   SupabaseAuthProvider,
   UserWalletProvider,
 } from "./Context/Context";
 
 //vercel page tracking and performance
 import { inject } from "@vercel/analytics";
+
 // import { SpeedInsights } from "@vercel/speed-insights/react";
 //Import pages
 const LandingPage = lazy(() => import("./Pages/Landingpage"));
@@ -34,11 +36,21 @@ const UpdatePassword = lazy(() => import("./Pages/UpdatePassword.jsx"));
 const ManagePlan = lazy(() => import("./Pages/ManagePlan.jsx"));
 const PurchaseToken = lazy(() => import("./Pages/PurchaseToken.jsx"));
 const BillingHistory = lazy(() => import("./Pages/BillingHistory.jsx"));
+const Profile = lazy(() => import("./Pages/Profile.jsx"));
+const Account = lazy(() => import("./Pages/Account.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
   const [footerHeight, setFooterHeight] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // const openNotification = () => {
+  //   api.open({
+  //     key,
+  //     message: 'Notification Title',
+  //     description: 'description.',
+  //   });
+  // }
   const [customModal, setCustomModal] = useState({
     el: null,
     isOpen: false,
@@ -89,84 +101,96 @@ function App() {
   return (
     <SupabaseAuthProvider>
       {/* <SpeedInsights /> */}
-      <GlobalContext.Provider
-        value={{
-          headerHeight,
-          setHeaderHeight,
-          footerHeight,
-          setFooterHeight,
-          isModalOpen,
-          setIsModalOpen,
-          customModal,
-          setCustomModal,
-        }}
-      >
-        <UserWalletProvider>
-          <div
-            className="App"
-            style={{ "--header-height": `${headerHeight}px` }}
-          >
-            {
-              <main
-                style={{ marginTop: headerHeight, marginBottom: footerHeight }}
-              >
-                <AnimatePresence exitBeforeEnter>
-                  <Suspense fallback={<></>}>
-                    <Routes>
-                      <Route
-                        path="/"
-                        element={
-                          <LandingPage style={{ "--base-color": "#e6994e" }} />
-                        }
-                      />
-                      <Route path="about-us" element={<AboutUs />} />
-                      <Route path="economics" element={<Economics />} />
-                      <Route path="search" element={<Search />} />
-                      <Route
-                        path="search-results"
-                        element={<SearchResults />}
-                      />
-                      <Route path="invest" element={<Invest />} />
-                      <Route path="area-data" element={<Area />} />
-                      <Route
-                        path="yield-pdi-insights"
-                        element={<YHAlgoPage />}
-                      />
-                      <Route
-                        path="price-sqm-pdi-insights"
-                        element={<LPAlgoPage />}
-                      />
-                      <Route
-                        path="grm-pdi-insights"
-                        element={<GRMAlgoPage />}
-                      />
-                      <Route path="verify-mail" element={<VerifyMailPage />} />
-                      <Route path="register" element={<Register />} />
-                      <Route path="login" element={<Login />} />
-                      <Route path="confirm" element={<Confirm />} />
-                      <Route
-                        path="user-dashboard"
-                        element={<UserDashboard />}
-                      />
-                      <Route path="reset" element={<ResetPassword />} />
-                      <Route
-                        path="update-password"
-                        element={<UpdatePassword />}
-                      />
-                      <Route path="manage-plan" element={<ManagePlan />} />
-                      <Route
-                        path="purchase-token"
-                        element={<PurchaseToken />}
-                      />
-                      <Route path="billing" element={<BillingHistory />} />
-                    </Routes>
-                  </Suspense>
-                </AnimatePresence>
-              </main>
-            }
-          </div>
-        </UserWalletProvider>
-      </GlobalContext.Provider>
+      <NotificationProvider>
+        <GlobalContext.Provider
+          value={{
+            headerHeight,
+            setHeaderHeight,
+            footerHeight,
+            setFooterHeight,
+            isModalOpen,
+            setIsModalOpen,
+            customModal,
+            setCustomModal,
+          }}
+        >
+          <UserWalletProvider>
+            <div
+              className="App"
+              style={{ "--header-height": `${headerHeight}px` }}
+            >
+              {
+                <main
+                  style={{
+                    marginTop: headerHeight,
+                    marginBottom: footerHeight,
+                  }}
+                >
+                  <AnimatePresence exitBeforeEnter>
+                    <Suspense fallback={<></>}>
+                      <Routes>
+                        <Route
+                          path="/"
+                          element={
+                            <LandingPage
+                              style={{ "--base-color": "#e6994e" }}
+                            />
+                          }
+                        />
+                        <Route path="about-us" element={<AboutUs />} />
+                        <Route path="economics" element={<Economics />} />
+                        <Route path="search" element={<Search />} />
+                        <Route
+                          path="search-results"
+                          element={<SearchResults />}
+                        />
+                        <Route path="invest" element={<Invest />} />
+                        <Route path="area-data" element={<Area />} />
+                        <Route
+                          path="yield-pdi-insights"
+                          element={<YHAlgoPage />}
+                        />
+                        <Route
+                          path="price-sqm-pdi-insights"
+                          element={<LPAlgoPage />}
+                        />
+                        <Route
+                          path="grm-pdi-insights"
+                          element={<GRMAlgoPage />}
+                        />
+                        <Route
+                          path="verify-mail"
+                          element={<VerifyMailPage />}
+                        />
+                        <Route path="register" element={<Register />} />
+                        <Route path="login" element={<Login />} />
+                        <Route path="confirm" element={<Confirm />} />
+                        <Route
+                          path="user-dashboard"
+                          element={<UserDashboard />}
+                        />
+                        <Route path="reset" element={<ResetPassword />} />
+                        <Route
+                          path="update-password"
+                          element={<UpdatePassword />}
+                        />
+                        <Route path="manage-plan" element={<ManagePlan />} />
+                        <Route
+                          path="purchase-token"
+                          element={<PurchaseToken />}
+                        />
+                        <Route path="billing" element={<BillingHistory />} />
+                        <Route path="profile" element={<Profile />} />
+                        <Route path="account" element={<Account />} />
+                      </Routes>
+                    </Suspense>
+                  </AnimatePresence>
+                </main>
+              }
+            </div>
+          </UserWalletProvider>
+        </GlobalContext.Provider>
+      </NotificationProvider>
     </SupabaseAuthProvider>
   );
 }

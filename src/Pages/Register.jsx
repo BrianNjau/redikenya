@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { Input } from "../Components/Form";
+import { Input, Password } from "../Components/Form";
 import { resetForm } from "../Functions/Utilities";
 import { Supabase } from "../Functions/SupabaseClient";
-import { Spin, notification } from "antd";
-import { useSupabaseAuth } from "../Context/Context";
+import { Spin } from "antd";
+import { NotificationContext, useSupabaseAuth } from "../Context/Context";
 import { LoadingOutlined } from "@ant-design/icons";
 import Welcome from "../Assets/img/welcome.svg";
+// import SuccessIcon from "../Assets/img/successIcon.png";
+import FailureIcon from "../Assets/img/failIcon.png";
 const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
+
   const navigate = useNavigate();
   const session = useSupabaseAuth();
-
+  const { openNotification } = useContext(NotificationContext);
   useEffect(() => {
     if (session) {
       navigate("/");
@@ -28,6 +30,8 @@ const Register = () => {
     try {
       //
       setRegisterLoading(true);
+
+      //first check if such email exists
       const { data, error } = await Supabase.auth.signUp({
         email: registerUserInfo.email,
         password: registerUserInfo.password,
@@ -37,35 +41,48 @@ const Register = () => {
           },
         },
       });
-      console.log("register response", data);
-      if (data.user) {
+      //user returned is fake thus already exists
+      if (
+        data.user &&
+        data.user.identities &&
+        data.user.identities.length === 0
+      ) {
+        openNotification(
+          "topRight",
+          "Sign Up Failed!",
+          "Account already exists",
+          <img className="w-8" src={FailureIcon} alt="success" />
+        );
+      } else if (data.user && data.user.identities.length > 0) {
         //user obj returned on successful account creation
 
-        console.log(data);
+        // console.log(data);
 
         navigate("/verify-mail");
       }
       setRegisterLoading(false);
       if (error) {
-        api.error({
-          message: error.code,
-          description: error.message,
-        });
+        openNotification(
+          "topRight",
+          error.code,
+          error.message,
+          <img className="w-8" src={FailureIcon} alt="success" />
+        );
       }
     } catch (error) {
       console.log(error);
       setRegisterLoading(false);
-
-      api.error({
-        message: error.code,
-        description: error.message,
-      });
+      openNotification(
+        "topRight",
+        error.code,
+        error.message,
+        <img className="w-8" src={FailureIcon} alt="success" />
+      );
     }
   }
 
   return (
     <>
-      {contextHolder}
       <div className="absolute top-0 left-0 w-full h-full opacity-75 bg-gradient-to-tr from-[#08415c] via-[#3EB489] to-[#08415c]"></div>
       <Container className="relative mt-[15vh]">
         <Row className="justify-center">
@@ -84,9 +101,8 @@ const Register = () => {
               <span className="text-[#3EB489] block font-serif uppercase mb-[10px]">
                 Sign Up For Free
               </span>
-              <h6 className="inline-block text-[#08415c] -tracking-[1px] w-[80%] mb-14 lg:w-[85%] sm:w-[55%] xs:w-full">
-                Unlock the Power of Property Data <br /> Create Account to
-                Receive Free Tokens
+              <h6 className="inline-block text-[#08415c] -tracking-[1px] w-[80%] mb-10 lg:w-[85%] sm:w-[55%] xs:w-full">
+                Unlock the Power of Property Data
               </h6>
               <Formik
                 initialValues={{
@@ -111,27 +127,27 @@ const Register = () => {
                 }}
               >
                 {({ isSubmitting, status }) => (
-                  <div className="relative subscribe-style-08">
+                  <div>
                     <Form className="relative">
                       <Input
                         showErrorMsg={true}
                         type="text"
                         name="name"
-                        className="border-[1px] medium-input border-solid border-transparent font-sans"
+                        className=" medium-input font-sans mb-4"
                         placeholder="Your full name"
                       />
                       <Input
                         showErrorMsg={true}
                         type="email"
                         name="email"
-                        className="border-[1px] medium-input border-solid border-transparent font-sans"
+                        className="border-[1px] mb-4  medium-input font-sans"
                         placeholder="Your email address"
                       />
-                      <Input
+                      <Password
                         showErrorMsg={true}
                         type="password"
                         name="password"
-                        className="border-[1px] medium-input border-solid border-transparent font-sans"
+                        className="border-[1px] medium-input mb-4  font-sans"
                         placeholder="Create your password"
                       />
                       <p className="mb-[25px] block text-sm">
@@ -151,15 +167,13 @@ const Register = () => {
                       <button
                         aria-label="subscribe"
                         type="submit"
-                        className={`text-xs py-[12px] px-[28px] uppercase${
-                          isSubmitting ? " loading" : ""
-                        } `}
+                        className={`w-[100%] mt-2 text-white rounded hover:bg-white bg-black btn-fill btn-fancy font-medium font-sans text-xs py-[14px] px-[28px] uppercase`}
                       >
                         {registerLoading ? (
                           <Spin
                             indicator={
                               <LoadingOutlined
-                                style={{ fontSize: 24, color: "#3EB489" }}
+                                style={{ fontSize: 24, color: "white" }}
                                 spin
                               />
                             }

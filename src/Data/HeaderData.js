@@ -31,8 +31,9 @@ const HeaderData = [
                   </span>
                 </div>
                 <p className="text-gray-100 text-sm text-balance">
-                  Leverage AI-powered tools to identify prime properties.
+                  Leverage AI- tools to uncover investment insights.
                 </p>
+
                 <div className="flex items-center py-3">
                   {/* <svg
                     className="h-6 pr-3 fill-current text-blue-300"
@@ -43,7 +44,7 @@ const HeaderData = [
                   </svg> */}
                   <Link
                     to="/invest"
-                    className="text-white bold border-b-2 border-green-400 hover:text-green-400"
+                    className="text-white bold border-b-2 border-[#3EB489] hover:text-[#3EB489]"
                   >
                     Explore
                   </Link>
@@ -75,7 +76,7 @@ const HeaderData = [
                   </svg> */}
                   <Link
                     to="/area-data"
-                    className="text-white bold border-b-2 border-green-400 hover:text-green-400"
+                    className="text-white bold border-b-2 border-[#3EB489] hover:text-[#3EB489]"
                   >
                     Explore
                   </Link>
@@ -107,7 +108,7 @@ const HeaderData = [
                   </svg> */}
                   <Link
                     to="/search"
-                    className="text-white bold border-b-2 border-green-400 hover:text-green-400"
+                    className="text-white bold border-b-2 border-[#3EB489] hover:text-[#3EB489]"
                   >
                     Explore
                   </Link>

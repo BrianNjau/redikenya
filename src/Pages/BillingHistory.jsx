@@ -74,7 +74,7 @@ const BillingHistory = () => {
 
       if (data) {
         setBillingData(data);
-        console.log("Billing data =>", data);
+        // console.log("Billing data =>", data);
       }
       if (error) {
         console.log("error on billing data", error.message);

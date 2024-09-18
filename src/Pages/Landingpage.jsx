@@ -43,7 +43,7 @@ const Landingpage = (props) => {
     },
 
     {
-      label: <Link to="/"> Profile</Link>,
+      label: <Link to="/profile"> Profile</Link>,
       key: "4",
     },
     {

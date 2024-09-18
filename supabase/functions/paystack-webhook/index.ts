@@ -24,7 +24,71 @@ Deno.serve(async (req) => {
 
     if(event==="subscription.create"){
       console.log("created subscription with this =>", data)
-      // handle subscription insertion 
+      // handle subscription insertion and insert the subscription code
+
+      const {data: user_id, error:userError} = await  supabase.rpc(
+        "get_user_id_by_email",
+        {
+          email: data.customer.email,
+        }
+      );
+      if(user_id)console.log("User ID that subscribed =>", user_id[0].id);
+      if(userError) console.log("Get user id error ", userError);
+
+
+      if(user_id){
+            //check if subscription exists
+      const { data: subscribed_user} = await supabase
+      .from('subscriptions')
+      .select("*")
+      .eq('user_id', user_id[0].id);
+  // 
+  if(subscribed_user.length>0){
+    const {data:subData, error} = await supabase.from("subscriptions").update(
+      {
+     
+        tokens:  0,
+        subscription_code: data.subscription_code,
+        next_payment_date: data.next_payment_date,
+        created_at: data.createdAt,
+        expires_at: new Date(new Date(data.createdAt).setMonth(new Date(data.createdAt).getMonth() + 1)), //created + 1 month
+        period: data.plan["interval"],
+        status: data.status,
+        
+      }
+    ).eq("user_id", user_id[0].id);
+
+    console.log("updated new sub", subData)
+    console.log("updated new sub err", error)
+  } else
+    if(subscribed_user.length===0){
+  const {data:subData, error} = await supabase.from("subscriptions").insert([
+    {
+      user_id: user_id[0].id,
+      tokens:  0, // tokens will be added by the transaction event
+      customer_ref: data.customer.customer_code,
+      period: data.plan["interval"],
+     
+      subscription_code: data.subscription_code,
+      next_payment_date: data.next_payment_date,
+      created_at: data.createdAt,
+      expires_at: new Date(new Date(data.createdAt).setMonth(new Date(data.createdAt).getMonth() + 1)), //created + 1 month
+     
+      status: data.status,
+     
+    }
+  ]);
+  console.log("create subscription i", subData);
+  console.log("err", error);
+}
+
+      }
+   
+
+      // await supabase.from('subscriptions').insert([{
+
+      // }])
+
 
     }
     
@@ -55,7 +119,7 @@ Deno.serve(async (req) => {
       
         // create recurring subscription transaction here 
         if(subscribed_user.length>0){
-          console.log("run recurring ");
+          console.log("subscription payment");
          const {data:subData, error} =  await supabase.from('subscription_payments').insert([
             {
               user_id: data.metadata.customer[2]["value"],
@@ -78,27 +142,37 @@ Deno.serve(async (req) => {
 
         if(subscribed_user.length===0){
           // need to insert subscription create 
-          console.log("run create sub");
-          const {data:subData, error} = await supabase.from("subscription_payments").insert([
-          {
-            user_id: data.metadata.customer[2]["value"],
-            token_amount:  data.metadata.customer[3]["value"],
-            customer_ref: data.customer.customer_code,
-            period: data.plan["interval"],
-            email: data.customer["email"],
-            subscription_amount: data.amount/100,
-            paid_at: data.paid_at,
-            status: data.status,
-            transaction_event: event,
-            transaction_reference: data.reference,
-            transaction_type: "create"
-          }
-        ]);
-        // if (error) throw new Error(`Create payment insertion failed: ${error.message}`);
-        console.log("supadata", subData);
-        console.log("err", error);
+          console.log("create subscription event came late throw error and relisten");
+        //   const {data:subData, error} = await supabase.from("subscription_payments").insert([
+        //   {
+        //     user_id: data.metadata.customer[2]["value"],
+        //     token_amount:  data.metadata.customer[3]["value"],
+        //     customer_ref: data.customer.customer_code,
+        //     period: data.plan["interval"],
+        //     email: data.customer["email"],
+        //     subscription_amount: data.amount/100,
+        //     paid_at: data.paid_at,
+        //     status: data.status,
+        //     transaction_event: event,
+        //     transaction_reference: data.reference,
+        //     transaction_type: "create"
+        //   }
+        // ]);
+         if (error) throw new Error(`Create payment insertion failed: ${error.message}`);
+
         }
       }
+    }
+
+    if(event === "invoice.update"){
+      //result after subscription attempt
+      if(data.transaction.status==="success"){
+        await supabase
+        .from('subscriptions').update({next_payment_date: data.subscription.next_payment_date}).eq('customer_ref', data.customer.customer_code);
+
+      }
+
+
     }
 
     // listen for unsubscribe events

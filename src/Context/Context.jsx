@@ -1,5 +1,7 @@
-import { createContext, useEffect, useState, useContext } from "react";
+import { createContext, useEffect, useState, useContext, useMemo } from "react";
 import { Supabase } from "../Functions/SupabaseClient";
+import { InfoCircleTwoTone } from "@ant-design/icons";
+import { notification } from "antd";
 
 // set the defaults
 export const GlobalContext = createContext({
@@ -27,6 +29,7 @@ export const SupabaseAuthProvider = ({ children }) => {
     Supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_OUT") {
         setSession(null);
+        localStorage.clear();
       } else if (session) {
         setSession(session);
       }
@@ -193,5 +196,35 @@ export const UserWalletProvider = ({ children }) => {
     >
       {children}
     </UserWalletContext.Provider>
+  );
+};
+
+// Create context
+export const NotificationContext = createContext({});
+
+export const NotificationProvider = ({ children }) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  // Create a function to handle opening notifications
+  const openNotification = (placement, message, description, icon) => {
+    api.open({
+      message: message || `Notification ${placement}`,
+      description: description || "",
+      placement: placement || "topRight",
+      icon: icon || <InfoCircleTwoTone />,
+    });
+  };
+  // Example context value that could be used in notifications
+  const contextValue = useMemo(
+    () => ({
+      openNotification,
+    }),
+    [api]
+  );
+  return (
+    <NotificationContext.Provider value={contextValue}>
+      {contextHolder}
+      {children}
+    </NotificationContext.Provider>
   );
 };
