@@ -208,7 +208,7 @@ export const NotificationProvider = ({ children }) => {
   // Create a function to handle opening notifications
   const openNotification = (placement, message, description, icon) => {
     api.open({
-      message: message || `Notification ${placement}`,
+      message: message || `Please Notice`,
       description: description || "",
       placement: placement || "topRight",
       icon: icon || <InfoCircleTwoTone />,

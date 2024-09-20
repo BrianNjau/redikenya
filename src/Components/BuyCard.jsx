@@ -81,11 +81,11 @@ const BuyCard = () => {
     publicKey: test_key,
     text: (
       <Buttons
-        className={"ml-4 mt-2 bg-[#3EB489] btn-fill  font-medium font-sans "}
-        themeColor="#3EB489"
+        className={"ml-4 mt-2  btn-fancy font-medium font-sans "}
+        themeColor="#fff"
         color="#fff"
         title={"Buy"}
-        size={"md"}
+        size={"sm"}
       />
     ),
     label: "PDI Marketplace Kenya",

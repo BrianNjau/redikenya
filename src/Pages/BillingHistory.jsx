@@ -3,32 +3,23 @@ import UserDashLayout from "../Components/UserDashLayout";
 import { useSupabaseAuth } from "../Context/Context";
 import { Table } from "antd";
 import { Supabase } from "../Functions/SupabaseClient";
-import { title } from "process";
+
+import { useNavigate } from "react-router-dom";
 
 const BillingHistory = () => {
   const session = useSupabaseAuth();
   const [billingData, setBillingData] = useState();
   const [loading, setLoading] = useState(false);
-  //   const [tableParams, setTableParams] = useState({
-  //     pagination: {
-  //       current: 0,
-  //       pageSize: 5,
-  //     },
-  //   });
+  const navigate = useNavigate();
 
+  console.log(session);
   useEffect(() => {
-    if (!billingData) {
+    if (!session) {
+      navigate("/");
+    } else if (!billingData) {
       fetchBillingInfo(session.user.id);
     }
-  }, [
-    session.user.id,
-    billingData,
-    // tableParams.pagination?.current,
-    // tableParams.pagination?.pageSize,
-    // tableParams?.sortOrder,
-    // tableParams?.sortField,
-    // JSON.stringify(tableParams.filters),
-  ]);
+  }, [session, billingData]);
 
   const columns = [
     {

@@ -10,6 +10,7 @@ import { Supabase } from "../Functions/SupabaseClient";
 import { Spin } from "antd";
 import SuccessIcon from "../Assets/img/successIcon.png";
 import FailureIcon from "../Assets/img/failIcon.png";
+import Buttons from "../Components/Buttons";
 const Profile = () => {
   const session = useSupabaseAuth();
   const [loading, setLoading] = useState(false);
@@ -124,7 +125,30 @@ const Profile = () => {
                     name="password"
                     prefix={<KeyOutlined />}
                   /> */}
-                  <button
+                  <Buttons
+                    type={"submit"}
+                    className={
+                      "mt-2 w-[40%]  btn-fill btn-fancy font-medium font-sans"
+                    }
+                    themeColor="#000"
+                    color="#fff"
+                    title={
+                      loading ? (
+                        <Spin
+                          indicator={
+                            <LoadingOutlined
+                              style={{ fontSize: 18, color: "green" }}
+                              spin
+                            />
+                          }
+                        />
+                      ) : (
+                        "Save"
+                      )
+                    }
+                    size={"sm"}
+                  />
+                  {/* <button
                     aria-label="subscribe"
                     type="submit"
                     className={`w-[40%] mt-2 text-white rounded hover:bg-white bg-black btn-fill btn-fancy font-medium font-sans text-xs py-[14px] px-[28px] uppercase`}
@@ -141,7 +165,7 @@ const Profile = () => {
                     ) : (
                       "Save"
                     )}
-                  </button>
+                  </button> */}
                 </Form>
               </>
             )}

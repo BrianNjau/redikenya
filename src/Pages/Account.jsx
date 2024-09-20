@@ -1,17 +1,143 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserDashLayout from "../Components/UserDashLayout";
-import { useSupabaseAuth } from "../Context/Context";
-import { Card } from "antd";
-import {
-  InfoCircleFilled,
-  InfoCircleOutlined,
-  InfoCircleTwoTone,
-} from "@ant-design/icons";
+import { NotificationContext, useSupabaseAuth } from "../Context/Context";
+import { Card, Modal, Spin } from "antd";
+import { InfoCircleTwoTone, LoadingOutlined } from "@ant-design/icons";
 import Buttons from "../Components/Buttons";
+import { Supabase } from "../Functions/SupabaseClient";
+import FailureIcon from "../Assets/img/failIcon.png";
+import SuccessIcon from "../Assets/img/successIcon.png";
+import { useNavigate } from "react-router-dom";
+import CautionImage from "../Assets/img/cautionBack.svg";
 
 const Account = () => {
   const session = useSupabaseAuth();
-  console.log("user", session);
+  //   console.log("user", session);
+  const { openNotification } = useContext(NotificationContext);
+  const [loadingSignOut, setLoadingSignOut] = useState(false);
+  const [loadingResetPassword, setLoadingResetPassword] = useState(false);
+  const [loadingDeleteAccount, setLoadingDeleteAccount] = useState(false);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!session) {
+      navigate("/");
+    }
+  }, []);
+
+  const handleSignOutDevices = async () => {
+    try {
+      setLoadingSignOut(true);
+      const { data: signOutData, error: signOutError } =
+        await Supabase.auth.signOut({ scope: "others" });
+      if (signOutError) {
+        console.log(signOutError);
+        openNotification(
+          "topRight",
+          signOutError.code,
+          signOutError.message,
+          <img className="w-8" src={FailureIcon} alt="fail" />
+        );
+      }
+      //   console.log(signOutData);
+      if (!signOutError) {
+        //   console.log(signOutData);
+        openNotification(
+          "topRight",
+          "Sign Out Devices Success",
+          "You have successfully signed out all other devices signed in",
+          <img className="w-8" src={SuccessIcon} alt="success" />
+        );
+      }
+      setLoadingSignOut(false);
+    } catch (error) {
+      console.log(error);
+      setLoadingSignOut(false);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    try {
+      setLoadingResetPassword(true);
+      const { data: resetData, error: errorReset } =
+        await Supabase.auth.resetPasswordForEmail(session.user.email);
+      if (errorReset) {
+        openNotification(
+          "topRight",
+          errorReset.code,
+          errorReset.message,
+          <img className="w-8" src={FailureIcon} alt="fail" />
+        );
+      }
+      if (!errorReset) {
+        openNotification(
+          "topRight",
+          "Reset Password Success",
+          "Reset password link has been sent to your email account",
+          <img className="w-8" src={SuccessIcon} alt="success" />
+        );
+      }
+      setLoadingResetPassword(false);
+    } catch (error) {
+      console.log(error);
+      setLoadingResetPassword(false);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      setLoadingDeleteAccount(true);
+      //Call edge function
+      setIsModalOpen(false);
+      const { data, error } = await Supabase.functions.invoke(
+        "admin-functions",
+        {
+          body: {
+            userId: session.user.id,
+          },
+        }
+      );
+
+      // After deletion, sign out the user from the frontend
+      await Supabase.auth.signOut();
+
+      if (!error) {
+        openNotification(
+          "topRight",
+          "Account Deleted",
+          "Your account has been deleted",
+          <img className="w-8" src={SuccessIcon} alt="success" />
+        );
+      }
+      if (error) {
+        console.log(error);
+        openNotification(
+          "topRight",
+          error.code,
+          error.message,
+          <img className="w-8" src={FailureIcon} alt="fail" />
+        );
+      }
+
+      setLoadingDeleteAccount(false);
+    } catch (error) {
+      console.log(error);
+      setLoadingDeleteAccount(false);
+    }
+  };
+
   return (
     <UserDashLayout>
       <div className=" text-left">
@@ -60,8 +186,22 @@ const Account = () => {
               className={"mt-2 h-10  btn-fill btn-fancy font-medium font-sans"}
               themeColor="#000"
               color="#fff"
-              title={"Sign Out"}
+              title={
+                loadingSignOut ? (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ fontSize: 18, color: "black" }}
+                        spin
+                      />
+                    }
+                  />
+                ) : (
+                  "Sign Out"
+                )
+              }
               size={"sm"}
+              onClick={handleSignOutDevices}
             />
           </div>
           <div className="mt-8">
@@ -78,7 +218,21 @@ const Account = () => {
               className={"mt-2 h-10  btn-fill btn-fancy font-medium font-sans"}
               themeColor="#000"
               color="#fff"
-              title={"Reset Password"}
+              title={
+                loadingResetPassword ? (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ fontSize: 18, color: "black" }}
+                        spin
+                      />
+                    }
+                  />
+                ) : (
+                  "Reset Password"
+                )
+              }
+              onClick={handlePasswordReset}
               size={"sm"}
             />
           </div>
@@ -96,9 +250,52 @@ const Account = () => {
               className={"mt-2 h-10  btn-fill btn-fancy font-medium font-sans"}
               themeColor="#8c271e"
               color="#fff"
-              title={"Delete Account"}
+              title={
+                loadingDeleteAccount ? (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ fontSize: 18, color: "black" }}
+                        spin
+                      />
+                    }
+                  />
+                ) : (
+                  "Delete Account"
+                )
+              }
               size={"sm"}
+              onClick={showModal}
             />
+            <Modal
+              title={
+                <img
+                  className="h-48 ml-auto mr-auto"
+                  src={CautionImage}
+                  alt="Caution, you are deleting your account"
+                />
+              }
+              open={isModalOpen}
+              onOk={handleDeleteUser}
+              onCancel={handleCancel}
+              okText="Delete Account"
+              okType="danger"
+              cancelText="Cancel"
+            >
+              <div>
+                <br />
+                <div className="text-center mb-4">
+                  <p className="text-base font-semibold">
+                    Caution you are about to delete your account!
+                  </p>
+
+                  <p className="text-sm font-light">
+                    You will lose access to your account and any active tokens
+                    or subscriptions
+                  </p>
+                </div>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>

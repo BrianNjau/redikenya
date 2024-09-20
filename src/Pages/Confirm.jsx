@@ -30,7 +30,7 @@ const Confirm = () => {
 
   const checkWindow = window.location.href;
 
-  console.log(checkWindow.split("confirm")[1]);
+  // console.log(checkWindow.split("confirm")[1]);
 
   return checkWindow.split("confirm")[1] ===
     "#error=access_denied&error_code=403&error_description=Email+link+is+invalid+or+has+expired" ? (
@@ -54,7 +54,7 @@ const Confirm = () => {
                       alt="activation-icon"
                     />
                   }
-                  title={`Ooops, this link seems to have been alredy used or expired`}
+                  title={`Ooops, this link seems to have been already used or expired`}
                   subTitle="If you suspect something is not right, please reach out to support"
                 />
                 <Buttons
