@@ -50,12 +50,13 @@ const ResetPassword = () => {
     try {
       setLoading(true);
       setCountdown(30);
-      const { data, error } = await Supabase.auth.resetPasswordForEmail(
-        email.email,
-        {
-          options: captchaToken,
-        }
-      );
+      const { data, error } = await Supabase.auth.resetPasswordForEmail({
+        email: email.email,
+        options: {
+          captchaToken: captchaToken,
+        },
+      });
+      captcha.current.resetCaptcha();
 
       // Set an interval to update the countdown every second
       const interval = setInterval(() => {

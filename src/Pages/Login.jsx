@@ -39,6 +39,7 @@ const Login = () => {
         password: loginUserInfo.password,
         options: { captchaToken },
       });
+      captcha.current.resetCaptcha();
 
       if (!data.session || !data.user) {
         openNotification(

@@ -46,6 +46,8 @@ const Register = () => {
           captchaToken,
         },
       });
+
+      captcha.current.resetCaptcha();
       //user returned is fake thus already exists
       if (
         data.user &&
