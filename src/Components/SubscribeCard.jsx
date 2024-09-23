@@ -1,10 +1,12 @@
-import { Card, Skeleton } from "antd";
-import React, { useState } from "react";
+import { Card } from "antd";
+import React, { useContext } from "react";
 import Buttons from "./Buttons";
-import { useSupabaseAuth } from "../Context/Context";
+import { NotificationContext, useSupabaseAuth } from "../Context/Context";
 import { PaystackButton } from "react-paystack";
-import { Supabase } from "../Functions/SupabaseClient";
-import { createClient } from "@supabase/supabase-js";
+// import { Supabase } from "../Functions/SupabaseClient";
+// import { createClient } from "@supabase/supabase-js";
+import SuccessIcon from "../Assets/img/successIcon.png";
+// import FailureIcon from "../Assets/img/failIcon.png";
 
 // const supabase = createClient(
 //   `http://127.0.0.1:54321`,
@@ -17,15 +19,18 @@ const SubscribeCard = () => {
   const session = useSupabaseAuth();
   const tokenPrice = 1500;
   const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
+  const { openNotification } = useContext(NotificationContext);
 
   // you can call this function anything
   const handlePaystackSuccessAction = async () => {
     // Implementation for whatever you want to do with reference and after success call.
-    // wait for 1.5 seconds to allow for webhook response
-    // setTimeout(function () {
-    //   // refresh the page
-    //   window.location.reload(false);
-    // }, 1500);
+    //send user success response
+    openNotification(
+      "topRight",
+      "Subscribed Successfully!",
+      "Thank you for your purchase. We are crediting your account shortly",
+      <img className="w-8" src={SuccessIcon} alt="success" />
+    );
   };
 
   // you can call this function anything
@@ -78,7 +83,7 @@ const SubscribeCard = () => {
       />
     ),
     label: "Monthly Standard Plan",
-    onSuccess: (reference) => handlePaystackSuccessAction(reference),
+    onSuccess: (reference) => handlePaystackSuccessAction(),
 
     onClose: () => handleOnClose(),
   };

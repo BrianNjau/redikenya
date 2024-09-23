@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
@@ -15,12 +15,15 @@ import { Spin } from "antd";
 import LoginImg from "../Assets/img/logini.svg";
 import SuccessIcon from "../Assets/img/successIcon.png";
 import FailureIcon from "../Assets/img/failIcon.png";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 
 const Login = () => {
   const session = useSupabaseAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { openNotification } = useContext(NotificationContext);
+  const [captchaToken, setCaptchaToken] = useState();
+  const captcha = useRef();
 
   useEffect(() => {
     if (session) {
@@ -34,13 +37,14 @@ const Login = () => {
       const { data, error } = await Supabase.auth.signInWithPassword({
         email: loginUserInfo.email,
         password: loginUserInfo.password,
+        options: { captchaToken },
       });
 
       if (!data.session || !data.user) {
         openNotification(
           "topRight",
           "Login Failed!",
-          "Incorrect email or password. Please try again",
+          error.message,
           <img className="w-8" src={FailureIcon} alt="success" />
         );
       }
@@ -134,6 +138,13 @@ const Login = () => {
                           Forgot password?
                         </Link>
                       </p>
+                      <HCaptcha
+                        ref={captcha}
+                        sitekey="a0b218b4-5e24-499e-8154-e4a08c6ae2b0"
+                        onVerify={(token) => {
+                          setCaptchaToken(token);
+                        }}
+                      />
 
                       {/* <Buttons
                         className={

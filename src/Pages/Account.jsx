@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import UserDashLayout from "../Components/UserDashLayout";
-import { NotificationContext, useSupabaseAuth } from "../Context/Context";
+import {
+  NotificationContext,
+  useSupabaseAuth,
+  useUserWallet,
+} from "../Context/Context";
 import { Card, Modal, Spin } from "antd";
 import { InfoCircleTwoTone, LoadingOutlined } from "@ant-design/icons";
 import Buttons from "../Components/Buttons";
@@ -19,6 +23,7 @@ const Account = () => {
   const [loadingDeleteAccount, setLoadingDeleteAccount] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { subscriptionWallet } = useUserWallet();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -99,45 +104,58 @@ const Account = () => {
   const handleDeleteUser = async () => {
     try {
       setLoadingDeleteAccount(true);
-      //Call edge function
-      setIsModalOpen(false);
-      const { data, error } = await Supabase.functions.invoke(
-        "admin-functions",
-        {
-          body: {
-            userId: session.user.id,
-          },
-        }
-      );
 
-      // After deletion, sign out the user from the frontend
-      await Supabase.auth.signOut();
+      //check if active subscription exists
+      const subStatus = subscriptionWallet?.status;
 
-      if (!error) {
+      if (subStatus === "active") {
         openNotification(
           "topRight",
-          "Account Deleted",
-          "Your account has been deleted",
-          <img className="w-8" src={SuccessIcon} alt="success" />
-        );
-      }
-      if (error) {
-        console.log(error);
-        openNotification(
-          "topRight",
-          error.code,
-          error.message,
+          "Delete account failed",
+          "Please cancel your active subscription first to delete account",
           <img className="w-8" src={FailureIcon} alt="fail" />
         );
-      }
+        setIsModalOpen(false);
+      } else {
+        //Call edge function
+        setIsModalOpen(false);
+        const { data, error } = await Supabase.functions.invoke(
+          "admin-functions",
+          {
+            body: {
+              userId: session.user.id,
+            },
+          }
+        );
 
+        // After deletion, sign out the user from the frontend
+        await Supabase.auth.signOut();
+
+        if (!error) {
+          openNotification(
+            "topRight",
+            "Account Deleted",
+            "Your account has been deleted",
+            <img className="w-8" src={SuccessIcon} alt="success" />
+          );
+        }
+        if (error) {
+          console.log(error);
+          openNotification(
+            "topRight",
+            error.code,
+            error.message,
+            <img className="w-8" src={FailureIcon} alt="fail" />
+          );
+        }
+      }
       setLoadingDeleteAccount(false);
     } catch (error) {
       console.log(error);
       setLoadingDeleteAccount(false);
     }
   };
-
+  console.log(subscriptionWallet);
   return (
     <UserDashLayout>
       <div className=" text-left">

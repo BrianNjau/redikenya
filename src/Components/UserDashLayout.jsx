@@ -62,7 +62,7 @@ const UserDashLayout = ({ children }) => {
         },
         {
           key: "account",
-          label: <Link to="/account">Account Status</Link>,
+          label: <Link to="/account">Account Settings</Link>,
         },
         {
           key: "accountSub3",

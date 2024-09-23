@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
@@ -6,7 +6,7 @@ import { Formik, Form } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Input } from "../Components/Form";
-
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { resetForm } from "../Functions/Utilities";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSupabaseAuth } from "../Context/Context";
@@ -20,7 +20,8 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
-
+  const [captchaToken, setCaptchaToken] = useState();
+  const captcha = useRef();
   useEffect(() => {
     if (session) {
       navigate("/");
@@ -50,7 +51,10 @@ const ResetPassword = () => {
       setLoading(true);
       setCountdown(30);
       const { data, error } = await Supabase.auth.resetPasswordForEmail(
-        email.email
+        email.email,
+        {
+          options: captchaToken,
+        }
       );
 
       // Set an interval to update the countdown every second
@@ -140,11 +144,18 @@ const ResetPassword = () => {
                         className="border-[1px] medium-input border-solid border-transparent font-sans"
                         placeholder="Create your password"
                       /> */}
+                      <HCaptcha
+                        ref={captcha}
+                        sitekey="a0b218b4-5e24-499e-8154-e4a08c6ae2b0"
+                        onVerify={(token) => {
+                          setCaptchaToken(token);
+                        }}
+                      />
 
                       <button
                         aria-label="subscribe"
                         type="submit"
-                        className={`text-xs py-[12px] px-[28px] uppercase`}
+                        className={`text-xs py-[12px] px-[28px] mt-2 uppercase`}
                         disabled={loading}
                       >
                         {loading ? (

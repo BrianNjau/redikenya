@@ -7,6 +7,7 @@
     "@ant-design/pro-chat": "^1.12.2",
     "@babel/runtime": "^7.23.2",
     "@craco/craco": "^7.1.0",
+    "@hcaptcha/react-hcaptcha": "^1.11.0",
     "@nivo/bar": "^0.84.0",
     "@nivo/line": "^0.84.0",
     "@nivo/pie": "^0.84.0",

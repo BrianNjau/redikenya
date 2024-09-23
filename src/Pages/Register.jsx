@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 // Libraries
 import { Col, Container, Row } from "react-bootstrap";
@@ -14,12 +14,16 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Welcome from "../Assets/img/welcome.svg";
 // import SuccessIcon from "../Assets/img/successIcon.png";
 import FailureIcon from "../Assets/img/failIcon.png";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+
 const Register = () => {
   const [registerLoading, setRegisterLoading] = useState(false);
 
   const navigate = useNavigate();
   const session = useSupabaseAuth();
   const { openNotification } = useContext(NotificationContext);
+  const [captchaToken, setCaptchaToken] = useState();
+  const captcha = useRef();
   useEffect(() => {
     if (session) {
       navigate("/");
@@ -39,6 +43,7 @@ const Register = () => {
           data: {
             fullName: registerUserInfo.name,
           },
+          captchaToken,
         },
       });
       //user returned is fake thus already exists
@@ -149,6 +154,13 @@ const Register = () => {
                         name="password"
                         className="border-[1px] medium-input mb-4  font-sans"
                         placeholder="Create your password"
+                      />
+                      <HCaptcha
+                        ref={captcha}
+                        sitekey="a0b218b4-5e24-499e-8154-e4a08c6ae2b0"
+                        onVerify={(token) => {
+                          setCaptchaToken(token);
+                        }}
                       />
                       <p className="mb-[25px] block text-sm">
                         After you sign up, you will be granted free tokens to
