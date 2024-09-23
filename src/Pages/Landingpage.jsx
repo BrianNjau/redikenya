@@ -170,7 +170,7 @@ const Landingpage = (props) => {
                   themeColor="#3EB489"
                   color="#F3EFE0"
                   size="md"
-                  title="Try for free"
+                  title="Try  free"
                 />
               </Col>
             )}
