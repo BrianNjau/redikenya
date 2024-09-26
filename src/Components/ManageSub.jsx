@@ -88,6 +88,8 @@ const ManageSub = () => {
         <Modal
           title="Manage PDI Subscription"
           open={isModalOpen}
+          onCancel={handleCancel}
+          onOk={null}
           footer={null}
           bodyStyle={{ height: "800px", padding: 0 }}
           width={800} // Adjust the modal width as per your requirement

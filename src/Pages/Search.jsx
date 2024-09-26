@@ -14,11 +14,18 @@ import {
   Tooltip,
   Row as RowAnt,
   Col as ColAnt,
+  Modal,
+  Progress,
 } from "antd";
-import { GlobalContext, useSupabaseAuth } from "../Context/Context";
+import {
+  GlobalContext,
+  NotificationContext,
+  useSupabaseAuth,
+} from "../Context/Context";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
-
+import { consumeToken } from "../Functions/ConsumeToken";
+import SearchConfirm from "../Assets/img/SearchConf.svg";
 const Search = () => {
   const [user, setUser] = useState();
   const navigate = useNavigate();
@@ -29,8 +36,19 @@ const Search = () => {
   let [loadingSubmit, setLoadingSubmit] = useState(false);
   let [selectedRoad, setSelectedRoad] = useState("");
   let [selectedLocation, setSelectedLocation] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("active"); // Possible statuses: 'active', 'exception', 'success'
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openNotification } = useContext(NotificationContext);
 
   const session = useSupabaseAuth();
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const { setHeaderHeight } = useContext(GlobalContext);
   useEffect(() => {
@@ -84,9 +102,26 @@ const Search = () => {
     try {
       e.preventDefault();
       setLoadingSubmit(true);
+      setProgress(30);
+      setTimeout(() => setProgress(60), 1000);
+      //check user login
+      if (!session) {
+        setIsModalOpen(false);
+        navigate("/login");
+        openNotification(
+          "topRight",
+          "Login required",
+          "You must login to get our data insights"
+        );
+        return;
+      }
 
-      if (session) {
-        // road specific search
+      //open modal first and ask for confirmation
+
+      //first try consume token and receive success message
+      const consumeTokenResult = await consumeToken(session.user.id);
+      console.log("consume token result", consumeTokenResult);
+      if (consumeTokenResult.success) {
         if (selectedRoad) {
           const { data: searchedRoadResults } = await Supabase.from(
             "Property Overview"
@@ -126,15 +161,45 @@ const Search = () => {
             location: selectedLocation,
             propertyData: propertyDataSearched,
           };
-          navigate("/search-results", { state: searched });
+
+          setProgress(100);
+          setStatus("success");
+          // enhance animation effect
+
+          setTimeout(() => {
+            setIsModalOpen(false);
+            navigate("/search-results", { state: searched });
+            openNotification(
+              "topRight",
+              "Successfully completed search",
+              consumeTokenResult.message
+            );
+          }, 1000);
         }
       } else {
-        navigate("/login"); // user must login
+        setProgress(100);
+        setStatus("exception"); // Show error status if something goes wrong
+        setTimeout(() => {
+          openNotification(
+            "topRight",
+            "Failed to complete search",
+            consumeTokenResult.message
+          );
+          setIsModalOpen(false);
+          setLoadingSubmit(false);
+          setProgress(0);
+          setStatus("active");
+        }, 1000);
       }
-
       setLoadingSubmit(false);
     } catch (err) {
+      setProgress(100);
+      setStatus("exception");
+      setLoadingSubmit(false);
       console.log(err);
+      setIsModalOpen(false);
+      setProgress(0);
+      setStatus("active");
     }
   };
 
@@ -212,12 +277,13 @@ const Search = () => {
                   />
 
                   <Button
-                    className=""
-                    style={{ color: "#FFFFFF" }}
+                    // className="hover:text-black"
+                    style={{ color: "#3EB489" }}
                     icon={<i className="fas fa-search text-xs"></i>}
                     loading={loadingSubmit}
                     disabled={propertyRoad.length === 0 ? true : false}
-                    onClick={onSubmitSearch}
+                    onClick={showModal}
+                    // type="primary"
                   >
                     <span className="text-xs font-semibold">SEARCH</span>
                   </Button>
@@ -444,6 +510,60 @@ const Search = () => {
           </Card>
         </ColAnt>
       </RowAnt>
+      <Modal
+        title={
+          loadingSubmit || status === "exception" || status === "success" ? (
+            <p className="text-base text-center font-semibold ml-auto mr-auto ">
+              Hold tight running your search
+            </p>
+          ) : (
+            <img
+              className="h-48 ml-auto mr-auto"
+              src={SearchConfirm}
+              alt="celebration"
+            />
+          )
+        }
+        open={isModalOpen}
+        onOk={onSubmitSearch}
+        onCancel={handleCancel}
+        okText="Continue"
+        okType="primary"
+        cancelText="Cancel"
+        cancelButtonProps={{
+          disabled: loadingSubmit,
+        }}
+        okButtonProps={{
+          className: "text-white bg-black",
+          loading:
+            loadingSubmit || status === "exception" || status === "success",
+        }}
+      >
+        {loadingSubmit || status === "exception" || status === "success" ? (
+          <div>
+            <br />
+            <div className="text-center mb-4">
+              <Progress
+                className="ml-auto mr-auto"
+                type="line"
+                percent={progress}
+                status={status}
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <br />
+            <div className="text-center mb-4">
+              <p className="text-base font-semibold">You're almost there!</p>
+
+              <p className="text-sm font-light">
+                Please note that this search will consume one token
+              </p>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

@@ -531,18 +531,17 @@ const SearchResults = () => {
       {contextNotification}
 
       <div className="flex justify-between">
-        <ToolTipANT title="Back">
-          <Button onClick={confirm} className="ml-4">
-            {" "}
-            <i className="line-icon-Arrow-Back3 "></i>
-          </Button>
-        </ToolTipANT>
-        <ToolTipANT title="Save Search">
+        <Button onClick={confirm} className="ml-4">
+          {" "}
+          <i className="feather-arrow-left mr-2 pt-2 "></i> <span>return</span>
+        </Button>
+
+        {/* <ToolTipANT title="Save Search">
           <Button className="mr-4">
             {" "}
             <i className="line-icon-Save"></i>
           </Button>
-        </ToolTipANT>
+        </ToolTipANT> */}
       </div>
 
       {contextHolder}

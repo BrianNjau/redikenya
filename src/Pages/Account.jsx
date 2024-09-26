@@ -13,6 +13,7 @@ import FailureIcon from "../Assets/img/failIcon.png";
 import SuccessIcon from "../Assets/img/successIcon.png";
 import { useNavigate } from "react-router-dom";
 import CautionImage from "../Assets/img/cautionBack.svg";
+import { createClient } from "@supabase/supabase-js";
 
 const Account = () => {
   const session = useSupabaseAuth();
@@ -21,6 +22,12 @@ const Account = () => {
   const [loadingSignOut, setLoadingSignOut] = useState(false);
   const [loadingResetPassword, setLoadingResetPassword] = useState(false);
   const [loadingDeleteAccount, setLoadingDeleteAccount] = useState(false);
+
+  //TEST PROXY
+  //   const supabase = createClient(
+  //     `https://gnohvxtipsxjqtgjazcb.supabase.co`,
+  //     `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdub2h2eHRpcHN4anF0Z2phemNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjcxODY4MDQsImV4cCI6MjA0Mjc2MjgwNH0.Ux0bBQn1lpwG7E2LnqFUc6Uh-iWGvY67p3C_F88wamU`
+  //   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { subscriptionWallet } = useUserWallet();
@@ -155,7 +162,20 @@ const Account = () => {
       setLoadingDeleteAccount(false);
     }
   };
-  console.log(subscriptionWallet);
+
+  //   const handleProxyInvocation = async () => {
+  //     try {
+  //       const { data, error } = await supabase.functions.invoke("appcube-proxy", {
+  //         body: null,
+  //       });
+  //       console.log("response from appcube proxy=>", data);
+  //       console.log("error response from appcube proxy=>", error);
+  //     } catch (error) {
+  //       console.log("err ", error);
+  //     }
+  //   };
+
+  //   console.log(subscriptionWallet);
   return (
     <UserDashLayout>
       <div className=" text-left">
@@ -188,6 +208,7 @@ const Account = () => {
                 color="#000"
                 title={"Support"}
                 size={"sm"}
+                // onClick={handleProxyInvocation}
               />
             </div>
           </Card>
