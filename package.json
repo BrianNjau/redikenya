@@ -48,6 +48,7 @@
     "google-map-react": "^2.2.1",
     "isotope-layout": "^3.0.6",
     "kutty": "^0.6.0",
+    "ml-pca": "^4.1.1",
     "nodemailer": "^6.9.1",
     "npm-run-all": "^4.1.5",
     "openai": "^4.33.1",

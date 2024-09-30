@@ -27,7 +27,6 @@ import Meta from "antd/es/card/Meta";
 import { consumeToken } from "../Functions/ConsumeToken";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
 const Search = () => {
-  const [user, setUser] = useState();
   const navigate = useNavigate();
   let [location, setLocation] = useState([]);
   let [propertyRoad, setPropertyRoad] = useState([]);
@@ -53,9 +52,6 @@ const Search = () => {
   const { setHeaderHeight } = useContext(GlobalContext);
   useEffect(() => {
     setHeaderHeight(120);
-    if (session) {
-      setUser(session.user.user_metadata); // set user
-    }
   }, [session]);
 
   const onChange = async (value) => {

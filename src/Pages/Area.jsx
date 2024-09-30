@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import GlobalHeader from "../Components/GlobalHeader";
 import {
   Select,
@@ -13,6 +13,8 @@ import {
   Button as ButtonAnt,
   Result,
   Table,
+  Modal,
+  Progress,
 } from "antd";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Autoplay, Keyboard } from "swiper/modules";
@@ -30,11 +32,12 @@ import { ResponsivePie } from "@nivo/pie";
 import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import SearchAreaImage from "../Assets/img/areaSearch.svg";
-import { useSupabaseAuth } from "../Context/Context";
+import { NotificationContext, useSupabaseAuth } from "../Context/Context";
 import { useNavigate } from "react-router-dom";
+import SearchConfirm from "../Assets/img/SearchConf.svg";
+import { consumeToken } from "../Functions/ConsumeToken";
 
 const Area = () => {
-  const [user, setUser] = useState();
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedLocationLoading, setSelectedLocationLoading] = useState(false);
   const [locationOverview, setLocationOverview] = useState([]);
@@ -54,7 +57,7 @@ const Area = () => {
   const [selectedTypology, setSelectedTypology] = useState([]);
   const [marketValue, setMarketValue] = useState([]);
   const [filteredMarketValue, setFilteredMarketValue] = useState([]);
-
+  const [selectedDropDown, setSelectedDropDown] = useState();
   const session = useSupabaseAuth();
 
   const navigate = useNavigate();
@@ -62,6 +65,22 @@ const Area = () => {
   const swiperRef = React.useRef(null);
   // const swiperRef2 = React.useRef(null);
   // const [activeSlide, setActiveSlide] = useState(0);
+
+  //consume token featues
+
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("active"); // Possible statuses: 'active', 'exception', 'success'
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openNotification } = useContext(NotificationContext);
+
+  const showModal = (e) => {
+    setIsModalOpen(true);
+    setSelectedDropDown(e);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const locationSelectionOptions = areaData.map((a) => {
     return {
       value: a["area"],
@@ -70,9 +89,6 @@ const Area = () => {
   });
 
   useEffect(() => {
-    if (session) {
-      setUser(session.user.user_metadata); // set user
-    }
     if (selectedRoad.length > 0 && roads.includes(selectedRoad[0]) === false) {
       //location, road mismatch refresh state for filters
       setSelectedRoad([]);
@@ -294,15 +310,37 @@ const Area = () => {
       : (medSort[half - 1] + medSort[half]) / 2;
   };
 
-  async function onSelectArea(e) {
+  async function onSelectArea() {
     try {
-      if (session) {
+      //
+      // console.log(selectedDropDown);
+      setSelectedLocationLoading(true);
+      setProgress(30);
+      //check user login
+      if (!session) {
+        setIsModalOpen(false);
+        navigate("/login");
+        openNotification(
+          "topRight",
+          "Login required",
+          "You must login to get our data insights"
+        );
+        return;
+      }
+
+      setTimeout(() => setProgress(60), 1000);
+
+      //try consume the token
+      const consumeTokenResult = await consumeToken(session.user.id);
+      console.log("consume token result", consumeTokenResult);
+
+      if (consumeTokenResult.success) {
         if (roads.length > 0) {
           setRoads([]);
         }
-        setSelectedLocationLoading(true);
+
         const selectedArea = areaData.filter(
-          (areadata) => areadata["area"] === e
+          (areadata) => areadata["area"] === selectedDropDown
         );
         setSelectedLocation(selectedArea);
         //TO DO: PULL AREA SPECIFIC DATA FROM DB HERE
@@ -364,10 +402,33 @@ const Area = () => {
           }
         }
         if (error) console.log(error);
+        setProgress(100);
+        setStatus("success");
+        setTimeout(() => {
+          setIsModalOpen(false);
+          openNotification(
+            "topRight",
+            "Successfully completed search",
+            consumeTokenResult.message
+          );
+          setProgress(0);
+          setStatus("active");
+        }, 1000);
       } else {
-        navigate("/login"); // user must login
+        setProgress(100);
+        setStatus("exception"); // Show error status if something goes wrong
+        setTimeout(() => {
+          openNotification(
+            "topRight",
+            "Failed to complete search",
+            consumeTokenResult.message
+          );
+          setIsModalOpen(false);
+          setSelectedLocationLoading(false);
+          setProgress(0);
+          setStatus("active");
+        }, 1000);
       }
-
       setSelectedLocationLoading(false);
     } catch (error) {
       setSelectedLocationLoading(false);
@@ -1653,7 +1714,7 @@ const Area = () => {
                   <div className="relative text-right sm:text-end xs:text-center sm:mx-[15px]">
                     <div className="h-[1px] w-[90%] right-0 top-[20px] z-0 bg-[#3EB489] block absolute sm:block sm:w-full sm:top-[25px] xs:hidden xs:w-[95%] xs:right-[15px]"></div>
                     <Select
-                      onChange={onSelectArea}
+                      onChange={showModal}
                       bordered={false}
                       size={"large"}
                       placeholder="Please select area location"
@@ -1853,6 +1914,66 @@ const Area = () => {
           )}
         </div>
       </section>
+      <Modal
+        title={
+          selectedLocationLoading ||
+          status === "exception" ||
+          status === "success" ? (
+            <p className="text-base text-center font-semibold ml-auto mr-auto ">
+              Hold tight running your search
+            </p>
+          ) : (
+            <img
+              className="h-48 ml-auto mr-auto"
+              src={SearchConfirm}
+              alt="celebration"
+            />
+          )
+        }
+        open={isModalOpen}
+        onOk={onSelectArea}
+        onCancel={handleCancel}
+        okText="Continue"
+        okType="primary"
+        cancelText="Cancel"
+        cancelButtonProps={{
+          disabled: selectedLocationLoading,
+        }}
+        okButtonProps={{
+          className: "text-white bg-black",
+          loading:
+            selectedLocationLoading ||
+            status === "exception" ||
+            status === "success",
+        }}
+      >
+        {selectedLocationLoading ||
+        status === "exception" ||
+        status === "success" ? (
+          <div>
+            <br />
+            <div className="text-center mb-4">
+              <Progress
+                className="ml-auto mr-auto"
+                type="line"
+                percent={progress}
+                status={status}
+              />
+            </div>
+          </div>
+        ) : (
+          <div>
+            <br />
+            <div className="text-center mb-4">
+              <p className="text-base font-semibold">You're almost there!</p>
+
+              <p className="text-sm font-light">
+                Please note that this search will consume one token
+              </p>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

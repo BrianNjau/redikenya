@@ -21,8 +21,13 @@ import {
   Row as RowAnt,
   Col as ColAnt,
   ConfigProvider,
+  Progress,
 } from "antd";
-import { GlobalContext, useSupabaseAuth } from "../Context/Context";
+import {
+  GlobalContext,
+  NotificationContext,
+  useSupabaseAuth,
+} from "../Context/Context";
 import { Supabase } from "../Functions/SupabaseClient";
 import {
   CodeOutlined,
@@ -43,9 +48,11 @@ import HGRIImage from "../Assets/img/hgri.svg";
 import { useNavigate } from "react-router-dom";
 import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
+import { consumeToken } from "../Functions/ConsumeToken";
 // import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { useCompletion } from "ai/react";
 // import { useChatCompletion } from "openai-streaming-hooks";
+
 const Invest = () => {
   const [user, setUser] = useState();
   const [hasSearched, setHasSearched] = useState(false);
@@ -69,7 +76,12 @@ const Invest = () => {
   const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
   const openAIKEY = process.env.REACT_APP_OPENAPIKEY;
   const navigate = useNavigate();
+  const { openNotification } = useContext(NotificationContext);
 
+  //consume token load
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState("active"); // Possible statuses: 'active', 'exception', 'success'
+  const [consumeTokenLoading, setConsumeTokenLoading] = useState(false);
   const session = useSupabaseAuth();
 
   const showDrawer = () => {
@@ -288,12 +300,61 @@ const Invest = () => {
   const showConfirmModal = () => {
     setIsConfirmSearchModalOpen(true);
   };
-  const handleOkSearch = () => {
-    if (session) {
-      filterProperties();
-      setIsConfirmSearchModalOpen(false);
-    } else {
-      navigate("/login"); // user must login first
+  const handleOkSearch = async () => {
+    try {
+      setConsumeTokenLoading(true);
+
+      setProgress(30);
+
+      setTimeout(() => 60, 1000);
+
+      //check user login
+      if (!session) {
+        setIsConfirmSearchModalOpen(false);
+        navigate("/login");
+        openNotification(
+          "topRight",
+          "Login required",
+          "You must login to get our data insights"
+        );
+        return;
+      }
+      //try to consume token
+      const consumeTokenResult = await consumeToken(session.user.id);
+      console.log("consume token result", consumeTokenResult);
+
+      if (consumeTokenResult.success) {
+        setProgress(100);
+        setStatus("success");
+        setTimeout(() => {
+          filterProperties();
+          setIsConfirmSearchModalOpen(false);
+          openNotification(
+            "topRight",
+            "Successfully completed search",
+            consumeTokenResult.message
+          );
+          setConsumeTokenLoading(false);
+          setProgress(0);
+          setStatus("active");
+        }, 1000);
+      } else {
+        setProgress(100);
+        setStatus("exception"); // Show error status if something goes wrong
+        setTimeout(() => {
+          openNotification(
+            "topRight",
+            "Failed to complete search",
+            consumeTokenResult.message
+          );
+          setConsumeTokenLoading(false);
+          setIsConfirmSearchModalOpen(false);
+          setProgress(0);
+          setStatus("active");
+        }, 1000);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -321,37 +382,186 @@ const Invest = () => {
     id: "google-map-script",
     googleMapsApiKey: mapsApi,
   });
+  // console.log(
+  //   "Context=>",
+  //   filterSearchResults.map((item) => JSON.stringify(item)).join(" ")
+  // );
 
   // AI SETUP
   async function HandleAIMessages(messages) {
     console.log("messages", messages);
+
+    // Function to chunk data based on the specified chunk size
+    const chunkData = (data, chunkSize) => {
+      const chunks = [];
+      let currentChunk = [];
+
+      data.forEach((item) => {
+        const currentSize = JSON.stringify(currentChunk).length;
+        const itemSize = JSON.stringify(item).length;
+
+        if (currentSize + itemSize < chunkSize) {
+          currentChunk.push(item);
+        } else {
+          chunks.push(currentChunk);
+          currentChunk = [item];
+        }
+      });
+
+      if (currentChunk.length) chunks.push(currentChunk);
+      return chunks;
+    };
+
     try {
       const openai = new OpenAI({
         apiKey: openAIKEY,
         dangerouslyAllowBrowser: true,
       });
       // Ensure the messages format is appropriate for ChatGPT
+
+      //create embeddings
+      const getEmbeddings = async (text) => {
+        try {
+          const response = await openai.embeddings.create({
+            model: "text-embedding-3-small", // Model for generating embeddings
+            input: text,
+          });
+
+          return response.data[0].embedding;
+        } catch (err) {
+          console.log("Embedding Error: ", err);
+          return null;
+        }
+      };
+
+      // Function to calculate cosine similarity between two embeddings
+      const cosineSimilarity = (vecA, vecB) => {
+        const dotProduct = vecA.reduce(
+          (acc, val, idx) => acc + val * vecB[idx],
+          0
+        );
+        const magnitudeA = Math.sqrt(
+          vecA.reduce((acc, val) => acc + val * val, 0)
+        );
+        const magnitudeB = Math.sqrt(
+          vecB.reduce((acc, val) => acc + val * val, 0)
+        );
+        return dotProduct / (magnitudeA * magnitudeB);
+      };
+
+      // Function to get top N relevant chunks based on query embedding and similarity threshold
+      const getRelevantChunks = async (
+        chunks,
+        queryEmbedding,
+        topN = 3,
+        threshold = 0.7
+      ) => {
+        const chunkEmbeddings = await Promise.all(
+          chunks.map((chunk) => getEmbeddings(JSON.stringify(chunk)))
+        );
+
+        const similarities = chunkEmbeddings.map((chunkEmbedding) =>
+          cosineSimilarity(chunkEmbedding, queryEmbedding)
+        );
+
+        // Filter chunks based on similarity threshold
+        const relevantChunks = similarities
+          .map((similarity, idx) => ({ similarity, idx }))
+          .filter((item) => item.similarity >= threshold) // Only include chunks above the threshold
+          .sort((a, b) => b.similarity - a.similarity) // Sort by similarity
+          .slice(0, topN) // Get top N relevant chunks
+          .map((item) => chunks[item.idx]);
+
+        // Fallback: if no chunk meets the threshold, return the top N most similar chunks
+        if (relevantChunks.length === 0) {
+          return chunks.slice(0, topN); // Fall back to first N chunks
+        }
+
+        return relevantChunks;
+      };
+      // const deduplicateResponse = (responseText) => {
+      //   const sentences = responseText.split(". ");
+      //   const uniqueSentences = [...new Set(sentences)];
+      //   return uniqueSentences.join(". ");
+      // };
+
+      // Define the chunk size (adjust according to your token limit)
+      // const CHUNK_SIZE = 9000; // Example chunk size; adjust as needed
+      // const chunkedResults = chunkData(filterSearchResults, CHUNK_SIZE);
+
+      // Prepare the base system message
+      // const baseSystemMessage = {
+      //   role: "system",
+      //   content: `PDI-AI is an intelligent property investment assistant. You can only answer questions based on the provided context. Never return the property key. If question not in context, say I may not have enough information to answer that question based on your search`,
+      // };
+
+      // // // Get the embedding for the user's latest query message
+      // const userMessage = messages[messages.length - 1].content;
+      // const queryEmbedding = await getEmbeddings(userMessage);
+
+      // // Get top 3 relevant chunks based on query embedding
+      // const relevantChunks = await getRelevantChunks(
+      //   chunkedResults,
+      //   queryEmbedding,
+      //   2,
+      //   0.65
+      // );
+
+      // let responseContent = "";
+
+      // // chunk implementation
+      // for (const chunk of relevantChunks) {
+      //   // Format messages for each chunk
+      //   const formattedMessages = [
+      //     baseSystemMessage,
+      //     ...messages.map((message) => ({
+      //       role: "user", // Assuming all other messages are from the user
+      //       content: message.content,
+      //     })),
+      //     {
+      //       role: "system",
+      //       content: `Context: ${JSON.stringify(chunk)}\n\n`,
+      //     },
+      //   ];
+
+      //   //   // Make a request to your ChatGPT API endpoint with streaming enabled
+      //   const response = await openai.chat.completions.create({
+      //     model: "gpt-4o", // Specify the model you want to use
+      //     messages: formattedMessages,
+      //     n: 1,
+      //     // stream: true,
+      //     // temperature: 0,
+      //     // max_tokens: 100,
+      //   });
+      //   responseContent += response.choices[0].message["content"];
+      // }
+
       const formattedMessages = [
         {
           role: "system",
-          content: `PDI-AI is an intelligent property investment assistant. You can only answer questions based on this context.\n\n Context: ${JSON.stringify(
+          content: `PDI-AI is an intelligent property investment assistant. Never return the property key. You will answer questions based on this JSON context. Context: ${JSON.stringify(
             filterSearchResults
-          )}\n\n and if the question can't be answered based on the context, say "Your question is not related to the investment search."\n\n`,
+          )} and if the question can't be answered based on the context, say "Your question is not related to the investment search."`,
         },
         ...messages.map((message) => ({
           role: "user", // Assuming all other messages are from the user
           content: message.content,
         })),
       ];
-      // Make a request to your ChatGPT API endpoint with streaming enabled
+      // // Make a request to your ChatGPT API endpoint with streaming enabled
       const response = await openai.chat.completions.create({
-        model: "gpt-4o", // Specify the model you want to use
+        model: "gpt-4o-mini", // Specify the model you want to use
         messages: [...formattedMessages],
-        // stream: true,
+
+        //   //   //   // stream: true,
       });
+      // If no useful response was generated, handle the fallback message
+      // if (!responseContent.trim()) {
+      //   responseContent = "That is all I know";
+      // }
 
       return new Response(response.choices[0].message["content"]);
-
+      // return new Response(responseContent);
       // Create a stream from the response and pipe it to the ProChat component
       // const stream = OpenAIStream(response);
 
@@ -425,12 +635,20 @@ const Invest = () => {
         </Container>
       </section>
 
+      {/* Ensure at least one filter is applied for ai to be used              */}
       {filterSearchResults.length === 0 && !hasSearched ? (
         ""
       ) : (
         <FloatButton.Group
           trigger="click"
           type="default"
+          badge={{
+            dot: true,
+            classNames: {
+              indicator: "motion-safe:animate-pulse",
+            },
+            color: "#3eb489",
+          }}
           icon={<MonitorOutlined />}
           className=" text-slate-600"
         >
@@ -950,20 +1168,46 @@ const Invest = () => {
                 onOk={handleOkSearch}
                 okText="Search"
                 confirmLoading={filterSearchLoading}
-                okType="secondary"
+                okType="primary"
                 onCancel={handleCancelSearch}
+                cancelButtonProps={{
+                  disabled: consumeTokenLoading,
+                }}
+                okButtonProps={{
+                  className: "text-white bg-black",
+                  loading:
+                    consumeTokenLoading ||
+                    status === "exception" ||
+                    status === "success",
+                }}
               >
-                <Result
-                  icon={
-                    <img
-                      className="h-64 ml-auto mr-auto"
-                      src={SearchInvest}
-                      alt="Please search to invest"
-                    />
-                  }
-                  title="Search to uncover investment opportunities"
-                  subTitle=" 1 search = 1 token"
-                />
+                {consumeTokenLoading ||
+                status === "exception" ||
+                status === "success" ? (
+                  <div>
+                    <br />
+                    <div className="text-center mb-4">
+                      <Progress
+                        className="ml-auto mr-auto"
+                        type="line"
+                        percent={progress}
+                        status={status}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <Result
+                    icon={
+                      <img
+                        className="h-64 ml-auto mr-auto"
+                        src={SearchInvest}
+                        alt="Please search to invest"
+                      />
+                    }
+                    title="Search to uncover investment opportunities"
+                    subTitle="Please note that this search will consume one token"
+                  />
+                )}
               </Modal>
 
               <div>
