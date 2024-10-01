@@ -54,7 +54,6 @@ import { consumeToken } from "../Functions/ConsumeToken";
 // import { useChatCompletion } from "openai-streaming-hooks";
 
 const Invest = () => {
-  const [user, setUser] = useState();
   const [hasSearched, setHasSearched] = useState(false);
   const [loadingPropData, setLoadingPropData] = useState([]);
   const [loadingPropOverview, setLoadingPropOverview] = useState([]);
@@ -96,9 +95,6 @@ const Invest = () => {
     setHeaderHeight(120);
     fetchPropData();
     fetchPropOverview();
-    if (session) {
-      setUser(session.user.user_metadata); // set user
-    }
   }, [session]);
 
   async function fetchPropData() {
@@ -109,6 +105,7 @@ const Invest = () => {
       let { data: PropData } = await Supabase.from("PropData").select("*");
       setPropData(PropData);
 
+      // console.log("prop data =>", PropData);
       setLoadingPropData(false);
     } catch (error) {
       setLoadingPropData(false);
@@ -124,6 +121,7 @@ const Invest = () => {
         "Property Overview"
       ).select("*");
       setPropOverview(PropOverview);
+      console.log("Prop Overview =>", PropOverview);
       setLoadingPropOverview(false);
     } catch (err) {
       setLoadingPropOverview(false);
@@ -225,6 +223,8 @@ const Invest = () => {
 
   function filterByTypology(data, typologies) {
     try {
+      // console.log("typolo", typologies);
+      // console.log("data", data);
       if (typologies.length === 0) {
         return data;
       }
@@ -232,7 +232,7 @@ const Invest = () => {
       const filteredResults = data.filter((property) =>
         typologies.includes(property["Typology"])
       );
-      // console.log("in typology", filteredResults);
+      console.log("in typology", filteredResults);
 
       return filteredResults;
     } catch (err) {
@@ -248,28 +248,31 @@ const Invest = () => {
         selectedMarketPrice,
         "Market Price"
       ); // filter by marketprice
-      // console.log("MarketPrice filtered result", filterByMarketPrice);
+      console.log("MarketPrice filtered result", filterByMarketPrice);
       const filterByRent = filterByValue(
         filterByMarketPrice.filtered,
         selectedRentPrice,
         "Rent"
       );
-      // console.log("Rent filtered result", filterByRent);
+      console.log("Rent filtered result", filterByRent);
       const locationFiltered = filterByLocation(
         filterByRent.filtered,
         selectedLocation,
         propOverview
       );
-      // console.log("FILTERED WITH LOcation", locationFiltered);
+      console.log("FILTERED WITH LOcation", locationFiltered);
       const typologyFiltered = filterByTypology(
         locationFiltered,
         selectedTypology
       );
 
+      console.log("typology filtered", typologyFiltered);
+
       const enrichedData = typologyFiltered.map((el) => {
         let locationName = propOverview.find(
           (prop) => prop["Property ID"] === el["PropertyID"]
         )["Name"];
+        console.log("location name", locationName);
         let location = propOverview.find(
           (prop) => prop["Property ID"] === el["PropertyID"]
         )["Location"];
@@ -287,13 +290,14 @@ const Invest = () => {
           ...el,
         };
       });
-      // console.log("FILTERED By Typology", typologyFiltered);
-      // console.log("enrichedData", enrichedData);
+      console.log("FILTERED By Typology", typologyFiltered);
+      console.log("enrichedData", enrichedData);
       setFilterSearchResults(enrichedData);
       setFilterSearchLoading(false);
       setHasSearched(true);
     } catch (error) {
       setFilterSearchLoading(false);
+      console.log("FILTER PROPERTIES ERROR=>", error);
     }
   }
 
@@ -392,25 +396,25 @@ const Invest = () => {
     console.log("messages", messages);
 
     // Function to chunk data based on the specified chunk size
-    const chunkData = (data, chunkSize) => {
-      const chunks = [];
-      let currentChunk = [];
+    // const chunkData = (data, chunkSize) => {
+    //   const chunks = [];
+    //   let currentChunk = [];
 
-      data.forEach((item) => {
-        const currentSize = JSON.stringify(currentChunk).length;
-        const itemSize = JSON.stringify(item).length;
+    //   data.forEach((item) => {
+    //     const currentSize = JSON.stringify(currentChunk).length;
+    //     const itemSize = JSON.stringify(item).length;
 
-        if (currentSize + itemSize < chunkSize) {
-          currentChunk.push(item);
-        } else {
-          chunks.push(currentChunk);
-          currentChunk = [item];
-        }
-      });
+    //     if (currentSize + itemSize < chunkSize) {
+    //       currentChunk.push(item);
+    //     } else {
+    //       chunks.push(currentChunk);
+    //       currentChunk = [item];
+    //     }
+    //   });
 
-      if (currentChunk.length) chunks.push(currentChunk);
-      return chunks;
-    };
+    //   if (currentChunk.length) chunks.push(currentChunk);
+    //   return chunks;
+    // };
 
     try {
       const openai = new OpenAI({
@@ -420,65 +424,65 @@ const Invest = () => {
       // Ensure the messages format is appropriate for ChatGPT
 
       //create embeddings
-      const getEmbeddings = async (text) => {
-        try {
-          const response = await openai.embeddings.create({
-            model: "text-embedding-3-small", // Model for generating embeddings
-            input: text,
-          });
+      // const getEmbeddings = async (text) => {
+      //   try {
+      //     const response = await openai.embeddings.create({
+      //       model: "text-embedding-3-small", // Model for generating embeddings
+      //       input: text,
+      //     });
 
-          return response.data[0].embedding;
-        } catch (err) {
-          console.log("Embedding Error: ", err);
-          return null;
-        }
-      };
+      //     return response.data[0].embedding;
+      //   } catch (err) {
+      //     console.log("Embedding Error: ", err);
+      //     return null;
+      //   }
+      // };
 
       // Function to calculate cosine similarity between two embeddings
-      const cosineSimilarity = (vecA, vecB) => {
-        const dotProduct = vecA.reduce(
-          (acc, val, idx) => acc + val * vecB[idx],
-          0
-        );
-        const magnitudeA = Math.sqrt(
-          vecA.reduce((acc, val) => acc + val * val, 0)
-        );
-        const magnitudeB = Math.sqrt(
-          vecB.reduce((acc, val) => acc + val * val, 0)
-        );
-        return dotProduct / (magnitudeA * magnitudeB);
-      };
+      // const cosineSimilarity = (vecA, vecB) => {
+      //   const dotProduct = vecA.reduce(
+      //     (acc, val, idx) => acc + val * vecB[idx],
+      //     0
+      //   );
+      //   const magnitudeA = Math.sqrt(
+      //     vecA.reduce((acc, val) => acc + val * val, 0)
+      //   );
+      //   const magnitudeB = Math.sqrt(
+      //     vecB.reduce((acc, val) => acc + val * val, 0)
+      //   );
+      //   return dotProduct / (magnitudeA * magnitudeB);
+      // };
 
       // Function to get top N relevant chunks based on query embedding and similarity threshold
-      const getRelevantChunks = async (
-        chunks,
-        queryEmbedding,
-        topN = 3,
-        threshold = 0.7
-      ) => {
-        const chunkEmbeddings = await Promise.all(
-          chunks.map((chunk) => getEmbeddings(JSON.stringify(chunk)))
-        );
+      // const getRelevantChunks = async (
+      //   chunks,
+      //   queryEmbedding,
+      //   topN = 3,
+      //   threshold = 0.7
+      // ) => {
+      //   const chunkEmbeddings = await Promise.all(
+      //     chunks.map((chunk) => getEmbeddings(JSON.stringify(chunk)))
+      //   );
 
-        const similarities = chunkEmbeddings.map((chunkEmbedding) =>
-          cosineSimilarity(chunkEmbedding, queryEmbedding)
-        );
+      //   const similarities = chunkEmbeddings.map((chunkEmbedding) =>
+      //     cosineSimilarity(chunkEmbedding, queryEmbedding)
+      //   );
 
-        // Filter chunks based on similarity threshold
-        const relevantChunks = similarities
-          .map((similarity, idx) => ({ similarity, idx }))
-          .filter((item) => item.similarity >= threshold) // Only include chunks above the threshold
-          .sort((a, b) => b.similarity - a.similarity) // Sort by similarity
-          .slice(0, topN) // Get top N relevant chunks
-          .map((item) => chunks[item.idx]);
+      //   // Filter chunks based on similarity threshold
+      //   const relevantChunks = similarities
+      //     .map((similarity, idx) => ({ similarity, idx }))
+      //     .filter((item) => item.similarity >= threshold) // Only include chunks above the threshold
+      //     .sort((a, b) => b.similarity - a.similarity) // Sort by similarity
+      //     .slice(0, topN) // Get top N relevant chunks
+      //     .map((item) => chunks[item.idx]);
 
-        // Fallback: if no chunk meets the threshold, return the top N most similar chunks
-        if (relevantChunks.length === 0) {
-          return chunks.slice(0, topN); // Fall back to first N chunks
-        }
+      //   // Fallback: if no chunk meets the threshold, return the top N most similar chunks
+      //   if (relevantChunks.length === 0) {
+      //     return chunks.slice(0, topN); // Fall back to first N chunks
+      //   }
 
-        return relevantChunks;
-      };
+      //   return relevantChunks;
+      // };
       // const deduplicateResponse = (responseText) => {
       //   const sentences = responseText.split(". ");
       //   const uniqueSentences = [...new Set(sentences)];
@@ -931,7 +935,7 @@ const Invest = () => {
                                               a["Property ID"] ===
                                               item["PropertyID"]
                                           )
-                                          ["Geo-Location"].split(",")[0]
+                                          ["Geo-Location"].split(", ")[0]
                                       : 0
                                   ),
                                   lng: Number(
@@ -945,7 +949,7 @@ const Invest = () => {
                                               a["Property ID"] ===
                                               item["PropertyID"]
                                           )
-                                          ["Geo-Location"].split(",")[1]
+                                          ["Geo-Location"].split(", ")[1]
                                       : 0
                                   ),
                                 }}
@@ -966,7 +970,7 @@ const Invest = () => {
                                               a["Property ID"] ===
                                               item["PropertyID"]
                                           )
-                                          ["Geo-Location"].split(",")[0]
+                                          ["Geo-Location"].split(", ")[0]
                                       : 0
                                   )} - ${Number(
                                     propOverview.find(
@@ -979,7 +983,7 @@ const Invest = () => {
                                               a["Property ID"] ===
                                               item["PropertyID"]
                                           )
-                                          ["Geo-Location"].split(",")[1]
+                                          ["Geo-Location"].split(", ")[1]
                                       : 0
                                   )}`}
                                   position={{
@@ -995,7 +999,7 @@ const Invest = () => {
                                                 a["Property ID"] ===
                                                 item["PropertyID"]
                                             )
-                                            ["Geo-Location"].split(",")[0]
+                                            ["Geo-Location"].split(", ")[0]
                                         : 0
                                     ),
                                     lng: Number(
@@ -1010,7 +1014,7 @@ const Invest = () => {
                                                 a["Property ID"] ===
                                                 item["PropertyID"]
                                             )
-                                            ["Geo-Location"].split(",")[1]
+                                            ["Geo-Location"].split(", ")[1]
                                         : 0
                                     ),
                                   }}
