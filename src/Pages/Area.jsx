@@ -550,7 +550,7 @@ const Area = () => {
     },
     grid: {
       line: {
-        stroke: "#f3efe0", // Change color of grid lines
+        stroke: "rgba(255,255,255,0.1)", // Change color of grid lines
       },
     },
     tooltip: {
@@ -561,6 +561,13 @@ const Area = () => {
     legends: {
       text: {
         fill: "#f3efe0", // Change color of legend text
+      },
+    },
+    crosshair: {
+      line: {
+        stroke: "rgba(255,255,255,0.8)",
+        strokeWidth: 1,
+        strokeOpacity: 0.35,
       },
     },
   };
@@ -685,7 +692,7 @@ const Area = () => {
   const medianGRISqmLine = [
     {
       id: "Median of GRI/Sqm by Typology",
-      color: "hsl(79, 70%, 50%)",
+      color: "#ff3344",
       data: [
         {
           x: "Studio",
@@ -972,6 +979,14 @@ const Area = () => {
                 Median of GRI/Sqm by Typology
               </span>{" "}
               <ResponsiveLine
+                colors={{ scheme: "accent" }}
+                // borderColor={{
+                //   from: "color",
+                //   modifiers: [
+                //     ["darker", 0.6],
+                //     ["opacity", 0.9],
+                //   ],
+                // }}
                 data={medianGRISqmLine}
                 theme={theme}
                 margin={{ top: 50, right: 140, bottom: 50, left: 120 }}

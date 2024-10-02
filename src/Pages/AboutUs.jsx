@@ -134,8 +134,8 @@ const AboutUs = () => {
                   underpinned by actionable insights derived from comprehensive
                   data analysis. Our commitment lies in fostering a culture
                   where investors, developers, agents, and stakeholders can
-                  harness the power of data to drive innovation, reduce risk,
-                  and seize opportunities.
+                  harness the power of AI and data to drive innovation, reduce
+                  risk, and seize opportunities.
                 </p>
               </div>
             </Col>
