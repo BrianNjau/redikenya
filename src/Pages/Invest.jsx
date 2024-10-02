@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import GlobalHeader from "../Components/GlobalHeader";
 import { Col, Container, Row } from "react-bootstrap";
 import Typed from "react-typed";
@@ -22,6 +22,7 @@ import {
   Col as ColAnt,
   ConfigProvider,
   Progress,
+  Tour,
 } from "antd";
 import {
   GlobalContext,
@@ -49,6 +50,7 @@ import { useNavigate } from "react-router-dom";
 import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
 import { consumeToken } from "../Functions/ConsumeToken";
+import { title } from "process";
 // import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { useCompletion } from "ai/react";
 // import { useChatCompletion } from "openai-streaming-hooks";
@@ -61,8 +63,10 @@ const Invest = () => {
   const [propOverview, setPropOverview] = useState([]);
   const [selectedMarketPrice, setSelectedMarketPrice] = useState([]);
   const [selectedRentPrice, setSelectedRentPrice] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState([]);
-  const [selectedTypology, setSelectedTypology] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState([
+    "Nairobi Kileleshwa",
+  ]);
+  const [selectedTypology, setSelectedTypology] = useState(["1BR", "2BR"]);
   const [filterSearchLoading, setFilterSearchLoading] = useState(false);
   const [filterSearchResults, setFilterSearchResults] = useState([]);
   const [isConfirmSearchModalOpen, setIsConfirmSearchModalOpen] =
@@ -82,6 +86,7 @@ const Invest = () => {
   const [status, setStatus] = useState("active"); // Possible statuses: 'active', 'exception', 'success'
   const [consumeTokenLoading, setConsumeTokenLoading] = useState(false);
   const session = useSupabaseAuth();
+  const [openTour, setTourOpen] = useState(false);
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -232,7 +237,7 @@ const Invest = () => {
       const filteredResults = data.filter((property) =>
         typologies.includes(property["Typology"])
       );
-      console.log("in typology", filteredResults);
+      // console.log("in typology", filteredResults);
 
       return filteredResults;
     } catch (err) {
@@ -248,25 +253,25 @@ const Invest = () => {
         selectedMarketPrice,
         "Market Price"
       ); // filter by marketprice
-      console.log("MarketPrice filtered result", filterByMarketPrice);
+      // console.log("MarketPrice filtered result", filterByMarketPrice);
       const filterByRent = filterByValue(
         filterByMarketPrice.filtered,
         selectedRentPrice,
         "Rent"
       );
-      console.log("Rent filtered result", filterByRent);
+      // console.log("Rent filtered result", filterByRent);
       const locationFiltered = filterByLocation(
         filterByRent.filtered,
         selectedLocation,
         propOverview
       );
-      console.log("FILTERED WITH LOcation", locationFiltered);
+      // console.log("FILTERED WITH LOcation", locationFiltered);
       const typologyFiltered = filterByTypology(
         locationFiltered,
         selectedTypology
       );
 
-      console.log("typology filtered", typologyFiltered);
+      // console.log("typology filtered", typologyFiltered);
 
       const enrichedData = typologyFiltered.map((el) => {
         let locationName = propOverview.find(
@@ -290,16 +295,25 @@ const Invest = () => {
           ...el,
         };
       });
-      console.log("FILTERED By Typology", typologyFiltered);
-      console.log("enrichedData", enrichedData);
+      // console.log("FILTERED By Typology", typologyFiltered);
+      // console.log("enrichedData", enrichedData);
       setFilterSearchResults(enrichedData);
       setFilterSearchLoading(false);
       setHasSearched(true);
+      // setTourOpen(true);
     } catch (error) {
       setFilterSearchLoading(false);
-      console.log("FILTER PROPERTIES ERROR=>", error);
+      // console.log("FILTER PROPERTIES ERROR=>", error);
     }
   }
+  // const ref1 = useRef(null);
+  // const aiAlert = [
+  //   {
+  //     title: <span>Understand your search results!</span>,
+  //     description: "Use our algorithms and AI",
+  //     target: () => ref1.current,
+  //   },
+  // ];
 
   const showConfirmModal = () => {
     setIsConfirmSearchModalOpen(true);
@@ -649,7 +663,7 @@ const Invest = () => {
           badge={{
             dot: true,
             classNames: {
-              indicator: "motion-safe:animate-pulse",
+              indicator: "animate-pulse",
             },
             color: "#3eb489",
           }}
@@ -673,7 +687,14 @@ const Invest = () => {
           </Tooltip>
         </FloatButton.Group>
       )}
-
+      {/* <Tour
+        steps={aiAlert}
+        open={openTour}
+        onClose={() => setTourOpen(false)}
+        mask={false}
+        type="primary"
+        className="w-50%"
+      /> */}
       {/* PDI INSIGHTS DRAWER */}
 
       <Drawer
@@ -1124,6 +1145,7 @@ const Invest = () => {
                   placeholder="Please select"
                   style={{ width: "100%" }}
                   onChange={handleLocationPicker}
+                  defaultValue={selectedLocation}
                   options={locations.map((a) => {
                     return { value: a, label: a };
                   })}
@@ -1143,7 +1165,10 @@ const Invest = () => {
                   Filter By Typology
                 </span>
                 <ul className="list-style filter-category">
-                  <Checkbox.Group onChange={handleTypologyPicker}>
+                  <Checkbox.Group
+                    defaultValue={selectedTypology}
+                    onChange={handleTypologyPicker}
+                  >
                     <li>
                       <Checkbox value="Studio">Studio</Checkbox>
                     </li>

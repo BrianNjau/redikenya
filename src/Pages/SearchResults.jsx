@@ -96,6 +96,7 @@ const SearchResults = () => {
   const [ensuite, setEnsuite] = useState(undefined);
   const [cloakroom, setCloakRoom] = useState(undefined);
   const [amenitiesLocation, setAmenitiesLocation] = useState(undefined);
+  // const [onsiteAmenities, setOnsiteAmenities] = useState(undefined);
   const [scatterLocation, setScatterLocation] = useState(undefined);
   const [scatterRoad, setScatterRoad] = useState(undefined);
   const [, setIsModalOpen] = useState(false);
@@ -202,7 +203,10 @@ const SearchResults = () => {
     )[0]["Sale type"];
     let amenitiesLocation = searchResults.roadResults.filter(
       (el) => el["Property ID"] === item["PropertyID"]
-    )[0]["Wellness location"];
+    )[0]["Amenities location"];
+    // let onsiteAmenities = searchResults.roadResults.filter(
+    //   (el) => el["Property ID"] === item["PropertyID"]
+    // )[0]["Onsite Amenities"];
     let location = searchResults.roadResults.filter(
       (el) => el["Property ID"] === item["PropertyID"]
     )[0]["Location"];
@@ -223,6 +227,7 @@ const SearchResults = () => {
       ensuite: item["En-suite"],
       cloakroom: item["Cloak room"],
       amenitiesLocation: amenitiesLocation,
+      // onsiteAmenities: onsiteAmenities,
       location: location,
       road: road,
       unit: unit,
@@ -230,7 +235,7 @@ const SearchResults = () => {
   });
 
   const CustomToolTip = ({ active, payload, label }) => {
-    // console.log(payload)
+    // console.log(payload);
     if (active && payload && payload.length) {
       return (
         <div
@@ -352,6 +357,16 @@ const SearchResults = () => {
               </ColAnt>
             </RowAnt>
           ) : null}
+          {/* {onsiteAmenities ? (
+            <RowAnt gutter={8}>
+              <ColAnt flex="auto" className="gutter-row">
+                <span>Onsite Amenities:</span>
+              </ColAnt>
+              <ColAnt flex="auto" className="gutter-row items-start">
+                <span>{payload[0].payload["onsiteAmenities"].trim()} </span>
+              </ColAnt>
+            </RowAnt>
+          ) : null} */}
           <br />
           <span className="font-semibold text-sm -tracking-[1px]">
             Click to view this property
@@ -408,6 +423,11 @@ const SearchResults = () => {
     } else {
       setScatterRoad(false);
     }
+    // if (selectedItemArray.includes("onsiteAmenities")) {
+    //   setOnsiteAmenities(true);
+    // } else {
+    //   setOnsiteAmenities(false);
+    // }
   };
 
   let marketPriceTotal =
@@ -522,6 +542,8 @@ const SearchResults = () => {
     { label: "Amenities Location", value: "amenitiesLocation" },
     { label: "Location", value: "location" },
     { label: "Road", value: "road" },
+    // { label: "Nearby Amenities", value: "nearbyAmenities" },
+    // { label: "Onsite Amenities", value: "onsiteAmenities" },
   ];
 
   console.log("search result", searchResults);
@@ -641,10 +663,10 @@ const SearchResults = () => {
                         value: "mapView",
                         label: "Map View ",
                       },
-                      {
-                        value: "tableView",
-                        label: "Table View",
-                      },
+                      // {
+                      //   value: "tableView",
+                      //   label: "Table View",
+                      // },
                     ]}
                     className="w-auto mb-12"
                   />
@@ -673,319 +695,345 @@ const SearchResults = () => {
                   )}
                   {/* Render based on selected select value */}
 
-                  {displayMarketView === "scatterChart" ? (
-                    <>
-                      {/* Display Dash Card */}
-                      <Row className="mb-6 " gutter={16}>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Median of Unit Price/SqM"}
-                            value={
-                              `Ksh. ${Math.round(
-                                medianCal(unitValuePicker)
-                              ).toLocaleString()}` || 0
-                            }
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Median of Rent"}
-                            value={
-                              `Ksh. ${medianCal(
-                                rentValuePicker
-                              ).toLocaleString()}` || 0
-                            }
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Median of Rental Yield"}
-                            value={
-                              `${Math.round(
-                                medianCal(rentalYieldValuePicker)
-                              ).toLocaleString()}%` || 0
-                            }
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Median of GRM (Years)"}
-                            value={
-                              `${Math.round(
-                                medianCal(grmYieldValuePicker)
-                              ).toLocaleString()}` || 0
-                            }
-                          />
-                        </Col>
-                      </Row>
-                      <Row className="mb-6 " gutter={16}>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Average of Market Price"}
-                            value={`Ksh. ${
-                              Math.round(avgMarket).toLocaleString() || 0
-                            }`}
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Median of Market Price"}
-                            value={`Ksh. ${
-                              Math.round(
-                                medianCal(marketValuePicker)
-                              ).toLocaleString() || 0
-                            }`}
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Min of Market Price"}
-                            value={`Ksh. ${
-                              Math.round(minMarket).toLocaleString() || 0
-                            }`}
-                          />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Max of Market Price"}
-                            value={`Ksh. ${
-                              Math.round(maxMarket).toLocaleString() || 0
-                            }`}
-                          />
-                        </Col>
-                      </Row>
-                      {/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
-
-                      {/* scatter chart upgrade */}
-                      <ResponsiveContainer width="100%" height={700}>
-                        <ScatterChart
-                          className="bg-[#08415c]  rounded-md p-5"
-                          margin={{
-                            top: 20,
-                            right: 20,
-                            bottom: 20,
-                            left: 20,
-                          }}
-                        >
-                          <CartesianGrid opacity={0.5} strokeDasharray="2  2" />
-                          <XAxis
-                            style={{
-                              fontSize: "0.9rem",
-                            }}
-                            tick={{ fill: "#f3efe0" }}
-                            dataKey="floorArea"
-                            type="number"
-                            name="FloorArea (SqM)"
-                            unit="sqm"
-                          >
-                            <Label
-                              fill="#f3efe0"
-                              value="Floor area (SqM)"
-                              offset={0}
-                              position="bottom"
+                  {
+                    displayMarketView === "scatterChart" ? (
+                      <>
+                        {/* Display Dash Card */}
+                        <Row className="mb-6 " gutter={16}>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Median of Unit Price/SqM"}
+                              value={
+                                `Ksh. ${Math.round(
+                                  medianCal(unitValuePicker)
+                                ).toLocaleString()}` || 0
+                              }
                             />
-                          </XAxis>
-                          <YAxis
-                            style={{
-                              fontSize: "0.9rem",
-                            }}
-                            tickFormatter={(val) =>
-                              `Ksh.${val.toLocaleString()}`
-                            }
-                            tick={{ fill: "#f3efe0" }}
-                            dataKey="marketPrice"
-                            type="number"
-                            name="Estimated Market Price"
-                          >
-                            <Label
-                              fill="#f3efe0"
-                              value="Market Price"
-                              angle={0}
-                              offset={30}
-                              position="top"
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Median of Rent"}
+                              value={
+                                `Ksh. ${medianCal(
+                                  rentValuePicker
+                                ).toLocaleString()}` || 0
+                              }
                             />
-                          </YAxis>
-                          <RechartTooltip
-                            content={<CustomToolTip />}
-                            cursor={{ strokeDasharray: "3 3" }}
-                          />
-                          <RechartsLegend verticalAlign="top" height={36} />
-                          <RechartScatter
-                            name={`Data point`}
-                            data={antdScatterChartData}
-                            fill="#3eb489"
-                          />
-                        </ScatterChart>
-                      </ResponsiveContainer>
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Median of Rental Yield"}
+                              value={
+                                `${Math.round(
+                                  medianCal(rentalYieldValuePicker)
+                                ).toLocaleString()}%` || 0
+                              }
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Median of GRM (Years)"}
+                              value={
+                                `${Math.round(
+                                  medianCal(grmYieldValuePicker)
+                                ).toLocaleString()}` || 0
+                              }
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="mb-6 " gutter={16}>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Average of Market Price"}
+                              value={`Ksh. ${
+                                Math.round(avgMarket).toLocaleString() || 0
+                              }`}
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Median of Market Price"}
+                              value={`Ksh. ${
+                                Math.round(
+                                  medianCal(marketValuePicker)
+                                ).toLocaleString() || 0
+                              }`}
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Min of Market Price"}
+                              value={`Ksh. ${
+                                Math.round(minMarket).toLocaleString() || 0
+                              }`}
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Max of Market Price"}
+                              value={`Ksh. ${
+                                Math.round(maxMarket).toLocaleString() || 0
+                              }`}
+                            />
+                          </Col>
+                        </Row>
+                        {/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
 
-                      <div className="text-center  flex justify-center flex-col font-serif ">
-                        <span className="text-[#08415c] font-base text-md -tracking-[1px] mt-4">
-                          Apply property data parameters to uncover high yield
-                          prospects
-                        </span>
-                        <br />
-                        <Checkbox.Group
-                          onChange={handlePropertyCheckbox}
-                          className="justify-center text-[#08415c]"
-                          options={scatterDataCheckbox}
-                        />
-                      </div>
-                    </>
-                  ) : displayMarketView === "mapView" ? (
-                    <>
-                      {/* Display Dash Card */}
-                      <Row className="mb-6 " gutter={16}>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Average No. of Units (per property) "}
-                            value={
-                              `${Math.round(avgUnits).toLocaleString() || 0}` ||
-                              0
-                            }
+                        {/* scatter chart upgrade */}
+                        <ResponsiveContainer width="100%" height={700}>
+                          <ScatterChart
+                            className="bg-[#08415c]  rounded-md p-5"
+                            margin={{
+                              top: 20,
+                              right: 20,
+                              bottom: 20,
+                              left: 20,
+                            }}
+                          >
+                            <CartesianGrid
+                              opacity={0.5}
+                              strokeDasharray="2  2"
+                            />
+                            <XAxis
+                              style={{
+                                fontSize: "0.9rem",
+                              }}
+                              tick={{ fill: "#f3efe0" }}
+                              dataKey="floorArea"
+                              type="number"
+                              name="FloorArea (SqM)"
+                              unit="sqm"
+                            >
+                              <Label
+                                fill="#f3efe0"
+                                value="Floor area (SqM)"
+                                offset={0}
+                                position="bottom"
+                              />
+                            </XAxis>
+                            <YAxis
+                              style={{
+                                fontSize: "0.9rem",
+                              }}
+                              tickFormatter={(val) =>
+                                `Ksh.${val.toLocaleString()}`
+                              }
+                              tick={{ fill: "#f3efe0" }}
+                              dataKey="marketPrice"
+                              type="number"
+                              name="Estimated Market Price"
+                            >
+                              <Label
+                                fill="#f3efe0"
+                                value="Market Price"
+                                angle={0}
+                                offset={30}
+                                position="top"
+                              />
+                            </YAxis>
+                            <RechartTooltip
+                              content={<CustomToolTip />}
+                              cursor={{ strokeDasharray: "3 3" }}
+                            />
+                            <RechartsLegend verticalAlign="top" height={36} />
+                            <RechartScatter
+                              name={`Data point`}
+                              data={antdScatterChartData}
+                              fill="#3eb489"
+                            />
+                          </ScatterChart>
+                        </ResponsiveContainer>
+
+                        <div className="text-center  flex justify-center flex-col font-serif ">
+                          <span className="text-[#08415c] font-base text-md -tracking-[1px] mt-4">
+                            Apply property data parameters to uncover high yield
+                            prospects
+                          </span>
+                          <br />
+                          <Checkbox.Group
+                            onChange={handlePropertyCheckbox}
+                            className="justify-center text-[#08415c]"
+                            options={scatterDataCheckbox}
                           />
-                        </Col>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Average Density (units/acre)"}
-                            value={Math.round(avgDensity)}
-                          />
-                        </Col>
-                        {/* <Col span={8}>
+                        </div>
+                      </>
+                    ) : displayMarketView === "mapView" ? (
+                      <>
+                        {/* Display Dash Card */}
+                        <Row className="mb-6 " gutter={16}>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Average No. of Units (per property) "}
+                              value={
+                                `${
+                                  Math.round(avgUnits).toLocaleString() || 0
+                                }` || 0
+                              }
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Average Density (units/acre)"}
+                              value={Math.round(avgDensity)}
+                            />
+                          </Col>
+                          {/* <Col span={8}>
   <StatisticCard title={"Average no. of floors"} value={`${medianCal(rentalYieldValuePicker).toLocaleString()}%`||0}/>
 </Col>
 <Col span={8}>
   <StatisticCard title={"Median of GRM (Years)"} value={`${medianCal(grmYieldValuePicker).toLocaleString()}`||0}/> 
 </Col> */}
-                      </Row>
-                      <Row className="mb-6 " gutter={16}>
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Average of Floor Area (SqM)"}
-                            value={Math.round(avgFloorAreaTotal)}
-                          />
-                        </Col>
-                        {/* <Col span={8}>
+                        </Row>
+                        <Row className="mb-6 " gutter={16}>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Average of Floor Area (SqM)"}
+                              value={Math.round(avgFloorAreaTotal)}
+                            />
+                          </Col>
+                          {/* <Col span={8}>
   <StatisticCard title={"Median of Total No. of Floors"} value={`${medianCal(floorTotalPicker).toLocaleString()}`||0}/>
 </Col> */}
-                        <Col span={8}>
-                          <StatisticCard
-                            title={"Average no. of floors"}
-                            value={Math.floor(Math.round(avgFloor))}
-                          />
-                        </Col>
-                        {/* <Col span={8}>
+                          <Col span={8}>
+                            <StatisticCard
+                              title={"Average no. of floors"}
+                              value={Math.floor(Math.round(avgFloor))}
+                            />
+                          </Col>
+                          {/* <Col span={8}>
   <StatisticCard title={"No. of Plotted Properties"} value={searchResults.roadResults.length}/> 
 </Col> */}
-                      </Row>
+                        </Row>
 
-                      <div style={{ height: "60vh", width: "100%" }}>
-                        {isLoaded && (
-                          <GoogleMap
-                            mapContainerStyle={containerStyle}
-                            center={{
-                              lat: selectedPlace
-                                ? Number(
-                                    selectedPlace["Geo-Location"].split(",")[0]
-                                  )
-                                : searchResults.location === "Nairobi Westlands"
-                                ? centerLocations.westlands.lat
-                                : searchResults.location === "Nairobi Kilimani"
-                                ? centerLocations.kilimani.lat
-                                : searchResults.location ===
-                                  "Nairobi Kileleshwa"
-                                ? centerLocations.kileleshwa.lat
-                                : searchResults.location === "Nairobi Lavington"
-                                ? centerLocations.lavington.lat
-                                : centerLocations.riverside.lat,
-                              lng: selectedPlace
-                                ? Number(
-                                    selectedPlace["Geo-Location"].split(",")[1]
-                                  )
-                                : searchResults.location === "Nairobi Westlands"
-                                ? centerLocations.westlands.lng
-                                : searchResults.location === "Nairobi Kilimani"
-                                ? centerLocations.kilimani.lng
-                                : searchResults.location ===
-                                  "Nairobi Kileleshwa"
-                                ? centerLocations.kileleshwa.lng
-                                : searchResults.location === "Nairobi Lavington"
-                                ? centerLocations.lavington.lng
-                                : centerLocations.riverside.lng,
-                            }}
-                            zoom={14}
-                          >
-                            {searchResults.roadResults.map((place) => (
-                              <MarkerF
-                                options={{
-                                  icon: MapPin,
-                                }}
-                                key={`${Number(
-                                  place["Geo-Location"].split(",")[0]
-                                )} - ${Number(
-                                  place["Geo-Location"].split(",")[1]
-                                )}`}
-                                onClick={() => {
-                                  place === selectedPlace
-                                    ? setSelectedPlace(undefined)
-                                    : setSelectedPlace(place);
-                                }}
-                                position={{
-                                  lat: Number(
+                        <div style={{ height: "60vh", width: "100%" }}>
+                          {isLoaded && (
+                            <GoogleMap
+                              mapContainerStyle={containerStyle}
+                              center={{
+                                lat: selectedPlace
+                                  ? Number(
+                                      selectedPlace["Geo-Location"].split(
+                                        ","
+                                      )[0]
+                                    )
+                                  : searchResults.location ===
+                                    "Nairobi Westlands"
+                                  ? centerLocations.westlands.lat
+                                  : searchResults.location ===
+                                    "Nairobi Kilimani"
+                                  ? centerLocations.kilimani.lat
+                                  : searchResults.location ===
+                                    "Nairobi Kileleshwa"
+                                  ? centerLocations.kileleshwa.lat
+                                  : searchResults.location ===
+                                    "Nairobi Lavington"
+                                  ? centerLocations.lavington.lat
+                                  : centerLocations.riverside.lat,
+                                lng: selectedPlace
+                                  ? Number(
+                                      selectedPlace["Geo-Location"].split(
+                                        ","
+                                      )[1]
+                                    )
+                                  : searchResults.location ===
+                                    "Nairobi Westlands"
+                                  ? centerLocations.westlands.lng
+                                  : searchResults.location ===
+                                    "Nairobi Kilimani"
+                                  ? centerLocations.kilimani.lng
+                                  : searchResults.location ===
+                                    "Nairobi Kileleshwa"
+                                  ? centerLocations.kileleshwa.lng
+                                  : searchResults.location ===
+                                    "Nairobi Lavington"
+                                  ? centerLocations.lavington.lng
+                                  : centerLocations.riverside.lng,
+                              }}
+                              zoom={14}
+                            >
+                              {searchResults.roadResults.map((place) => (
+                                <MarkerF
+                                  options={{
+                                    icon: MapPin,
+                                  }}
+                                  key={`${Number(
                                     place["Geo-Location"].split(",")[0]
-                                  ),
-                                  lng: Number(
+                                  )} - ${Number(
                                     place["Geo-Location"].split(",")[1]
-                                  ),
-                                }}
-                              />
-                            ))}
-                            {selectedPlace && (
-                              <InfoWindowF
-                                position={{
-                                  lat: Number(
-                                    selectedPlace["Geo-Location"].split(",")[0]
-                                  ),
-                                  lng: Number(
-                                    selectedPlace["Geo-Location"].split(",")[1]
-                                  ),
-                                }}
-                                zIndex={1}
-                                option={
-                                  {
-                                    // pixelOffset:{
-                                    //   width:0,
-                                    //   height:-40,
-                                    // }
+                                  )}`}
+                                  onClick={() => {
+                                    place === selectedPlace
+                                      ? setSelectedPlace(undefined)
+                                      : setSelectedPlace(place);
+                                  }}
+                                  position={{
+                                    lat: Number(
+                                      place["Geo-Location"].split(",")[0]
+                                    ),
+                                    lng: Number(
+                                      place["Geo-Location"].split(",")[1]
+                                    ),
+                                  }}
+                                />
+                              ))}
+
+                              {selectedPlace && (
+                                <InfoWindowF
+                                  position={{
+                                    lat: Number(
+                                      selectedPlace["Geo-Location"].split(
+                                        ","
+                                      )[0]
+                                    ),
+                                    lng: Number(
+                                      selectedPlace["Geo-Location"].split(
+                                        ","
+                                      )[1]
+                                    ),
+                                  }}
+                                  zIndex={1}
+                                  option={
+                                    {
+                                      // pixelOffset:{
+                                      //   width:0,
+                                      //   height:-40,
+                                      // }
+                                    }
                                   }
-                                }
-                                onCloseClick={() => setSelectedPlace(undefined)}
-                              >
-                                <div>
-                                  <p className="font-semibold">
-                                    Property Name:{selectedPlace.Name}
-                                  </p>
-                                  <p className="">
-                                    Typology:{selectedPlace["Typology "]}
-                                  </p>
-                                  <p>
-                                    Number of Units:
-                                    {selectedPlace.number_of_units}
-                                  </p>
-                                  <p>Acreage:{selectedPlace["erf (acres)"]}</p>
-                                  <p>
-                                    Density:
-                                    {selectedPlace["Density (units/acre)"]}
-                                  </p>
-                                  <p>
-                                    Number of Floors:
-                                    {selectedPlace["Habitable no. of Floors"]}
-                                  </p>
-                                  <p>Location:{selectedPlace.Location}</p>
+                                  onCloseClick={() =>
+                                    setSelectedPlace(undefined)
+                                  }
+                                >
+                                  <div>
+                                    <p className="font-semibold">
+                                      Property Name:{selectedPlace.Name}
+                                    </p>
+                                    <br />
+                                    <p className="">
+                                      Typology:{selectedPlace["Typology "]}
+                                    </p>
+                                    <p>
+                                      Number of Units:
+                                      {selectedPlace.number_of_units}
+                                    </p>
+                                    <p>
+                                      Acreage:{selectedPlace["erf (acres)"]}
+                                    </p>
+                                    <p>
+                                      Density:
+                                      {selectedPlace["Density (units/acre)"]}
+                                    </p>
+                                    <p>
+                                      Number of Floors:
+                                      {selectedPlace["Habitable no. of Floors"]}
+                                    </p>
+                                    <p>Location:{selectedPlace.Location}</p>
+                                    <p>Property Use:{selectedPlace.User}</p>
 
-                                  <br />
-                                  <Button>View this Property</Button>
+                                    <br />
+                                    {/* <Button>View this Property</Button> */}
 
-                                  {/* <Divider orientation="left">{selectedPlace.Name}</Divider>
+                                    {/* <Divider orientation="left">{selectedPlace.Name}</Divider>
 <RowAnt gutter={16}>
 <ColAnt className="gutter-row" span={6}>
 <div>Property Name:</div>
@@ -995,16 +1043,16 @@ const SearchResults = () => {
 </Col>
 </RowAnt>
 */}
-                                </div>
-                              </InfoWindowF>
-                            )}
-                          </GoogleMap>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    <p>HERE IS TABLE VIEW </p>
-                  )}
+                                  </div>
+                                </InfoWindowF>
+                              )}
+                            </GoogleMap>
+                          )}
+                        </div>
+                      </>
+                    ) : null
+                    // <p>HERE IS TABLE VIEW </p>
+                  }
                 </div>
               </Col>
             </Row>
