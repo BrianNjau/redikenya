@@ -26,6 +26,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { consumeToken } from "../Functions/ConsumeToken";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
+import GlobalFooter from "../Components/GlobalFooter";
 const Search = () => {
   const navigate = useNavigate();
   let [location, setLocation] = useState([]);
@@ -560,6 +561,10 @@ const Search = () => {
           </div>
         )}
       </Modal>
+      <GlobalFooter
+        theme="dark"
+        className="bg-[#262b35] text-slateblue gym-fitness-footer"
+      />
     </div>
   );
 };

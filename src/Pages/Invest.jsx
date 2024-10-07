@@ -51,6 +51,7 @@ import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
 import { consumeToken } from "../Functions/ConsumeToken";
 import { title } from "process";
+import GlobalFooter from "../Components/GlobalFooter";
 // import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { useCompletion } from "ai/react";
 // import { useChatCompletion } from "openai-streaming-hooks";
@@ -753,14 +754,17 @@ const Invest = () => {
                 </div>
 
                 <button
-                  onClick={() =>
-                    navigate("/yield-pdi-insights", {
-                      state: {
+                  onClick={() => {
+                    //store the state in localstorage
+                    localStorage.setItem(
+                      "invest-data",
+                      JSON.stringify({
                         investData: filterSearchResults,
                         propOverview: propOverview,
-                      },
-                    })
-                  }
+                      })
+                    );
+                    window.open("/yield-pdi-insights", "_blank");
+                  }}
                   style={{
                     textAlign: "center",
                   }}
@@ -792,14 +796,16 @@ const Invest = () => {
                 </div>
 
                 <button
-                  onClick={() =>
-                    navigate("/price-sqm-pdi-insights", {
-                      state: {
+                  onClick={() => {
+                    localStorage.setItem(
+                      "invest-data",
+                      JSON.stringify({
                         investData: filterSearchResults,
                         propOverview: propOverview,
-                      },
-                    })
-                  }
+                      })
+                    );
+                    window.open("/price-sqm-pdi-insights", "_blank");
+                  }}
                   style={{
                     textAlign: "center",
                   }}
@@ -826,14 +832,23 @@ const Invest = () => {
                 </div>
 
                 <button
-                  onClick={() =>
-                    navigate("/grm-pdi-insights", {
-                      state: {
+                  onClick={() => {
+                    // navigate("/grm-pdi-insights", {
+                    //   state: {
+                    //     investData: filterSearchResults,
+                    //     propOverview: propOverview,
+                    //   },
+                    // })
+
+                    localStorage.setItem(
+                      "invest-data",
+                      JSON.stringify({
                         investData: filterSearchResults,
                         propOverview: propOverview,
-                      },
-                    })
-                  }
+                      })
+                    );
+                    window.open("/grm-pdi-insights", "_blank");
+                  }}
                   style={{
                     textAlign: "center",
                   }}
@@ -1262,6 +1277,10 @@ const Invest = () => {
         </Container>
       </section>
       {/* Section End */}
+      <GlobalFooter
+        theme="dark"
+        className="bg-[#262b35] text-slateblue gym-fitness-footer"
+      />
     </ConfigProvider>
   );
 };

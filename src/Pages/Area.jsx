@@ -36,6 +36,7 @@ import { NotificationContext, useSupabaseAuth } from "../Context/Context";
 import { useNavigate } from "react-router-dom";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
 import { consumeToken } from "../Functions/ConsumeToken";
+import GlobalFooter from "../Components/GlobalFooter";
 
 const Area = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
@@ -1989,6 +1990,10 @@ const Area = () => {
           </div>
         )}
       </Modal>
+      <GlobalFooter
+        theme="dark"
+        className="bg-[#262b35] text-slateblue gym-fitness-footer"
+      />
     </div>
   );
 };

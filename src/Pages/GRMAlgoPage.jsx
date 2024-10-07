@@ -1,22 +1,27 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../Context/Context";
 import { Col, Container, Row } from "react-bootstrap";
 import { fadeIn } from "../Functions/GlobalAnimations";
 import Overlap from "../Components/Overlap";
 import { TiltBox } from "../Components/TiltBox";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PatternImage from "../Assets/img/pattern.webp";
 import AlgoImage from "../Assets/img/algoImg.jpg";
 import Dropcaps from "../Components/Dropcaps";
 import { Table } from "antd";
 const GRMAlgoPage = () => {
   const { setHeaderHeight } = useContext(GlobalContext);
+  const [investData, setInvestData] = useState([]);
+  const [propOverview, setPropOverview] = useState([]);
   useEffect(() => {
     setHeaderHeight(0);
-  });
-  const location = useLocation();
-  const investData = location.state.investData;
-  const propOverview = location.state.propOverview;
+    const insightData = JSON.parse(localStorage.getItem("invest-data"));
+    // console.log("insightdata", insightData);
+    if (insightData) {
+      setInvestData(insightData.investData);
+      setPropOverview(insightData.propOverview);
+    }
+  }, []);
 
   const grmRange = investData.map((a) => a["GRM (Years)"]);
 
@@ -71,9 +76,16 @@ const GRMAlgoPage = () => {
       key: "Floor area (SqM)",
     },
   ];
+  const handleBack = () => {
+    window.close();
+  };
 
   return (
     <>
+      <button onClick={handleBack} className="m-4 text-green-500">
+        <i className="feather-arrow-left mr-2"></i>
+        back
+      </button>
       <section
         className=" h-[500px] sm:h-[400px] xs:h-[300px] cover-background "
         style={{ backgroundImage: `url(${AlgoImage})` }}

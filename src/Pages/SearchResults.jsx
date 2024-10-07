@@ -47,6 +47,7 @@ import {
 } from "recharts";
 import MapPin from "../Assets/img/CilLocationPin.svg";
 import CautionImage from "../Assets/img/cautionBack.svg";
+import GlobalFooter from "../Components/GlobalFooter";
 
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 const mapsApi = process.env.REACT_APP_GOOGLEMAPSAPI;
@@ -1060,6 +1061,10 @@ const SearchResults = () => {
         </section>
         {/* Section End */}
       </ConfigProvider>
+      <GlobalFooter
+        theme="dark"
+        className="bg-[#262b35] text-slateblue gym-fitness-footer"
+      />
     </div>
   );
 };
