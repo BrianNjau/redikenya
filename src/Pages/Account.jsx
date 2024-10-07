@@ -11,7 +11,7 @@ import Buttons from "../Components/Buttons";
 import { Supabase } from "../Functions/SupabaseClient";
 import FailureIcon from "../Assets/img/failIcon.png";
 import SuccessIcon from "../Assets/img/successIcon.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CautionImage from "../Assets/img/cautionBack.svg";
 import { createClient } from "@supabase/supabase-js";
 
@@ -176,6 +176,7 @@ const Account = () => {
   //   };
 
   //   console.log(subscriptionWallet);
+
   return (
     <UserDashLayout>
       <div className=" text-left">
@@ -200,15 +201,16 @@ const Account = () => {
                   Get easy access to support through here
                 </span>
               </div>
+
               <Buttons
                 className={
                   "mt-2 h-10 bg-white btn-fill btn-fancy font-medium font-sans"
                 }
                 themeColor="#000"
                 color="#000"
-                title={"Support"}
+                title="Support"
                 size={"sm"}
-                // onClick={handleProxyInvocation}
+                to={"/support"}
               />
             </div>
           </Card>

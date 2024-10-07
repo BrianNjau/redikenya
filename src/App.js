@@ -38,6 +38,7 @@ const PurchaseToken = lazy(() => import("./Pages/PurchaseToken.jsx"));
 const BillingHistory = lazy(() => import("./Pages/BillingHistory.jsx"));
 const Profile = lazy(() => import("./Pages/Profile.jsx"));
 const Account = lazy(() => import("./Pages/Account.jsx"));
+const Support = lazy(() => import("./Pages/Support.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -137,51 +138,52 @@ function App() {
                             />
                           }
                         />
-                        <Route path="about-us" element={<AboutUs />} />
-                        <Route path="economics" element={<Economics />} />
-                        <Route path="search" element={<Search />} />
+                        <Route path="/about-us" element={<AboutUs />} />
+                        <Route path="/economics" element={<Economics />} />
+                        <Route path="/search" element={<Search />} />
                         <Route
-                          path="search-results"
+                          path="/search-results"
                           element={<SearchResults />}
                         />
-                        <Route path="invest" element={<Invest />} />
-                        <Route path="area-data" element={<Area />} />
+                        <Route path="/invest" element={<Invest />} />
+                        <Route path="/area-data" element={<Area />} />
                         <Route
-                          path="yield-pdi-insights"
+                          path="/yield-pdi-insights"
                           element={<YHAlgoPage />}
                         />
                         <Route
-                          path="price-sqm-pdi-insights"
+                          path="/price-sqm-pdi-insights"
                           element={<LPAlgoPage />}
                         />
                         <Route
-                          path="grm-pdi-insights"
+                          path="/grm-pdi-insights"
                           element={<GRMAlgoPage />}
                         />
                         <Route
-                          path="verify-mail"
+                          path="/verify-mail"
                           element={<VerifyMailPage />}
                         />
-                        <Route path="register" element={<Register />} />
-                        <Route path="login" element={<Login />} />
-                        <Route path="confirm" element={<Confirm />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/confirm" element={<Confirm />} />
                         <Route
-                          path="user-dashboard"
+                          path="/user-dashboard"
                           element={<UserDashboard />}
                         />
-                        <Route path="reset" element={<ResetPassword />} />
+                        <Route path="/reset" element={<ResetPassword />} />
                         <Route
-                          path="update-password"
+                          path="/update-password"
                           element={<UpdatePassword />}
                         />
-                        <Route path="manage-plan" element={<ManagePlan />} />
+                        <Route path="/manage-plan" element={<ManagePlan />} />
                         <Route
-                          path="purchase-token"
+                          path="/purchase-token"
                           element={<PurchaseToken />}
                         />
-                        <Route path="billing" element={<BillingHistory />} />
-                        <Route path="profile" element={<Profile />} />
-                        <Route path="account" element={<Account />} />
+                        <Route path="/billing" element={<BillingHistory />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="/support" element={<Support />} />
                       </Routes>
                     </Suspense>
                   </AnimatePresence>

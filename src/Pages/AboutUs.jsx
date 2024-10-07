@@ -42,27 +42,36 @@ const AboutUs = () => {
 
       <GlobalHeader theme="light" />
       {/* Section Start */}
-      <section className="bg-lightgray py-[25px]">
+
+      <section className="bg-lightgray py-[40px] sm:py-[30px]">
         <Container>
-          <Row className="items-center justify-center">
-            <Col xl={8} lg={6}>
-              {/* <h1 className="font-serif text-darkgray font-medium mb-0 text-lg md:text-center"></h1> */}
+          <Row className="xs:text-center">
+            <Col
+              xl={8}
+              lg={6}
+              className="flex md:justify-center md:mb-[15px] sm:block sm:text-center sm:mb-[9px]"
+            >
+              <h1 className="text-lg leading-[28px] text-darkgray font-medium mb-0 font-serif inline-block">
+                About us
+              </h1>
+              <span className="font-serif text-md leading-[28px] relative pl-[25px] ml-[30px] block sm:p-0 before:absolute before:bg-darkgray before:content-[''] before:h-[12px] before:top-[8px] before:w-[2px] before:left-0 sm:before:hidden sm:ml-0">
+                Why PDI Marketplace Kenya
+              </span>
             </Col>
             <Col
               xl={4}
               lg={6}
-              className="breadcrumb mb-0 justify-end font-serif md:justify-center sm:mt-[10px] text-sm"
+              className="breadcrumb justify-end px-[15px] text-sm font-serif m-0 md:justify-center"
             >
-              <ul className="xs-text-center">
-                <li>About</li>
-                <li>
-                  {" "}
+              <ul>
+                <li className="!leading-[30px]">
+                  {/* <Link aria-label="link for" to="/support"> */}
                   <Typed
                     className="font-semibold text-[#3eb489]"
                     strings={[
                       "PDI",
-                      "Property Development & Investments",
-                      "Property Data & Insights",
+                      "Property Development Investments",
+                      "Property Data Insights",
                     ]}
                     typeSpeed={80}
                     backSpeed={80}
@@ -70,6 +79,7 @@ const AboutUs = () => {
                     showCursor
                     cursorChar="|"
                   />
+                  {/* </Link> */}
                 </li>
               </ul>
             </Col>

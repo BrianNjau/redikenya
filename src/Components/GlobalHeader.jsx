@@ -40,15 +40,19 @@ const GlobalHeader = (props) => {
     },
 
     {
-      label: <Link to="/"> Profile</Link>,
+      label: <Link to="/profile">Edit Profile</Link>,
       key: "4",
+    },
+    {
+      label: <Link to="/account">Manage Account </Link>,
+      key: "5",
     },
     {
       type: "divider",
     },
     {
       label: <button onClick={Logout}> Logout</button>,
-      key: "5",
+      key: "6",
     },
   ];
 
