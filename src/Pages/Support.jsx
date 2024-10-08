@@ -181,10 +181,10 @@ const Support = () => {
                     onSubmit={async (values, actions) => {
                       actions.setSubmitting(true);
                       const response = await sendReportEmail(values);
-                      response.status === "success" && resetForm(actions);
+                      resetForm(actions);
                     }}
                   >
-                    {({ isSubmitting, status }) => (
+                    {({ isSubmitting }) => (
                       <Form ref={form}>
                         <Row className="row-cols-1 row-cols-md-2">
                           <Col className="mb-16 sm:mb-[25px]">
