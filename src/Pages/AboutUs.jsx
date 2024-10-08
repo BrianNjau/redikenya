@@ -181,7 +181,7 @@ const AboutUs = () => {
             >
               <Link to="/user-dashboard">
                 <span className="cursor-pointer font-serif inline-block py-[19px] px-[44px] text-white rounded about-us-bg-gradient">
-                  <i className="fa fa-arrow-right line-icon-Arrow-Forward2 text-[50px] inline-block ml-0 mr-[15px] align-middle"></i>
+                  <i className="feather-layers  text-[50px] inline-block ml-0 mr-[15px] align-middle"></i>
                   <div className="inline-block text-start text-md align-middle uppercase font-medium">
                     <span className="opacity-60 text-md block leading-[15px]">
                       Explore our
