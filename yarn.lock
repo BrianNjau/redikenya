@@ -14976,10 +14976,10 @@ sucrase@^3.32.0:
     pirates "^4.0.1"
     ts-interface-checker "^0.1.9"
 
-supabase@^1.192.5:
-  version "1.192.5"
-  resolved "https://registry.yarnpkg.com/supabase/-/supabase-1.192.5.tgz#57b649923d7e5c24a8930cbcb780b3326966a513"
-  integrity sha512-xRn5wu4jtSgaPXfNrYRYv6Y1oxevxp7Ff95rJyhh1Us7WqSxjmJcpFygXG/tZx/Oxp/iD1JMhip+mFVlfcaVcw==
+supabase@^1.200.3:
+  version "1.200.3"
+  resolved "https://registry.yarnpkg.com/supabase/-/supabase-1.200.3.tgz#52cd53fd0bcd46af0748c8ffa61fac05e21a0a23"
+  integrity sha512-3NdhqBkfPVlm+rAhWQoVcyr54kykuAlHav/GWaAoQEHBDbbYI1lhbDzugk8ryQg92vSLwr3pWz0s4Hjdte8WyQ==
   dependencies:
     bin-links "^4.0.3"
     https-proxy-agent "^7.0.2"

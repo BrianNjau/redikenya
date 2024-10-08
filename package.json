@@ -87,7 +87,7 @@
     "smooth-scrollbar": "^8.8.1",
     "smooth-scrollbar-react": "^2.4.1",
     "stream-browserify": "^3.0.0",
-    "supabase": "^1.192.5",
+    "supabase": "^1.200.3",
     "swiper": "^10.3.0",
     "tailwindcss": "^3.1.2",
     "util": "^0.12.5",

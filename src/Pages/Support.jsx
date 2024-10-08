@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import GlobalHeader from "../Components/GlobalHeader";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -8,8 +8,53 @@ import Buttons from "../Components/Buttons";
 import { AnimatePresence } from "framer-motion";
 import Overlap from "../Components/Overlap";
 import GlobalFooter from "../Components/GlobalFooter";
+import * as Yup from "yup";
+import FailureIcon from "../Assets/img/failIcon.png";
+import SuccessIcon from "../Assets/img/successIcon.png";
+import { Supabase } from "../Functions/SupabaseClient";
+import { resetForm } from "../Functions/Utilities";
+import { NotificationContext } from "../Context/Context";
 const Support = () => {
   const form = useRef(null);
+  const ContactFormSchema = Yup.object().shape({
+    name: Yup.string().required("Field is required."),
+    content: Yup.string().required("Field is required."),
+    userEmail: Yup.string()
+      .email("Invalid email.")
+      .required("Field is required."),
+    terms_condition: Yup.boolean().oneOf([true], "Message").required(),
+  });
+  const { openNotification } = useContext(NotificationContext);
+  const sendReportEmail = async (content) => {
+    // console.log("useremail", userEmail);
+    // console.log("phone", phone);
+    const { data, error } = await Supabase.functions.invoke("send-mail", {
+      body: {
+        subject: `Issue Report from ${content.userEmail}`,
+        content: content.content,
+        to: "info@pdimarketplace.com", // The support email
+        name: content.name,
+        phone: content.phone,
+      },
+    });
+
+    if (!error) {
+      openNotification(
+        "topRight",
+        "Email Sent Successfully",
+        "We have received your mail and will respond as soon as we can",
+        <img className="w-8" src={SuccessIcon} alt="success" />
+      );
+    } else {
+      openNotification(
+        "topRight",
+        error.code,
+        error.message,
+        <img className="w-8" src={FailureIcon} alt="fail" />
+      );
+    }
+  };
+
   return (
     <div className="bg-white">
       <GlobalHeader theme="light" />
@@ -62,7 +107,7 @@ const Support = () => {
               <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">
                 Call Us
               </div>
-              <p className="w-[70%] lg:w-full mx-auto">Phone: 1-800-222-000</p>
+              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 722946261</p>
             </Col>
             <Col>
               <i className="line-icon-Mail-Read text-gradient bg-[#3EB489] text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
@@ -127,17 +172,17 @@ const Support = () => {
                   <Formik
                     initialValues={{
                       name: "",
-                      email: "",
+                      userEmail: "",
                       phone: "",
-                      comment: "",
+                      content: "",
                       terms_condition: false,
                     }}
-                    // validationSchema={ContactFormStyle03Schema}
-                    // onSubmit={async (values, actions) => {
-                    //   actions.setSubmitting(true)
-                    //   const response = await sendEmail(values)
-                    //   response.status === "success" && resetForm(actions)
-                    // }}
+                    validationSchema={ContactFormSchema}
+                    onSubmit={async (values, actions) => {
+                      actions.setSubmitting(true);
+                      const response = await sendReportEmail(values);
+                      response.status === "success" && resetForm(actions);
+                    }}
                   >
                     {({ isSubmitting, status }) => (
                       <Form ref={form}>
@@ -154,7 +199,7 @@ const Support = () => {
                             <Input
                               showErrorMsg={false}
                               type="email"
-                              name="email"
+                              name="userEmail"
                               className="py-[15px] px-[20px] w-full text-md border-[1px] border-solid border-[#dfdfdf]"
                               labelClass="mb-[25px]"
                               placeholder="Your email address"
@@ -171,7 +216,7 @@ const Support = () => {
                             <TextArea
                               className="border-[1px] border-solid border-[#dfdfdf] w-full py-[15px] px-[20px] text-md h-[210px] resize-none"
                               rows="6"
-                              name="comment"
+                              name="content"
                               placeholder="Your message"
                             ></TextArea>
                           </Col>
