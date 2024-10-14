@@ -37,6 +37,7 @@ import {
   MonitorOutlined,
   QuestionCircleOutlined,
   RiseOutlined,
+  SaveFilled,
 } from "@ant-design/icons";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MapPin from "../Assets/img/CilLocationPin.svg";
@@ -50,7 +51,7 @@ import { useNavigate } from "react-router-dom";
 import { ProChat } from "@ant-design/pro-chat";
 import OpenAI from "openai";
 import { consumeToken } from "../Functions/ConsumeToken";
-import { title } from "process";
+
 import GlobalFooter from "../Components/GlobalFooter";
 // import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { useCompletion } from "ai/react";
@@ -67,6 +68,7 @@ const Invest = () => {
   const [selectedLocation, setSelectedLocation] = useState([
     "Nairobi Kileleshwa",
   ]);
+  const [selectedSaleType, setSelectedSaleType] = useState([]);
   const [selectedTypology, setSelectedTypology] = useState(["1BR", "2BR"]);
   const [filterSearchLoading, setFilterSearchLoading] = useState(false);
   const [filterSearchResults, setFilterSearchResults] = useState([]);
@@ -87,7 +89,6 @@ const Invest = () => {
   const [status, setStatus] = useState("active"); // Possible statuses: 'active', 'exception', 'success'
   const [consumeTokenLoading, setConsumeTokenLoading] = useState(false);
   const session = useSupabaseAuth();
-  const [openTour, setTourOpen] = useState(false);
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -127,7 +128,7 @@ const Invest = () => {
         "Property Overview"
       ).select("*");
       setPropOverview(PropOverview);
-      console.log("Prop Overview =>", PropOverview);
+      // console.log("Prop Overview =>", PropOverview);
       setLoadingPropOverview(false);
     } catch (err) {
       setLoadingPropOverview(false);
@@ -151,6 +152,8 @@ const Invest = () => {
   const rents = propData.map((val) => val["Rent"]) || [];
   const locations =
     [...new Set(propOverview.map((val) => val["Location"]))] || [];
+  const saleTypes =
+    [...new Set(propOverview.map((val) => val["Sale type"]))] || [];
 
   const handleMarketPricePicker = (marketPrices) => {
     setSelectedMarketPrice(marketPrices);
@@ -166,6 +169,10 @@ const Invest = () => {
   };
   const handleTypologyPicker = (typologies) => {
     setSelectedTypology(typologies);
+  };
+  const handleSaleTypePicker = (saleTypes) => {
+    // console.log("selected =>", saleTypes);
+    setSelectedSaleType(saleTypes);
   };
 
   function filterByValue(data, selectedPrice, type) {
@@ -245,6 +252,30 @@ const Invest = () => {
       console.log(err);
     }
   }
+  function filterBySaleType(data, selectedSaleTypes, lookUpData) {
+    try {
+      if (selectedSaleTypes.length === 0) {
+        return data;
+      }
+      const filterSaleTypes = (result) => {
+        const propertyID = result["PropertyID"];
+        const foundLocation = lookUpData.find(
+          (a) =>
+            a["Property ID"] === propertyID &&
+            selectedSaleTypes.includes(a["Sale type"])
+        );
+        // console.log("found sale type props", foundLocation);
+        if (foundLocation) {
+          return result;
+        }
+        return false;
+      };
+      const filteredResults = data.filter(filterSaleTypes);
+      return filteredResults;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   function filterProperties() {
     try {
@@ -271,14 +302,19 @@ const Invest = () => {
         locationFiltered,
         selectedTypology
       );
+      const saleTypeFiltered = filterBySaleType(
+        typologyFiltered,
+        selectedSaleType,
+        propOverview
+      );
 
-      // console.log("typology filtered", typologyFiltered);
+      // console.log("saleTypeFiltered", saleTypeFiltered);
 
-      const enrichedData = typologyFiltered.map((el) => {
+      const enrichedData = saleTypeFiltered.map((el) => {
         let locationName = propOverview.find(
           (prop) => prop["Property ID"] === el["PropertyID"]
         )["Name"];
-        console.log("location name", locationName);
+        // console.log("location name", locationName);
         let location = propOverview.find(
           (prop) => prop["Property ID"] === el["PropertyID"]
         )["Location"];
@@ -288,11 +324,20 @@ const Invest = () => {
         let saleType = propOverview.find(
           (prop) => prop["Property ID"] === el["PropertyID"]
         )["Sale type"];
+        let onsiteAmenities = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Onsite Amenities"];
+        let nearbyAmenities = propOverview.find(
+          (prop) => prop["Property ID"] === el["PropertyID"]
+        )["Nearby Public Amenities"];
 
         return {
           propertyName: locationName,
           location: location,
           road: road,
+          saleType: saleType,
+          onsiteAmenities: onsiteAmenities,
+          nearbyPublicAmenities: nearbyAmenities,
           ...el,
         };
       });
@@ -960,6 +1005,11 @@ const Invest = () => {
                             text={`GRM: ${item["GRM (Years)"]} Years`}
                             key={"grm-price-icon"}
                           />,
+                          <IconText
+                            icon={<QuestionCircleOutlined />}
+                            text={`${item["saleType"]}`}
+                            key={"sale-type-icon"}
+                          />,
                         ]}
                         extra={
                           isLoaded && (
@@ -1113,6 +1163,10 @@ const Invest = () => {
                           <ul>
                             <li>Rent: {item["Rent"]}</li>
                             <li>Rental Yield: {item["Rental Yield"]}</li>
+                            <li>
+                              Floor area : {item["Floor area (SqM)"]} m
+                              <sup>2</sup>
+                            </li>
                           </ul>
                         </div>
                       </List.Item>
@@ -1214,6 +1268,24 @@ const Invest = () => {
                     </li>
                   </Checkbox.Group>
                 </ul>
+              </div>
+              <div className="border-b border-mediumgray pb-12 mb-12 relative">
+                <span className="shop-title relative font-serif font-medium text-darkgray block mb-[20px]">
+                  Filter by Sale Type
+                </span>
+
+                <Select
+                  loading={loadingPropOverview}
+                  mode="multiple"
+                  size={"large"}
+                  placeholder="Please select"
+                  style={{ width: "100%" }}
+                  onChange={handleSaleTypePicker}
+                  defaultValue={selectedSaleType}
+                  options={saleTypes.map((a) => {
+                    return { value: a, label: a };
+                  })}
+                />
               </div>
 
               <Modal

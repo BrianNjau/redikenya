@@ -29,7 +29,7 @@ const FooterData = [
         link: "/privacy-policy",
       },
       {
-        title: "Terms and Conditions",
+        title: "Terms of Use",
         link: "/terms-conditions",
       },
     ],

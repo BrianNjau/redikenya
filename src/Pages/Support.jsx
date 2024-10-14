@@ -228,9 +228,18 @@ const Support = () => {
                               labelClass="flex items-start"
                             >
                               <span className="ml-[10px] text-sm inline-block w-[85%]">
-                                I accept the terms & conditions and I understand
-                                that my data will be held securely in accordance
-                                with the
+                                I accept the{" "}
+                                <Link
+                                  aria-label="checkbox"
+                                  to="/terms-conditions"
+                                  target="_blank"
+                                  className="text-darkgray underline hover:text-fastblue"
+                                >
+                                  {" "}
+                                  terms of use
+                                </Link>{" "}
+                                and I understand that my data will be held
+                                securely in accordance with the
                                 <Link
                                   aria-label="checkbox"
                                   to="/privacy-policy"

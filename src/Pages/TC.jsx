@@ -311,13 +311,13 @@ const TC = () => {
               <p className="mb-[25px] md:mb-[20px] sm:mb-[15px]">
                 If you have any questions about these Terms of Use or need
                 further assistance, please contact us at:
-                <br />
-                <ul className="list-style-03">
-                  <li>PDI Marketplace Kenya</li>
-                  <li>New Rehema House, Nairobi</li>
-                  <li>Email: info@pdimarketplace.com</li>
-                </ul>
               </p>
+              <ul className="list-style-03">
+                <li>PDI Marketplace Kenya</li>
+                <li>New Rehema House, Nairobi</li>
+                <li>Email: info@pdimarketplace.com</li>
+              </ul>
+              <br />
               By using the Website, you acknowledge that you have read and agree
               to these Terms of Use. If you do not agree with these terms,
               please discontinue your use of the Website.
