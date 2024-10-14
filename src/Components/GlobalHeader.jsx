@@ -84,7 +84,7 @@ const GlobalHeader = (props) => {
           containerClass="md:pr-0"
         >
           <Col lg={2} sm={6} xs={"auto"} className="mr-auto ps-0">
-            <Link aria-label="header logo" className="flex items-center" to="/">
+            <Link className="" to="/">
               <Navbar.Brand className="inline-block p-0 m-0 mt-0">
                 <Image
                   preview={false}
@@ -93,6 +93,7 @@ const GlobalHeader = (props) => {
                   src={props.theme === "dark" ? LogoLight : LogoDark}
                   alt="logo"
                 />
+
                 <Image
                   preview={false}
                   className="mobile-logo"
@@ -100,8 +101,9 @@ const GlobalHeader = (props) => {
                   src={LogoDark}
                   alt="logo"
                 />
+
                 <Image
-                  className="alt-logo p-1"
+                  className="alt-logo p-1 "
                   src={props.theme === "dark" ? LogoLight : LogoDark}
                   width={180}
                   preview={false}

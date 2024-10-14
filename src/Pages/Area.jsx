@@ -817,6 +817,7 @@ const Area = () => {
   //     key: "year",
   //   },
   // ];
+  const rowClassName = () => "icon-with-text-02 about-us-icon-with-text";
   const pipelineTableColumns = [
     {
       title: "Location",

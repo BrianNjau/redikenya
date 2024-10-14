@@ -27,6 +27,8 @@ import Meta from "antd/es/card/Meta";
 import { consumeToken } from "../Functions/ConsumeToken";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
 import GlobalFooter from "../Components/GlobalFooter";
+import IconWithText from "../Components/IconWithText/IconWithText";
+import { fadeIn } from "../Functions/GlobalAnimations";
 const Search = () => {
   const navigate = useNavigate();
   let [location, setLocation] = useState([]);
@@ -207,6 +209,44 @@ const Search = () => {
   let uniqueLocations = [...new Set(location.map((item) => item.Location))];
   let uniqueRoad = [...new Set(propertyRoad.map((item) => item.Road))];
 
+  const IconWithTextData = [
+    {
+      icon: "line-icon-Pipe text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Project pipeline",
+      content: "Access upcoming projects in your location of interest.",
+    },
+    {
+      icon: "line-icon-Bar-Chart3 text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Economic Data",
+      content:
+        "Access macro-economic data which plays an important role in shaping the real estate market.",
+    },
+    {
+      icon: "line-icon-Dashboard text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Data Charts and Infographics",
+      content:
+        "Access modern, well detailed and easy to understand dashboards offering key insights on data points",
+    },
+    {
+      icon: "line-icon-Search-People text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Property Search",
+      content:
+        "Access local property market data relevant in informing your investment objectives and Strategy",
+    },
+    {
+      icon: "line-icon-Bar-Chart text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Area Data",
+      content:
+        " Access hyperlocal data to help you identify the most attractive local areas within the city or neighbourhood.",
+    },
+    {
+      icon: "line-icon-Money-Bag text-gradient bg-gradient-to-r from-[#556fff] via-[#e05fc4] to-[#ff798e]",
+      title: "Buy or Rent",
+      content:
+        "Leverage AI- tools and advanced algorithms to uncover both rental and investment insights.",
+    },
+  ];
+
   return (
     <div className="">
       <GlobalHeader theme="light" />
@@ -297,9 +337,9 @@ const Search = () => {
         </Container>
       </div>
 
-      <Divider className="mt-3">Uncover Vital Property Insights </Divider>
+      <Divider className="mt-3 mb-8">Uncover Vital Property Insights </Divider>
 
-      <RowAnt gutter={56} className="m-4  mb-8">
+      {/* <RowAnt gutter={56} className="m-4  mb-8">
         <ColAnt className="gutter-row" span={8}>
           <Card style={{ width: 450, marginTop: 16, height: 150 }}>
             <Meta
@@ -372,10 +412,10 @@ const Search = () => {
             />
           </Card>
         </ColAnt>
-      </RowAnt>
+      </RowAnt> */}
 
-      <RowAnt gutter={56} className="m-4  mb-8">
-        <ColAnt className="gutter-row" span={8}>
+      <RowAnt gutter={56} className=" m-4 ">
+        {/* <ColAnt className="gutter-row" span={8}>
           <Card style={{ width: 450, marginTop: 16, height: 320 }}>
             <Meta
               avatar={
@@ -505,8 +545,18 @@ const Search = () => {
               }
             />
           </Card>
-        </ColAnt>
+        </ColAnt> */}
+        <Col className="mt-4 mb-16" xs={12} md={8} lg={12}>
+          <IconWithText
+            grid="row-cols-1 row-cols-md-1 row-cols-lg-3 gap-y-[12px]"
+            theme="icon-with-text-02 about-us-icon-with-text"
+            data={IconWithTextData}
+            animation={fadeIn}
+            animationDelay={0.1}
+          />
+        </Col>
       </RowAnt>
+
       <Modal
         title={
           loadingSubmit || status === "exception" || status === "success" ? (

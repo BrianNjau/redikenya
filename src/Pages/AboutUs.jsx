@@ -123,10 +123,12 @@ const AboutUs = () => {
                   investment strategies.
                 </p>
                 <Buttons
-                  href="/contact-us"
-                  className="font-medium font-serif uppercase text-[#f3efe0]  after:h-[2px] btn-link md:text-md md:mb-[15px] after:bg-[#f3efe0] hover:text-[#f3efe0]"
-                  color="#f3efe0"
-                  title="Talk to us"
+                  href="/support"
+                  className="font-medium about-us-bg-gradient font-sans btn-fancy uppercase   after:h-[2px]  md:text-md md:mb-[15px] "
+                  color="#fff"
+                  themeColor={"#fff"}
+                  size="sm"
+                  title="Talk To Us"
                 />
               </div>
             </Col>

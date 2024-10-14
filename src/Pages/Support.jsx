@@ -99,7 +99,7 @@ const Support = () => {
                 FIND US
               </div>
               <p className="w-[75%] lg:w-[90%] md:w-[60%] sm:w-[75%] xs:w-full mx-auto">
-                Rhapta Square, Westlands
+                New Rehema House, Nairobi
               </p>
             </Col>
             <Col>
@@ -107,7 +107,7 @@ const Support = () => {
               <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">
                 Call Us
               </div>
-              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 722946261</p>
+              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 723946261</p>
             </Col>
             <Col>
               <i className="line-icon-Mail-Read text-gradient bg-[#3EB489] text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
@@ -233,7 +233,7 @@ const Support = () => {
                                 with the
                                 <Link
                                   aria-label="checkbox"
-                                  to="/privacy"
+                                  to="/privacy-policy"
                                   target="_blank"
                                   className="text-darkgray underline hover:text-fastblue"
                                 >
