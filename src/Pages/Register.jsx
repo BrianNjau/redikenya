@@ -166,16 +166,25 @@ const Register = () => {
                       />
                       <p className="mb-[25px] block text-sm">
                         After you sign up, you will be granted free tokens to
-                        try PDI for free, no contract, no commitments. To view
-                        our terms of use you can read our{" "}
+                        try PDI for free, no contract, no commitments. By
+                        signing up you agree to our{" "}
                         <Link
-                          aria-label="privacy-policy-link"
-                          to="/terms-of-use"
+                          aria-label="terms-of-use-link"
+                          to="/terms-conditions"
                           className="underline"
                         >
                           {" "}
                           terms of use
-                        </Link>
+                        </Link>{" "}
+                        and our{" "}
+                        <Link
+                          aria-label="privacy-policy-link"
+                          to="/privacy-policy"
+                          className="underline"
+                        >
+                          {" "}
+                          privacy policy
+                        </Link>{" "}
                         .
                       </p>
                       <button
