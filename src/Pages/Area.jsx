@@ -15,6 +15,7 @@ import {
   Table,
   Modal,
   Progress,
+  Input,
 } from "antd";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Autoplay, Keyboard } from "swiper/modules";
@@ -59,6 +60,7 @@ const Area = () => {
   const [marketValue, setMarketValue] = useState([]);
   const [filteredMarketValue, setFilteredMarketValue] = useState([]);
   const [selectedDropDown, setSelectedDropDown] = useState();
+  const [selectedGRIData, setSelectedGRIData] = useState("median");
   const session = useSupabaseAuth();
 
   const navigate = useNavigate();
@@ -110,6 +112,75 @@ const Area = () => {
     stockProperties,
     session,
   ]);
+
+  function generateEnsuiteBarChartData(filteredPropertyDetails, typologies) {
+    return typologies.map((typology) => {
+      // Filter properties by the current typology
+      const typologyProperties = filteredPropertyDetails.filter(
+        (el) => el["Typology"] === typology
+      );
+
+      // Count the occurrences of each En-suite variation
+      const ensuiteCounts = typologyProperties.reduce(
+        (acc, property) => {
+          const ensuiteType = property["En-suite"];
+          if (ensuiteType === "All") {
+            acc.all++;
+          } else if (ensuiteType === "Three") {
+            acc.three++;
+          } else if (ensuiteType === "Two") {
+            acc.two++;
+          } else if (ensuiteType === "Master ") {
+            acc.master++;
+          } else if (ensuiteType === "Standard") {
+            acc.std++;
+          }
+          return acc;
+        },
+        { all: 0, three: 0, two: 0, master: 0, std: 0 }
+      );
+
+      // Calculate the total number of properties for this typology
+      const totalProperties = typologyProperties.length;
+
+      // Calculate the percentages for each ensuite type
+      const allPercentage =
+        totalProperties > 0
+          ? ((ensuiteCounts.all / totalProperties) * 100).toFixed(2)
+          : 0;
+      const masterPercentage =
+        totalProperties > 0
+          ? ((ensuiteCounts.master / totalProperties) * 100).toFixed(2)
+          : 0;
+      const stdPercentage =
+        totalProperties > 0
+          ? ((ensuiteCounts.std / totalProperties) * 100).toFixed(2)
+          : 0;
+      const threePercentage =
+        totalProperties > 0
+          ? ((ensuiteCounts.three / totalProperties) * 100).toFixed(2)
+          : 0;
+      const twoPercentage =
+        totalProperties > 0
+          ? ((ensuiteCounts.two / totalProperties) * 100).toFixed(2)
+          : 0;
+
+      // Return the object in the desired format
+      return {
+        property: typology,
+        all: allPercentage,
+        allColor: "hsl(169, 70%, 50%)", // Assign colors based on your preference
+        master: masterPercentage,
+        masterColor: "hsl(189, 70%, 50%)", // Assign colors based on your preference
+        standard: stdPercentage,
+        stdColor: "hsl(199, 70%, 50%)", // Assign colors based on your preference
+        three: threePercentage,
+        threeColor: "hsl(135, 70%, 50%)",
+        two: twoPercentage,
+        twoColor: "hsl(92, 70%, 50%)",
+      };
+    });
+  }
 
   const marketPricePicker =
     filteredPropertyDetails.length === 0
@@ -509,6 +580,7 @@ const Area = () => {
       }
       // console.log("filteredOver", filteredPropertyOverview);
       console.log("filteredDets", filteredPropertyDetails);
+      // handleGRIDataChange()
       setFilterLoading(false);
     } catch (error) {
       setFilterLoading(false);
@@ -770,6 +842,50 @@ const Area = () => {
       ],
     },
   ];
+  function calculateAverageGRI(filteredPropertyDetails, typology) {
+    // Filter the data based on the provided typology
+    const typologyValues = filteredPropertyDetails
+      .filter((el) => el["Typology"] === typology)
+      .map((a) => a["GRI/Sqm"]);
+
+    // Calculate the sum of the GRI/Sqm values
+    const totalGRI = typologyValues.reduce((sum, val) => sum + val, 0);
+
+    // Calculate and return the average (sum / number of items)
+    return typologyValues.length > 0 ? totalGRI / typologyValues.length : 0;
+  }
+  const averageGRISqmLine = [
+    {
+      id: "Average GRI/Sqm by Typology",
+      color: "#ff3344",
+      data: [
+        {
+          x: "Studio",
+          y: calculateAverageGRI(filteredPropertyDetails, "Studio"),
+        },
+        {
+          x: "1BR",
+          y: calculateAverageGRI(filteredPropertyDetails, "1BR"),
+        },
+        {
+          x: "2BR",
+          y: calculateAverageGRI(filteredPropertyDetails, "2BR"),
+        },
+        {
+          x: "3BR",
+          y: calculateAverageGRI(filteredPropertyDetails, "3BR"),
+        },
+        {
+          x: "4BR",
+          y: calculateAverageGRI(filteredPropertyDetails, "4BR"),
+        },
+        {
+          x: "5BR",
+          y: calculateAverageGRI(filteredPropertyDetails, "5BR"),
+        },
+      ],
+    },
+  ];
 
   const filterOptions = [
     {
@@ -817,7 +933,10 @@ const Area = () => {
   //     key: "year",
   //   },
   // ];
-  const rowClassName = () => "icon-with-text-02 about-us-icon-with-text";
+
+  const handleGRIDataChange = (value) => {
+    setSelectedGRIData(value);
+  };
   const pipelineTableColumns = [
     {
       title: "Location",
@@ -973,15 +1092,53 @@ const Area = () => {
           </RowAnt>
 
           <ColAnt className="gutter-row mt-8" span={24}>
+            <Select
+              defaultValue="median"
+              style={{
+                width: 120,
+              }}
+              onChange={handleGRIDataChange}
+              options={[
+                {
+                  value: "median",
+                  label: "Median",
+                },
+                {
+                  value: "average",
+                  label: "Average",
+                },
+              ]}
+            />
             <div
-              className="bg-[#08415c] rounded-lg p-6"
-              style={{ height: "50vh", width: "100%" }}
+              className="bg-[#08415c] rounded-lg p-6 mt-1"
+              style={{ height: "60vh", width: "100%" }}
             >
               <span className="font-base text-[#f3efe0] text-sm ">
-                Median of GRI/Sqm by Typology
+                GRI/Sqm by Typology
               </span>{" "}
               <ResponsiveLine
-                colors={{ scheme: "accent" }}
+                enableArea={true}
+                enableGridX={true}
+                areaOpacity={0.1}
+                // Clip path to prevent overflow
+                // defs={[
+                //   {
+                //     id: "clipPath",
+                //     type: "patternLines",
+                //     background: "inherit",
+                //     color: "#ffffff",
+                //     size: 3,
+                //     padding: 2,
+                //     stagger: true,
+                //   },
+                // ]}
+                // fill={[
+                //   {
+                //     match: "*",
+                //     id: "clipPath",
+                //   },
+                // ]}
+                colors={["rgb(62, 180, 137)"]}
                 // borderColor={{
                 //   from: "color",
                 //   modifiers: [
@@ -989,20 +1146,24 @@ const Area = () => {
                 //     ["opacity", 0.9],
                 //   ],
                 // }}
-                data={medianGRISqmLine}
+                data={
+                  selectedGRIData === "median"
+                    ? medianGRISqmLine
+                    : averageGRISqmLine
+                }
                 theme={theme}
                 margin={{ top: 50, right: 140, bottom: 50, left: 120 }}
                 xScale={{ type: "point" }}
                 yScale={{
                   type: "linear",
-                  min: "auto",
+                  min: 0,
                   max: "auto",
                   stacked: true,
                   reverse: false,
                 }}
-                // yFormat=" >-.2f"
-                // axisTop={null}
-                // axisRight={null}
+                yFormat=" >-.2f"
+                axisTop={null}
+                axisRight={null}
                 axisBottom={{
                   tickSize: 5,
                   tickPadding: 5,
@@ -1323,9 +1484,9 @@ const Area = () => {
                 style={{ height: "35vh" }}
               >
                 <span className="font-base text-[#f3efe0] text-sm ">
-                  Typology Analysis (%)
+                  Ensuite Property Analysis (%)
                 </span>{" "}
-                <ResponsivePie
+                {/* <ResponsivePie
                   data={typologyByBedroomsPieData}
                   margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
                   innerRadius={0.5}
@@ -1406,6 +1567,108 @@ const Area = () => {
                       ],
                     },
                   ]}
+                /> */}
+                <ResponsiveBar
+                  data={generateEnsuiteBarChartData(filteredPropertyDetails, [
+                    "Studio",
+                    "1BR",
+                    "2BR",
+                    "3BR",
+                    "4BR",
+                    "5BR",
+                  ])}
+                  theme={theme}
+                  valueFormat={(val) => `${val} %`}
+                  keys={["all", "master", "standard", "two", "three"]}
+                  indexBy="property"
+                  margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+                  padding={0.3}
+                  valueScale={{ type: "linear" }}
+                  indexScale={{ type: "band", round: true }}
+                  colors={{ scheme: "nivo" }}
+                  defs={[
+                    {
+                      id: "dots",
+                      type: "patternDots",
+                      background: "inherit",
+                      color: "#38bcb2",
+                      size: 4,
+                      padding: 1,
+                      stagger: true,
+                    },
+                    {
+                      id: "lines",
+                      type: "patternLines",
+                      background: "inherit",
+                      color: "#eed312",
+                      rotation: -45,
+                      lineWidth: 6,
+                      spacing: 10,
+                    },
+                  ]}
+                  borderColor={{
+                    from: "color",
+                    modifiers: [["darker", 1.6]],
+                  }}
+                  axisTop={null}
+                  axisRight={null}
+                  axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: "Typology",
+                    legendPosition: "middle",
+                    legendOffset: 32,
+                    truncateTickAt: 0,
+                  }}
+                  axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: "% Ensuite Property",
+                    legendPosition: "middle",
+                    legendOffset: -40,
+                    truncateTickAt: 0,
+                  }}
+                  labelSkipWidth={12}
+                  labelSkipHeight={12}
+                  labelTextColor={{
+                    from: "color",
+                    modifiers: [["darker", 1.6]],
+                  }}
+                  legends={[
+                    {
+                      dataFrom: "keys",
+                      anchor: "bottom-right",
+                      direction: "column",
+                      justify: false,
+                      translateX: 120,
+                      translateY: 0,
+                      itemsSpacing: 2,
+                      itemWidth: 100,
+                      itemHeight: 20,
+                      itemDirection: "left-to-right",
+                      itemOpacity: 0.85,
+                      symbolSize: 20,
+                      effects: [
+                        {
+                          on: "hover",
+                          style: {
+                            itemOpacity: 1,
+                          },
+                        },
+                      ],
+                    },
+                  ]}
+                  role="application"
+                  ariaLabel="Nivo bar chart demo"
+                  barAriaLabel={(e) =>
+                    e.id +
+                    ": " +
+                    e.formattedValue +
+                    " in country: " +
+                    e.indexValue
+                  }
                 />
               </div>
             </ColAnt>
