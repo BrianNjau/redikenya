@@ -7,10 +7,10 @@ import { PaystackButton } from "react-paystack";
 const ExpiredSubCard = () => {
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const std_plan = process.env.REACT_APP_PAYSTACK_STANDARD_SUBSCRIPTION_PLAN;
-  const hourlyplan = "PLN_nnca2e92pr76h7q";
+  // const hourlyplan = "PLN_nnca2e92pr76h7q";
   const session = useSupabaseAuth();
   const tokenPrice = 1500;
-  const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
+  // const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
 
   // you can call this function anything
   const handlePaystackSuccessAction = async () => {
@@ -52,8 +52,8 @@ const ExpiredSubCard = () => {
         },
       ],
     },
-    plan: hourlyplan,
-    publicKey: test_key,
+    plan: std_plan,
+    publicKey: public_key,
     text: (
       <Buttons
         className={
