@@ -133,7 +133,7 @@ const SearchResults = () => {
     }
   }
 
-  console.log("search results", searchResults);
+  // console.log("search results", searchResults);
 
   let unitsNumberPicker = searchResults.roadResults.map((a) => {
     let val = a.number_of_units;
@@ -388,7 +388,7 @@ const SearchResults = () => {
 
   const handlePropertyCheckbox = (selectedItemArray) => {
     openNotificationWithIcon();
-    console.log("SELECTED", selectedItemArray);
+    // console.log("SELECTED", selectedItemArray);
     if (selectedItemArray.includes("saleType")) {
       setSaleType(true);
     } else {
@@ -547,7 +547,7 @@ const SearchResults = () => {
     // { label: "Onsite Amenities", value: "onsiteAmenities" },
   ];
 
-  console.log("search result", searchResults);
+  // console.log("search result", searchResults);
 
   return (
     <div>

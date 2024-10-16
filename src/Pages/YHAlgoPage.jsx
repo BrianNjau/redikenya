@@ -15,7 +15,7 @@ const YHAlgoPage = () => {
 
   useEffect(() => {
     const insightData = JSON.parse(localStorage.getItem("invest-data"));
-    console.log("insightdata", insightData);
+    // console.log("insightdata", insightData);
     if (insightData) {
       setInvestData(insightData.investData);
       setPropOverview(insightData.propOverview);

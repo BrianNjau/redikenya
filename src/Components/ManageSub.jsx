@@ -48,7 +48,7 @@ const ManageSub = () => {
         showModal();
       }
 
-      console.log("Link =>", manageLink);
+      // console.log("Link =>", manageLink);
     } catch (error) {
       console.log(error);
     }

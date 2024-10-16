@@ -7,7 +7,7 @@ import { Col, Row } from "react-bootstrap";
 import Buttons from "./Buttons";
 
 const PricingTable = ({ grid, theme, className, data }) => {
-  console.log(data);
+  // console.log(data);
 
   return (
     <Row className={`${grid}`}>

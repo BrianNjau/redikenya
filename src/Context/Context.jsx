@@ -124,7 +124,7 @@ export const UserWalletProvider = ({ children }) => {
               "payGoWallet",
               JSON.stringify(newPayGoData.token_count)
             );
-            console.log("Change received", payload);
+            // console.log("Change received", payload);
           }
         )
         .on("error", (error) => {
@@ -157,7 +157,10 @@ export const UserWalletProvider = ({ children }) => {
           }
         )
         .on("error", (error) => {
-          console.error("WebSocket error:", error);
+          console.error("WebSocket network error:", error);
+          alert(
+            "Network seems to have an issue. Please log out and login once more"
+          );
         })
         .subscribe();
 

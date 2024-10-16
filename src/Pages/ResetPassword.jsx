@@ -74,7 +74,7 @@ const ResetPassword = () => {
         });
       }
       if (data) {
-        console.log("reset data ->", data);
+        // console.log("reset data ->", data);
         await resetSuccessNotification();
       }
       // Set a timeout to re-enable the button after 30 seconds

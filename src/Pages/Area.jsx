@@ -448,7 +448,7 @@ const Area = () => {
 
       //try consume the token
       const consumeTokenResult = await consumeToken(session.user.id);
-      console.log("consume token result", consumeTokenResult);
+      // console.log("consume token result", consumeTokenResult);
 
       if (consumeTokenResult.success) {
         if (roads.length > 0) {
@@ -623,7 +623,7 @@ const Area = () => {
         );
       }
       // console.log("filteredOver", filteredPropertyOverview);
-      console.log("filteredDets", filteredPropertyDetails);
+      // console.log("filteredDets", filteredPropertyDetails);
       // handleGRIDataChange()
       setFilterLoading(false);
     } catch (error) {
@@ -643,7 +643,7 @@ const Area = () => {
         setFilteredStock([]);
       }
 
-      console.log("filtered Stock", filteredStock);
+      // console.log("filtered Stock", filteredStock);
 
       setStockPropertyLoading(false);
     } catch (error) {

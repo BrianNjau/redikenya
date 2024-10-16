@@ -119,7 +119,7 @@ const Search = () => {
 
       //first try consume token and receive success message
       const consumeTokenResult = await consumeToken(session.user.id);
-      console.log("consume token result", consumeTokenResult);
+      // console.log("consume token result", consumeTokenResult);
       if (consumeTokenResult.success) {
         if (selectedRoad) {
           const { data: searchedRoadResults } = await Supabase.from(

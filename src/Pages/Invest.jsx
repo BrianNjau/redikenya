@@ -385,7 +385,7 @@ const Invest = () => {
       }
       //try to consume token
       const consumeTokenResult = await consumeToken(session.user.id);
-      console.log("consume token result", consumeTokenResult);
+      // console.log("consume token result", consumeTokenResult);
 
       if (consumeTokenResult.success) {
         setProgress(100);
@@ -453,7 +453,7 @@ const Invest = () => {
 
   // AI SETUP
   async function HandleAIMessages(messages) {
-    console.log("messages", messages);
+    // console.log("messages", messages);
 
     // Function to chunk data based on the specified chunk size
     // const chunkData = (data, chunkSize) => {

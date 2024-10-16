@@ -12,7 +12,7 @@ const BillingHistory = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log(session);
+  // console.log(session);
   useEffect(() => {
     if (!session) {
       navigate("/");

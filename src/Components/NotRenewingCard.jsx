@@ -24,7 +24,7 @@ const NotRenewingCard = () => {
   // you can call this function anything
   const handleOnClose = (ref) => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log("closed", ref);
+    // console.log("closed", ref);
   };
 
   // const paystackProps = {

@@ -63,15 +63,15 @@ const PriceCard = () => {
   const handleFlutterPayment = useFlutterwave(flwConfig);
   // useFlutterwave();
 
-  const fwConfig = {
-    ...flwConfig,
-    text: "Pay with Flutterwave!",
-    callback: (response) => {
-      console.log(response);
-      closePaymentModal(); // this will close the modal programmatically
-    },
-    onClose: () => {},
-  };
+  // const fwConfig = {
+  //   ...flwConfig,
+  //   text: "Pay with Flutterwave!",
+  //   callback: (response) => {
+  //     console.log(response);
+  //     closePaymentModal(); // this will close the modal programmatically
+  //   },
+  //   onClose: () => {},
+  // };
 
   async function handleSubscription() {
     //
@@ -113,7 +113,7 @@ const PriceCard = () => {
 
       handleFlutterPayment({
         callback: (response) => {
-          console.log(response);
+          // console.log(response);
           closePaymentModal(); // this will close the modal programmatically
         },
         onClose: () => {},
