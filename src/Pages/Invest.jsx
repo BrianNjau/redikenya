@@ -1002,7 +1002,7 @@ const Invest = () => {
                           />,
                           <IconText
                             icon={<RiseOutlined />}
-                            text={`GRM: ${item["GRM (Years)"]} Years`}
+                            text={`Est. GRM: ${item["GRM (Years)"]} Years`}
                             key={"grm-price-icon"}
                           />,
                           <IconText
@@ -1161,8 +1161,8 @@ const Invest = () => {
                         />
                         <div>
                           <ul>
-                            <li>Rent: {item["Rent"]}</li>
-                            <li>Rental Yield: {item["Rental Yield"]}</li>
+                            <li>Est. Rent: {item["Rent"]}</li>
+                            <li>Est. Rental Yield: {item["Rental Yield"]}</li>
                             <li>
                               Floor area : {item["Floor area (SqM)"]} m
                               <sup>2</sup>

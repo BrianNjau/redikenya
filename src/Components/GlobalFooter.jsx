@@ -58,49 +58,13 @@ const GlobalFooter = (props) => {
               <Link to="/support" className="mb-[5px] md:mb-[20px] text-white ">
                 Visit Our <u> Customer Support Page</u>
               </Link>
-              <p className="mb-[25px] md:mb-[20px] text-[#3EB489] ">
-                <i className="feather-mail"></i> : info@pdimarketplace.com
-              </p>
-              {/* <Formik
-                initialValues={{ email: "" }}
-                validationSchema={Yup.object().shape({
-                  email: Yup.string()
-                    .email("Invalid email.")
-                    .required("Field is required."),
-                })}
-                onSubmit={async (values, actions) => {
-                  actions.setSubmitting(true);
-                  const response = await sendEmail(values);
-                  response.status === "success" && resetForm(actions);
-                }}
+              <br />
+              <Link
+                to="/disclaimer"
+                className="mb-[5px] md:mb-[20px] text-white"
               >
-                {({ isSubmitting, status }) => (
-                  <>
-                    <Form className="w-full relative flex rounded-[0.25rem] overflow-hidden">
-                      <Input
-                        showErrorMsg={false}
-                        type="email"
-                        name="email"
-                        labelClass="w-full"
-                        className="border-[1px] border-solid border-transparent py-[13px] pl-[15px] pr-[15px] w-full"
-                        placeholder="Enter your email address"
-                      />
-                      <button
-                        aria-label="subscribe"
-                        type="submit"
-                        className={`text-lg tracking-[1px] py-[8px] px-[18px] btn-gradient uppercase${
-                          isSubmitting ? " loading" : ""
-                        }`}
-                      >
-                        <i className="feather-mail text-lg m-0"></i>
-                      </button>
-                    </Form> */}
-              {/* <AnimatePresence>
-                                    {status && <div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-[20px] w-full text relative"><MessageBox className="absolute py-[13px] px-[20px] text-md leading-[20px] rounded-[4px]" theme="message-box01" variant="success" message="Your message has been sent successfully subscribed to our email list!" /></div>}
-                                </AnimatePresence> */}
-              {/* </>
-                )}
-              </Formik> */}
+                Read Our <u> Disclaimer</u>
+              </Link>
             </Col>
           </Row>
         </Container>
@@ -123,9 +87,7 @@ const GlobalFooter = (props) => {
                 Rights Reserved{" "}
               </p>
             </Col>
-            <Col md={3}>
-              {/* <SocialIcons size="xs" theme="social-icon-style-01" className="felx justify-end md:justify-center" iconColor={props.theme === "dark" ? "light" : "dark"} data={iconData} /> */}
-            </Col>
+            <Col md={3}></Col>
           </Row>
         </Container>
       </div>

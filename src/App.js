@@ -41,6 +41,7 @@ const Account = lazy(() => import("./Pages/Account.jsx"));
 const Support = lazy(() => import("./Pages/Support.jsx"));
 const Privacy = lazy(() => import("./Pages/Privacy.jsx"));
 const Terms = lazy(() => import("./Pages/TC.jsx"));
+const Disclaimer = lazy(() => import("./Pages/Disclaimer.jsx"));
 
 function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -188,6 +189,7 @@ function App() {
                         <Route path="/support" element={<Support />} />
                         <Route path="/privacy-policy" element={<Privacy />} />
                         <Route path="/terms-conditions" element={<Terms />} />
+                        <Route path="/disclaimer" element={<Disclaimer />} />
                       </Routes>
                     </Suspense>
                   </AnimatePresence>

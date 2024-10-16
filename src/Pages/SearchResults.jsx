@@ -713,7 +713,7 @@ const SearchResults = () => {
                           </Col>
                           <Col span={8}>
                             <StatisticCard
-                              title={"Median of Rent"}
+                              title={"Median of Est. Rent"}
                               value={
                                 `Ksh. ${medianCal(
                                   rentValuePicker
@@ -723,7 +723,7 @@ const SearchResults = () => {
                           </Col>
                           <Col span={8}>
                             <StatisticCard
-                              title={"Median of Rental Yield"}
+                              title={"Median of Est. Rental Yield"}
                               value={
                                 `${Math.round(
                                   medianCal(rentalYieldValuePicker)
@@ -733,7 +733,7 @@ const SearchResults = () => {
                           </Col>
                           <Col span={8}>
                             <StatisticCard
-                              title={"Median of GRM (Years)"}
+                              title={"Median of Est. GRM (Years)"}
                               value={
                                 `${Math.round(
                                   medianCal(grmYieldValuePicker)

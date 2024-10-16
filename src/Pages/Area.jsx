@@ -181,6 +181,50 @@ const Area = () => {
       };
     });
   }
+  function generateCloakRoomBarChartData(filteredPropertyDetails, typologies) {
+    return typologies.map((typology) => {
+      // Filter properties by the current typology
+      const typologyProperties = filteredPropertyDetails.filter(
+        (el) => el["Typology"] === typology
+      );
+
+      // Count the occurrences of each En-suite variation
+      const cloakRoomCounts = typologyProperties.reduce(
+        (acc, property) => {
+          const cloakRoomType = property["Cloak room"];
+          if (cloakRoomType === "Share") {
+            acc.share++;
+          } else if (cloakRoomType === "Yes") {
+            acc.yes++;
+          }
+          return acc;
+        },
+        { share: 0, yes: 0 }
+      );
+
+      // Calculate the total number of properties for this typology
+      const totalProperties = typologyProperties.length;
+
+      // Calculate the percentages for each ensuite type
+      const sharePercentage =
+        totalProperties > 0
+          ? ((cloakRoomCounts.share / totalProperties) * 100).toFixed(2)
+          : 0;
+      const yesPercentage =
+        totalProperties > 0
+          ? ((cloakRoomCounts.yes / totalProperties) * 100).toFixed(2)
+          : 0;
+
+      // Return the object in the desired format
+      return {
+        property: typology,
+        Share: sharePercentage,
+        ShareColor: "hsl(135, 70%, 50%)", // Assign colors based on your preference
+        Yes: yesPercentage,
+        YesColor: "hsl(189, 70%, 50%)", // Assign colors based on your preference
+      };
+    });
+  }
 
   const marketPricePicker =
     filteredPropertyDetails.length === 0
@@ -666,7 +710,7 @@ const Area = () => {
       item.value = Math.round((item.value / totalCount) * 100); // Convert count to percentage
     });
 
-    result.sort((a, b) => b.value - a.value); // Sort in descending order based on percentage
+    result.sort((a, b) => a.value - b.value); // Sort in descending order based on percentage
 
     return result;
   }
@@ -758,6 +802,30 @@ const Area = () => {
           100
       ),
       label: "NoDSQ",
+      color: "hsl(355, 67%, 26%)",
+    },
+  ];
+  const officeProvisionPieData = [
+    {
+      id: "Office",
+      value: Math.round(
+        (filteredPropertyDetails.filter((el) => el["Office/study"] === "Yes")
+          .length /
+          filteredPropertyDetails.length) *
+          100
+      ),
+      label: "Office/Study",
+      color: "hsl(47, 44%, 92%)",
+    },
+    {
+      id: "NoOffice",
+      value: Math.round(
+        (filteredPropertyDetails.filter((el) => el["Office/study"] === "None")
+          .length /
+          filteredPropertyDetails.length) *
+          100
+      ),
+      label: "No Office/Study",
       color: "hsl(355, 67%, 26%)",
     },
   ];
@@ -1023,13 +1091,13 @@ const Area = () => {
             </ColAnt>
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
-                title={"Average of Rental Yield"}
+                title={"Est.Average of Rental Yield"}
                 value={`${Math.round(avgRentalYield).toLocaleString() || 0} %`}
               />
             </ColAnt>
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
-                title={"Average of Rent"}
+                title={"Est. Average of Rent"}
                 value={`Ksh. ${Math.round(avgRent).toLocaleString() || 0}`}
               />
             </ColAnt>
@@ -1067,7 +1135,7 @@ const Area = () => {
             </ColAnt>
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
-                title={"Median of Rental Yield"}
+                title={"Est. Median of Rental Yield"}
                 value={`${
                   Math.round(medianCal(rentalYieldPicker)).toLocaleString() || 0
                 } %`}
@@ -1075,7 +1143,7 @@ const Area = () => {
             </ColAnt>
             <ColAnt className="gutter-row" span={5}>
               <StatisticCard
-                title={"Median of Rent"}
+                title={"Est. Median of Rent"}
                 value={`Ksh. ${
                   Math.round(medianCal(rentValuePicker)).toLocaleString() || 0
                 }`}
@@ -1120,32 +1188,7 @@ const Area = () => {
                 enableArea={true}
                 enableGridX={true}
                 areaOpacity={0.1}
-                // Clip path to prevent overflow
-                // defs={[
-                //   {
-                //     id: "clipPath",
-                //     type: "patternLines",
-                //     background: "inherit",
-                //     color: "#ffffff",
-                //     size: 3,
-                //     padding: 2,
-                //     stagger: true,
-                //   },
-                // ]}
-                // fill={[
-                //   {
-                //     match: "*",
-                //     id: "clipPath",
-                //   },
-                // ]}
                 colors={["rgb(62, 180, 137)"]}
-                // borderColor={{
-                //   from: "color",
-                //   modifiers: [
-                //     ["darker", 0.6],
-                //     ["opacity", 0.9],
-                //   ],
-                // }}
                 data={
                   selectedGRIData === "median"
                     ? medianGRISqmLine
@@ -1486,88 +1529,6 @@ const Area = () => {
                 <span className="font-base text-[#f3efe0] text-sm ">
                   Ensuite Property Analysis (%)
                 </span>{" "}
-                {/* <ResponsivePie
-                  data={typologyByBedroomsPieData}
-                  margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-                  innerRadius={0.5}
-                  padAngle={0.7}
-                  cornerRadius={3}
-                  activeOuterRadiusOffset={8}
-                  borderWidth={1}
-                  borderColor={{
-                    from: "color",
-                    modifiers: [["darker", 0.2]],
-                  }}
-                  arcLinkLabelsSkipAngle={10}
-                  arcLinkLabelsTextColor="#FFF"
-                  arcLinkLabelsThickness={2}
-                  arcLinkLabelsColor={{ from: "color" }}
-                  arcLabelsSkipAngle={10}
-                  arcLabelsTextColor={{
-                    from: "color",
-                    modifiers: [["darker", 2]],
-                  }}
-                  valueFormat={(val) => `${val} %`}
-                  defs={[
-                    {
-                      id: "dots",
-                      type: "patternDots",
-                      background: "inherit",
-                      color: "rgba(255, 255, 255, 0.3)",
-                      size: 4,
-                      padding: 1,
-                      stagger: true,
-                    },
-                    {
-                      id: "lines",
-                      type: "patternLines",
-                      background: "inherit",
-                      color: "rgba(255, 255, 255, 0.3)",
-                      rotation: -45,
-                      lineWidth: 6,
-                      spacing: 10,
-                    },
-                  ]}
-                  fill={[
-                    {
-                      match: {
-                        id: "DSQ",
-                      },
-                      id: "dots",
-                    },
-                    {
-                      match: {
-                        id: "NoDSQ",
-                      },
-                      id: "lines",
-                    },
-                  ]}
-                  legends={[
-                    {
-                      anchor: "bottom",
-                      direction: "row",
-                      justify: false,
-                      translateX: 0,
-                      translateY: 56,
-                      itemsSpacing: 0,
-                      itemWidth: 100,
-                      itemHeight: 18,
-                      itemTextColor: "#FFF",
-                      itemDirection: "left-to-right",
-                      itemOpacity: 1,
-                      symbolSize: 18,
-                      symbolShape: "circle",
-                      effects: [
-                        {
-                          on: "hover",
-                          style: {
-                            itemTextColor: "#000",
-                          },
-                        },
-                      ],
-                    },
-                  ]}
-                /> */}
                 <ResponsiveBar
                   data={generateEnsuiteBarChartData(filteredPropertyDetails, [
                     "Studio",
@@ -1687,6 +1648,230 @@ const Area = () => {
                   innerRadius={0.5}
                   padAngle={0.7}
                   cornerRadius={3}
+                  activeOuterRadiusOffset={8}
+                  borderWidth={1}
+                  borderColor={{
+                    from: "color",
+                    modifiers: [["darker", 0.2]],
+                  }}
+                  valueFormat={(val) => `${val} %`}
+                  arcLinkLabelsSkipAngle={10}
+                  arcLinkLabelsTextColor="#FFF"
+                  arcLinkLabelsThickness={2}
+                  arcLinkLabelsColor={{ from: "color" }}
+                  arcLabelsSkipAngle={10}
+                  arcLabelsTextColor={{
+                    from: "color",
+                    modifiers: [["darker", 2]],
+                  }}
+                  defs={[
+                    {
+                      id: "dots",
+                      type: "patternDots",
+                      background: "inherit",
+                      color: "rgba(255, 255, 255, 0.3)",
+                      size: 4,
+                      padding: 1,
+                      stagger: true,
+                    },
+                    {
+                      id: "lines",
+                      type: "patternLines",
+                      background: "inherit",
+                      color: "rgba(255, 255, 255, 0.3)",
+                      rotation: -45,
+                      lineWidth: 6,
+                      spacing: 10,
+                    },
+                  ]}
+                  fill={[
+                    {
+                      match: {
+                        id: "Studio",
+                      },
+                      id: "dots",
+                    },
+                    {
+                      match: {
+                        id: "1BR",
+                      },
+                      id: "dots",
+                    },
+                    {
+                      match: {
+                        id: "2BR",
+                      },
+                      id: "dots",
+                    },
+                    {
+                      match: {
+                        id: "3BR",
+                      },
+                      id: "dots",
+                    },
+                    {
+                      match: {
+                        id: "4BR",
+                      },
+                      id: "lines",
+                    },
+                    {
+                      match: {
+                        id: "5BR",
+                      },
+                      id: "lines",
+                    },
+                  ]}
+                  legends={[
+                    {
+                      anchor: "bottom",
+                      direction: "row",
+                      justify: false,
+                      translateX: 0,
+                      translateY: 56,
+                      itemsSpacing: 0,
+                      itemWidth: 100,
+                      itemHeight: 18,
+                      itemTextColor: "#FFF",
+                      itemDirection: "left-to-right",
+                      itemOpacity: 1,
+                      symbolSize: 18,
+                      symbolShape: "circle",
+                      effects: [
+                        {
+                          on: "hover",
+                          style: {
+                            itemTextColor: "#000",
+                          },
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              </div>
+            </ColAnt>
+          </RowAnt>
+          <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <ColAnt className="gutter-row h-auto" span={14}>
+              {/* Pie chart typology by bedrooms */}
+              <div
+                className="bg-[#08415c] rounded-lg p-3 "
+                style={{ height: "35vh" }}
+              >
+                <span className="font-base text-[#f3efe0] text-sm ">
+                  Cloakroom Property Analysis (%)
+                </span>{" "}
+                <ResponsiveBar
+                  data={generateCloakRoomBarChartData(filteredPropertyDetails, [
+                    "Studio",
+                    "1BR",
+                    "2BR",
+                    "3BR",
+                    "4BR",
+                    "5BR",
+                  ])}
+                  theme={theme}
+                  valueFormat={(val) => `${val} %`}
+                  keys={["Share", "Yes"]}
+                  indexBy="property"
+                  margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+                  padding={0.3}
+                  valueScale={{ type: "linear" }}
+                  indexScale={{ type: "band", round: true }}
+                  colors={["rgb(62, 180, 137)", "rgb(255, 255, 255)"]}
+                  defs={[
+                    {
+                      id: "dots",
+                      type: "patternDots",
+                      background: "inherit",
+                      color: "#38bcb2",
+                      size: 4,
+                      padding: 1,
+                      stagger: true,
+                    },
+                    {
+                      id: "lines",
+                      type: "patternLines",
+                      background: "inherit",
+                      color: "#eed312",
+                      rotation: -45,
+                      lineWidth: 6,
+                      spacing: 10,
+                    },
+                  ]}
+                  borderColor={{
+                    from: "color",
+                    modifiers: [["darker", 1.6]],
+                  }}
+                  axisTop={null}
+                  axisRight={null}
+                  axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: "Typology",
+                    legendPosition: "middle",
+                    legendOffset: 32,
+                    truncateTickAt: 0,
+                  }}
+                  axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: "% Ensuite Property",
+                    legendPosition: "middle",
+                    legendOffset: -40,
+                    truncateTickAt: 0,
+                  }}
+                  labelSkipWidth={12}
+                  labelSkipHeight={12}
+                  labelTextColor={{
+                    from: "color",
+                    modifiers: [["darker", 1.6]],
+                  }}
+                  legends={[
+                    {
+                      dataFrom: "keys",
+                      anchor: "bottom-right",
+                      direction: "column",
+                      justify: false,
+                      translateX: 120,
+                      translateY: 0,
+                      itemsSpacing: 2,
+                      itemWidth: 100,
+                      itemHeight: 20,
+                      itemDirection: "left-to-right",
+                      itemOpacity: 0.85,
+                      symbolSize: 20,
+                      effects: [
+                        {
+                          on: "hover",
+                          style: {
+                            itemOpacity: 1,
+                          },
+                        },
+                      ],
+                    },
+                  ]}
+                />
+              </div>
+            </ColAnt>
+            <ColAnt className="gutter-row h-auto" span={10}>
+              {/* Pie chart typology by bedrooms */}
+              <div
+                className="bg-[#08415c] rounded-lg p-3 "
+                style={{ height: "35vh" }}
+              >
+                <span className="font-base text-[#f3efe0] text-sm ">
+                  Property Provision of Office/Study (%)
+                </span>{" "}
+                <ResponsivePie
+                  data={officeProvisionPieData}
+                  margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+                  innerRadius={0.5}
+                  padAngle={0.7}
+                  cornerRadius={3}
+                  colors={["rgb(140, 39, 30)", "rgb(62, 180, 137)"]}
                   activeOuterRadiusOffset={8}
                   borderWidth={1}
                   borderColor={{
