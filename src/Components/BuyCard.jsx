@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import Buttons from "./Buttons";
 import { useSupabaseAuth, useUserWallet } from "../Context/Context";
 import { PaystackButton } from "react-paystack";
-import { Supabase } from "../Functions/SupabaseClient";
-import { Loading3QuartersOutlined } from "@ant-design/icons";
+// import { Supabase } from "../Functions/SupabaseClient";
+// import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 const BuyCard = () => {
   const [tokenValue, setTokenValue] = useState(1);
   const [tokenPrice, setTokenPrice] = useState(160);
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
-  const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
+  // const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
 
   const session = useSupabaseAuth();
   const { payGoWallet, updatePayGoWallet } = useUserWallet();
@@ -78,7 +78,7 @@ const BuyCard = () => {
         },
       ],
     },
-    publicKey: test_key,
+    publicKey: public_key,
     text: (
       <Buttons
         className={"ml-4 mt-2  btn-fancy font-medium font-sans "}

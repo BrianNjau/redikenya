@@ -153,7 +153,7 @@ export const UserWalletProvider = ({ children }) => {
               "subscriptionWallet",
               JSON.stringify(newSubscriptionData)
             );
-            console.log("Change received", payload);
+            // console.log("Change received", payload);
           }
         )
         .on("error", (error) => {

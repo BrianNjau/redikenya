@@ -53,13 +53,13 @@ const PurchaseCard = () => {
   const handlePaystackSuccessAction = (reference) => {
     // Implementation for whatever you want to do with reference and after success call.
     alert("Thanks for doing business with us! Come back soon!!");
-    console.log(reference);
+    // console.log(reference);
   };
 
   // you can call this function anything
   const handlePaystackCloseAction = () => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log("closed");
+    // console.log("closed");
   };
 
   const paystackProps = {
@@ -169,7 +169,7 @@ const PurchaseCard = () => {
               purchaseToken({
                 callback: async (response) => {
                   //
-                  console.log("Payment Response", response);
+                  // console.log("Payment Response", response);
 
                   // if purchase successful
                   if (response["status"] === "successful") {
@@ -199,12 +199,12 @@ const PurchaseCard = () => {
                       });
                     }
                   } else {
-                    console.log(response);
+                    // console.log(response);
                     closePaymentModal(); // this will close the flutterwave modal programmatically
                   }
                 },
                 onClose: () => {
-                  console.log("Onclose ");
+                  // console.log("Onclose ");
                   api.success({
                     message: "Tokens Purchased Successfully",
                     description: `You have successfully credited your account ${tokenValue} tokens`,

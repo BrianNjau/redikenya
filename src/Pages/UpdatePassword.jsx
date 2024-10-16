@@ -51,7 +51,7 @@ const UpdatePassword = () => {
         password: password.password,
       });
 
-      console.log(data);
+      // console.log(data);
       if (error) {
         api.error({
           message: error.code,
@@ -59,7 +59,7 @@ const UpdatePassword = () => {
         });
       }
       if (data) {
-        console.log("reset data ->", data);
+        // console.log("reset data ->", data);
         await resetSuccessNotification();
       }
       setTimeout(() => {

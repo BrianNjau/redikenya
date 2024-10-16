@@ -5,7 +5,7 @@ import axios from "axios";
 import { useUserWallet } from "../Context/Context";
 
 const ManageSub = () => {
-  const secret = process.env.REACT_APP_PAYSTACK_TEST_SECRET;
+  const secret = process.env.REACT_APP_PAYSTACK_SECRET_KEY;
   const { subscriptionWallet } = useUserWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [generatedLink, setGeneratedLink] = useState("");

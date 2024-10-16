@@ -15,10 +15,10 @@ import SuccessIcon from "../Assets/img/successIcon.png";
 const SubscribeCard = () => {
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   const std_plan = process.env.REACT_APP_PAYSTACK_STANDARD_SUBSCRIPTION_PLAN;
-  const hourlyplan = "PLN_nnca2e92pr76h7q";
+  // const hourlyplan = "PLN_nnca2e92pr76h7q";
   const session = useSupabaseAuth();
   const tokenPrice = 1500;
-  const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
+  // const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
   const { openNotification } = useContext(NotificationContext);
 
   // you can call this function anything
@@ -36,7 +36,7 @@ const SubscribeCard = () => {
   // you can call this function anything
   const handleOnClose = (ref) => {
     // implementation for  whatever you want to do when the Paystack dialog closed.
-    console.log("closed", ref);
+    // console.log("closed", ref);
   };
 
   const paystackProps = {
@@ -69,8 +69,8 @@ const SubscribeCard = () => {
         },
       ],
     },
-    plan: hourlyplan,
-    publicKey: test_key,
+    plan: std_plan,
+    publicKey: public_key,
     text: (
       <Buttons
         className={
