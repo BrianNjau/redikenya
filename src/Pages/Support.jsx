@@ -107,7 +107,7 @@ const Support = () => {
               <div className="text-darkgray uppercase text-sm font-medium font-serif mb-[10px]">
                 Call Us
               </div>
-              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 723946261</p>
+              <p className="w-[70%] lg:w-full mx-auto">Phone: +254 731946261</p>
             </Col>
             <Col>
               <i className="line-icon-Mail-Read text-gradient bg-[#3EB489] text-[32px] mb-[30px] sm:mb-[10px] inline-block md:mb-[15px]"></i>
