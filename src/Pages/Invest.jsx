@@ -53,6 +53,7 @@ import OpenAI from "openai";
 import { consumeToken } from "../Functions/ConsumeToken";
 
 import GlobalFooter from "../Components/GlobalFooter";
+import ChatAvatar from "../Assets/img/pdiChatAvatar.png";
 // import { OpenAIStream, StreamingTextResponse } from "ai";
 // import { useCompletion } from "ai/react";
 // import { useChatCompletion } from "openai-streaming-hooks";
@@ -755,11 +756,26 @@ const Invest = () => {
 
       <Drawer
         size="large"
-        title="PDI AI"
+        title="PDI AI Assistant"
         onClose={onCloseDrawer}
         open={openDrawer}
       >
+        <p className="font-sans text-xs">
+          PDI AI Assistant is powered by AI may sometimes make mistakes. Please
+          countercheck the information provided.
+        </p>
         <ProChat
+          showTitle
+          assistantMeta={{
+            avatar: ChatAvatar,
+            title: "PDI AI Assistant",
+            backgroundColor: "#67dedd",
+          }}
+          userMeta={{
+            // avatar: `${session.user.user_metadata.fullName.split(" ")[0][0]}`,
+            title: `${session.user.user_metadata.fullName.split(" ")[0]}`,
+            // backgroundColor: "#08415c",
+          }}
           locale="en-US"
           helloMessage={
             "Greetings, I am your PDI assistant. Let me help you understand invest search results."
