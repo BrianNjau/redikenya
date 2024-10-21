@@ -30,6 +30,15 @@ module.exports = {
       xbig: ["230px", "200px"],
     },
     extend: {
+      animation: {
+        "pulse-large": "pulse-large 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+      },
+      keyframes: {
+        "pulse-large": {
+          "0%, 100%": { transform: "scale(1)", opacity: 1 },
+          "50%": { transform: "scale(3.5)", opacity: 0.8 },
+        },
+      },
       textUnderlineOffset: {
         2: "3px",
         4: "4px",

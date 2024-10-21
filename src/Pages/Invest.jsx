@@ -66,11 +66,9 @@ const Invest = () => {
   const [propOverview, setPropOverview] = useState([]);
   const [selectedMarketPrice, setSelectedMarketPrice] = useState([]);
   const [selectedRentPrice, setSelectedRentPrice] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState([
-    "Nairobi Kileleshwa",
-  ]);
+  const [selectedLocation, setSelectedLocation] = useState([]);
   const [selectedSaleType, setSelectedSaleType] = useState([]);
-  const [selectedTypology, setSelectedTypology] = useState(["1BR", "2BR"]);
+  const [selectedTypology, setSelectedTypology] = useState([]);
   const [filterSearchLoading, setFilterSearchLoading] = useState(false);
   const [filterSearchResults, setFilterSearchResults] = useState([]);
   const [isConfirmSearchModalOpen, setIsConfirmSearchModalOpen] =
@@ -714,35 +712,32 @@ const Invest = () => {
       {filterSearchResults.length === 0 && !hasSearched ? (
         ""
       ) : (
-        <FloatButton.Group
-          trigger="click"
-          type="default"
-          badge={{
-            dot: true,
-            classNames: {
-              indicator: "animate-pulse",
-            },
-            color: "#3eb489",
-          }}
-          icon={<MonitorOutlined />}
-          className=" text-slate-600"
-        >
-          <Tooltip title="Generate PDI investment insights">
-            <FloatButton
-              badge={{ dot: true }}
-              icon={<QuestionCircleOutlined />}
-              onClick={showAlgorithmModal}
-            />
-          </Tooltip>
+        <div className="fixed bottom-[67px] right-[44px]">
+          {/* Relative container to position the FloatButton and Ping */}
+          <div className="relative flex items-center justify-center">
+            {/* Ping Animation */}
+            <span className="absolute inline-flex h-[34px] w-[34px] rounded-full bg-[#3eb489] opacity-75 animate-ping"></span>
 
-          <Tooltip title="Let our AI analyze your results">
-            <FloatButton
-              badge={{ dot: true }}
-              icon={<CodeOutlined />}
-              onClick={showDrawer}
-            />
-          </Tooltip>
-        </FloatButton.Group>
+            {/* Float Button */}
+            <FloatButton.Group
+              trigger="click"
+              type="default"
+              icon={<MonitorOutlined />}
+              className="z-10 text-slate-600"
+            >
+              <Tooltip title="Generate PDI investment insights">
+                <FloatButton
+                  icon={<QuestionCircleOutlined />}
+                  onClick={showAlgorithmModal}
+                />
+              </Tooltip>
+
+              <Tooltip title="Let our AI analyze your results">
+                <FloatButton icon={<CodeOutlined />} onClick={showDrawer} />
+              </Tooltip>
+            </FloatButton.Group>
+          </div>
+        </div>
       )}
       {/* <Tour
         steps={aiAlert}
@@ -761,8 +756,8 @@ const Invest = () => {
         open={openDrawer}
       >
         <p className="font-sans text-xs">
-          PDI AI Assistant is powered by AI may sometimes make mistakes. Please
-          countercheck the information provided.
+          PDI AI Assistant is powered by AI and may sometimes make mistakes.
+          Please countercheck the information provided.
         </p>
         <ProChat
           showTitle
