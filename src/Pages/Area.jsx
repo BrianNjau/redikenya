@@ -1045,8 +1045,11 @@ const Area = () => {
             >
               <Tooltip title="Filter">
                 <ButtonAnt
+                  style={{
+                    backgroundColor: "#08415c",
+                  }}
                   loading={selectedLocationLoading}
-                  icon={<i className="line-icon-Filter-2"></i>}
+                  icon={<i className="line-icon-Filter-2 text-[#3EB489]"></i>}
                 />
               </Tooltip>
             </Dropdown>
@@ -1067,7 +1070,11 @@ const Area = () => {
               }))}
             />
             <ButtonAnt
-              style={{ color: "#08415c" }}
+              style={{
+                color: "#FFF",
+
+                backgroundColor: "#08415c",
+              }}
               onClick={handleFilterArea}
               loading={filterLoading}
               className="ml-8"
@@ -1280,8 +1287,11 @@ const Area = () => {
             >
               <Tooltip title="Filter">
                 <ButtonAnt
+                  style={{
+                    backgroundColor: "#08415c",
+                  }}
                   loading={selectedLocationLoading}
-                  icon={<i className="line-icon-Filter-2"></i>}
+                  icon={<i className="line-icon-Filter-2  text-[#3EB489]"></i>}
                 />
               </Tooltip>
             </Dropdown>
@@ -1302,7 +1312,11 @@ const Area = () => {
               }))}
             />
             <ButtonAnt
-              style={{ color: "#08415c" }}
+              style={{
+                color: "#FFF",
+
+                backgroundColor: "#08415c",
+              }}
               onClick={handleFilterArea}
               loading={filterLoading}
               className="ml-8"
@@ -1447,8 +1461,12 @@ const Area = () => {
             >
               <Tooltip title="Filter">
                 <ButtonAnt
+                  style={{
+                    backgroundColor: "#08415c",
+                  }}
+                  // className="bg-[#08415c]"
                   loading={selectedLocationLoading}
-                  icon={<i className="line-icon-Filter-2"></i>}
+                  icon={<i className="line-icon-Filter-2 text-[#3EB489]"></i>}
                 />
               </Tooltip>
             </Dropdown>
@@ -1469,7 +1487,11 @@ const Area = () => {
               }))}
             />
             <ButtonAnt
-              style={{ color: "#08415c" }}
+              style={{
+                color: "#FFF",
+
+                backgroundColor: "#08415c",
+              }}
               onClick={handleFilterArea}
               loading={filterLoading}
               className="ml-8"
