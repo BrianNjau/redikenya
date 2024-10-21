@@ -906,7 +906,10 @@ const SearchResults = () => {
 </Col> */}
                         </Row>
 
-                        <div style={{ height: "60vh", width: "100%" }}>
+                        <div
+                          className="m-4"
+                          style={{ height: "60vh", width: "100%" }}
+                        >
                           {isLoaded && (
                             <GoogleMap
                               mapContainerStyle={containerStyle}
