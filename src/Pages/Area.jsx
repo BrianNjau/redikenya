@@ -1648,6 +1648,7 @@ const Area = () => {
                   innerRadius={0.5}
                   padAngle={0.7}
                   cornerRadius={3}
+                  colors={["rgb(255, 255, 255)", "rgb(62, 180, 137)"]}
                   activeOuterRadiusOffset={8}
                   borderWidth={1}
                   borderColor={{
@@ -1871,7 +1872,7 @@ const Area = () => {
                   innerRadius={0.5}
                   padAngle={0.7}
                   cornerRadius={3}
-                  colors={["rgb(140, 39, 30)", "rgb(62, 180, 137)"]}
+                  colors={["rgb(255, 255, 255)", "rgb(62, 180, 137)"]}
                   activeOuterRadiusOffset={8}
                   borderWidth={1}
                   borderColor={{
