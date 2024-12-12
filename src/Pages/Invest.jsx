@@ -43,7 +43,6 @@ import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import MapPin from "../Assets/img/CilLocationPin.svg";
 import InvestIcon from "../Assets/img/investIcon.svg";
 import SearchInvest from "../Assets/img/searchInvest.svg";
-
 import yHImage from "../Assets/img/yht.svg";
 import LsqImage from "../Assets/img/lsqm.svg";
 import HGRIImage from "../Assets/img/hgri.svg";
@@ -768,7 +767,7 @@ const Invest = () => {
           }}
           userMeta={{
             // avatar: `${session.user.user_metadata.fullName.split(" ")[0][0]}`,
-            title: `${session.user.user_metadata.fullName.split(" ")[0]}`,
+            title: `${session?.user.user_metadata.fullName.split(" ")[0]}`,
             // backgroundColor: "#08415c",
           }}
           locale="en-US"
