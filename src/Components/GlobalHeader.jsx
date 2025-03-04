@@ -131,7 +131,7 @@ const GlobalHeader = (props) => {
                 }}
                 trigger={["click"]}
               >
-                <button className="btn-fill text-[#08415c] ">
+                <button className="btn-fill text-[#08415c] border p-2 rounded ">
                   <Avatar
                     style={{
                       backgroundColor: "#08415c",
@@ -142,6 +142,7 @@ const GlobalHeader = (props) => {
                     {userMeta.fullName.split(" ")[0][0]}
                   </Avatar>{" "}
                   {userMeta.fullName}
+                  <i className="feather-menu p-1 ml-2"></i>
                 </button>
               </Dropdown>
             </Col>
@@ -153,18 +154,18 @@ const GlobalHeader = (props) => {
             >
               <Link
                 to="/login"
-                className="text-[#08415c] font-serif hover:text-[#3EB489]  mr-[2rem]"
+                className="text-[#08415c] font-serif hover:text-[#3EB489]  mr-[2rem] w-full"
               >
                 <i className="mr-[1rem]"></i>LOGIN
               </Link>
               <Buttons
                 ariaLabel="button"
                 href="/register"
-                className="btn-fill mx-[8px] font-medium uppercase rounded-[80px]"
+                className="btn-fill mx-[8px] w-full font-medium uppercase rounded-[80px]"
                 themeColor="#3EB489"
-                color="#F3EFE0"
+                color="#FFFFFF"
                 size="md"
-                title="Try for free"
+                title="Try free"
               />
             </Col>
           )}

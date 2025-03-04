@@ -135,7 +135,7 @@ const HeroCarousel = () => {
 
               <h1 className="font-serif font-semibold text-white text-[65px] leading-[80px] w-[70%] mt-[2vh] tracking-[-5px] lg:text-[55px] lg:leading-[100px] md:text-[45px] md:leading-[85px] sm:text-[25px] sm:leading-[50px] sm:-tracking-[.5px] xs:w-[60%] xs:text-[60px] xs:leading-[65px]">
                 <Typed
-                  className="font-semibold text-[#3eb489] text-[68px] "
+                  className="font-semibold text-[#3eb489] "
                   strings={["Elevate", "Inform"]}
                   typeSpeed={40}
                   backSpeed={40}

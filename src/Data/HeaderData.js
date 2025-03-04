@@ -230,8 +230,17 @@ const HeaderData = [
   },
 
   {
+    title: "Pricing",
+    link: "https://pdimarketplace.com/#pricing",
+  },
+
+  {
     title: "Support",
     link: "/support",
+  },
+  {
+    title: "Faq",
+    link: "/faq",
   },
   // {
   //   title: "Pipeline",

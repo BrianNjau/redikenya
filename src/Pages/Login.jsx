@@ -76,7 +76,7 @@ const Login = () => {
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-full opacity-75 bg-gradient-to-tr from-[#08415c] via-[#3EB489] to-[#08415c]"></div>
-      <Container className="relative mt-[15vh]">
+      <Container className="relative mt-[7vh]">
         <Row className="justify-center">
           <Col xl={7} lg={8} md={10} className="xs:px-0">
             <Link to="/" className="text-white mb-2">

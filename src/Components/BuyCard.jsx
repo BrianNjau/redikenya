@@ -8,7 +8,7 @@ import { PaystackButton } from "react-paystack";
 
 const BuyCard = () => {
   const [tokenValue, setTokenValue] = useState(1);
-  const [tokenPrice, setTokenPrice] = useState(160);
+  const [tokenPrice, setTokenPrice] = useState(99);
   const public_key = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY;
   // const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
 
@@ -20,7 +20,7 @@ const BuyCard = () => {
       //onswipe
       setTokenValue(val);
 
-      const tokenPrice = val * 160;
+      const tokenPrice = val * 99;
       setTokenPrice(tokenPrice);
     } catch (e) {
       console.log(e);

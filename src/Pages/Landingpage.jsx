@@ -152,6 +152,7 @@ const Landingpage = (props) => {
                       {userMeta.fullName.split(" ")[0][0]}
                     </Avatar>{" "}
                     {userMeta.fullName}
+                    <i className="feather-menu  p-1 ml-2 "></i>
                   </button>
                 </Dropdown>
               </Col>

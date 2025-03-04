@@ -9,7 +9,7 @@ const ExpiredSubCard = () => {
   const std_plan = process.env.REACT_APP_PAYSTACK_STANDARD_SUBSCRIPTION_PLAN;
   // const hourlyplan = "PLN_nnca2e92pr76h7q";
   const session = useSupabaseAuth();
-  const tokenPrice = 1500;
+  const tokenPrice = 999;
   // const test_key = "pk_test_73cc2a30972587c0712d51cc7ea5aace2704aff2";
 
   // you can call this function anything
@@ -80,7 +80,7 @@ const ExpiredSubCard = () => {
         <div className="mt-12 mb-12 text-center ">
           {" "}
           <span className="text-[32px] text-white ml-2">
-            {/* {loadingTokens ? "" : tokenCount} */}Ksh. 1,500
+            {/* {loadingTokens ? "" : tokenCount} */}Ksh. 999
           </span>
           <span className="text-[11px] text-slate-300 ml-2">/ month</span>
         </div>
