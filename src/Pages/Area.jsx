@@ -16,6 +16,7 @@ import {
   Modal,
   Progress,
   Input,
+  Alert,
 } from "antd";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Autoplay, Keyboard } from "swiper/modules";
@@ -38,6 +39,11 @@ import { useNavigate } from "react-router-dom";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
 import { consumeToken } from "../Functions/ConsumeToken";
 import GlobalFooter from "../Components/GlobalFooter";
+import {
+  QuestionCircleFilled,
+  QuestionCircleOutlined,
+  QuestionCircleTwoTone,
+} from "@ant-design/icons";
 
 const Area = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
@@ -1084,6 +1090,14 @@ const Area = () => {
           </div>
 
           <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Alert
+              message="About this view"
+              description="These metrics serve as benchmarks, helping you and real estate professionals, gauge the health and trends within the industry. By leveraging industry-specific data, you can identify emerging patterns, assess the competitiveness of different neighborhoods, and respond effectively to changing market conditions, ultimately contributing to more informed and strategic choices in property development and investment."
+              type="info"
+              className="mb-4 ml-4 mr-4 "
+              showIcon
+              closable
+            />
             <ColAnt className="gutter-row" span={4}>
               <StatisticCard
                 title={"No. of Properties"}
@@ -1190,6 +1204,21 @@ const Area = () => {
             >
               <span className="font-base text-[#f3efe0] text-sm ">
                 GRI/Sqm by Typology
+              </span>{" "}
+              <span>
+                <Tooltip
+                  className="font-base float-right"
+                  title="The line graph illuminates the relationship between Gross Rental Income and floor area, revealing an inverse correlation. This suggests that larger residential plinth areas may not necessarily result in proportionally higher rental income"
+                >
+                  <ButtonAnt
+                    style={{
+                      backgroundColor: "#08415c",
+                    }}
+                    icon={
+                      <i className="feather-help-circle text-[#3EB489]"></i>
+                    }
+                  />
+                </Tooltip>
               </span>{" "}
               <ResponsiveLine
                 enableArea={true}
@@ -1324,6 +1353,14 @@ const Area = () => {
               Filter Area Data
             </ButtonAnt>
           </div>
+          <Alert
+            message="About this view"
+            description="Geometric data plays a crucial role in property analysis, especially when assessing key summary statistics such as averages, minimum and maximum values of the number of units, development density, acreage, and skyline of a specific area. These metrics provide essential insights into the spatial characteristics and scale of development within the analysed area. Averages offer a central tendency measure, giving an idea of the typical values, while minimum and maximum values highlight the range and extremes, showcasing the diversity of property features. Development density and acreage metrics contribute to understanding the concentration of properties in a given space. "
+            type="info"
+            className="mb-4 ml-4 mr-4 "
+            showIcon
+            closable
+          />
 
           <Divider orientation="center">Units Analysis</Divider>
 
@@ -1501,6 +1538,14 @@ const Area = () => {
           </div>
 
           <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Alert
+              message="About this view"
+              description="Geometric data focusing on floor areas (plinth), enhances property analysis by offering a comprehensive view of size dynamics in the real estate market. The average and median floor area offers a central tendency measure, giving an understanding of the typical size of properties, while the range between minimum and maximum values highlights the variation in property sizes.  "
+              type="info"
+              className="mb-4 ml-4 mr-4 "
+              showIcon
+              closable
+            />
             <ColAnt className="gutter-row" span={4}>
               <StatisticCard
                 title={"No. of Properties"}
@@ -1550,6 +1595,21 @@ const Area = () => {
               >
                 <span className="font-base text-[#f3efe0] text-sm ">
                   Ensuite Property Analysis (%)
+                </span>{" "}
+                <span>
+                  <Tooltip
+                    className="font-base float-right"
+                    title="The bar graph provides a visual analysis of the distribution of ensuite properties across various bedroom configurations, offering key insights into the prevalence of ensuite amenities for different housing"
+                  >
+                    <ButtonAnt
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </Tooltip>
                 </span>{" "}
                 <ResponsiveBar
                   data={generateEnsuiteBarChartData(filteredPropertyDetails, [
@@ -1663,6 +1723,21 @@ const Area = () => {
               >
                 <span className="font-base text-[#f3efe0] text-sm ">
                   DSQ Analysis (%)
+                </span>{" "}
+                <span>
+                  <Tooltip
+                    className="font-base float-right"
+                    title="The pie chart provides a visual representation of the distribution of different housing typologies and the provision of DSQ within the market and enhances intuitive understanding of the market composition"
+                  >
+                    <ButtonAnt
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </Tooltip>
                 </span>{" "}
                 <ResponsivePie
                   data={dsqProvisionPieData}
@@ -1784,6 +1859,21 @@ const Area = () => {
                 <span className="font-base text-[#f3efe0] text-sm ">
                   Cloakroom Property Analysis (%)
                 </span>{" "}
+                <span>
+                  <Tooltip
+                    className="font-base float-right"
+                    title="The bar graph illustrates the distribution of cloakrooms across different property configurations, providing a clear visual representation of how this feature is allocated within various unit types, such as studio apartments, one-bedroom, two-bedroom, and larger properties."
+                  >
+                    <ButtonAnt
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </Tooltip>
+                </span>{" "}
                 <ResponsiveBar
                   data={generateCloakRoomBarChartData(filteredPropertyDetails, [
                     "Studio",
@@ -1887,6 +1977,21 @@ const Area = () => {
               >
                 <span className="font-base text-[#f3efe0] text-sm ">
                   Property Provision of Office/Study (%)
+                </span>{" "}
+                <span>
+                  <Tooltip
+                    className="font-base float-right"
+                    title="The pie chart illustrates the distribution of home office and study rooms among the available properties in the market, providing valuable insights into the prevalence of work-from-home and study-friendly spaces in residential offerings. This analysis highlights the growing demand for functional home environments that cater to professional and academic needs."
+                  >
+                    <ButtonAnt
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </Tooltip>
                 </span>{" "}
                 <ResponsivePie
                   data={officeProvisionPieData}
@@ -2007,6 +2112,21 @@ const Area = () => {
                 <span className="font-base text-[#f3efe0] text-sm ">
                   Typology Per Development (%)
                 </span>{" "}
+                <span>
+                  <Tooltip
+                    className="font-base float-right"
+                    title="The bar graph illustrates the distribution of housing typologies within each property, highlighting the predominant housing type as an indicator of prevailing market trends and buyer preferences. "
+                  >
+                    <ButtonAnt
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </Tooltip>
+                </span>{" "}
                 <ResponsiveBar
                   keys={["value"]}
                   axisBottom={{
@@ -2091,6 +2211,14 @@ const Area = () => {
           </div>
           <div className="mt-4 ">
             <RowAnt className="mb-4" gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Alert
+                message="About this view"
+                description="This illustrates the quantity of new properties and total number of units introduced to the property market in a particular year, acting as an indicator of the real estate market's performance. A rise in housing stock is regarded favourably, signifying a positive response to market demand."
+                type="info"
+                className="mb-4 ml-4 mr-4 "
+                showIcon
+                closable
+              />
               <ColAnt className="gutter-row" span={12}>
                 <StatisticCard
                   title={"Number of Properties "}
@@ -2128,6 +2256,14 @@ const Area = () => {
       label: "Pipeline",
       children: (
         <>
+          <Alert
+            message="About this view"
+            description="The visual displays the count of properties and total units we are tracking and are still pending entry into the market. These development proposals are currently in either the statutory permitting stage or the conceptual stages."
+            type="info"
+            className="mb-4 ml-4 mr-4 "
+            showIcon
+            closable
+          />
           <div className="flex justify-between mb-8">
             {/* Year Picker  */}
             <div>
