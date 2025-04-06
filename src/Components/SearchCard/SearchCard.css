@@ -1,0 +1,23 @@
+.insight-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+}
+.insight-card span {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: black;
+  font-weight: 600;
+}
+.property-insights-container {
+  padding: 40px 20px;
+  text-align: center;
+}

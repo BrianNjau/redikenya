@@ -26,9 +26,13 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { consumeToken } from "../Functions/ConsumeToken";
 import SearchConfirm from "../Assets/img/SearchConf.svg";
+import SearchCard1 from "../Assets/img/searchcard1.png";
 import GlobalFooter from "../Components/GlobalFooter";
 import IconWithText from "../Components/IconWithText/IconWithText";
 import { fadeIn } from "../Functions/GlobalAnimations";
+import SearchCard from "../Components/SearchCard/SearchCard";
+import SearchInsights from "../Components/SearchInsights/SearchInsights";
+import SearchSection from "../Components/SearchSection/SearchSection";
 const Search = () => {
   const navigate = useNavigate();
   let [location, setLocation] = useState([]);
@@ -337,225 +341,12 @@ const Search = () => {
         </Container>
       </div>
 
-      <Divider className="mt-3 mb-8">Uncover Vital Property Insights </Divider>
-
-      {/* <RowAnt gutter={56} className="m-4  mb-8">
-        <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 150 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={<i className="line-icon-Pipe text-[#08415c]"></i>}
-                />
-              }
-              title="Project pipeline"
-              description={
-                <>
-                  <span>
-                    Access upcoming projects in your location of interest.
-                  </span>
-                  <br />
-                  <br />
-                </>
-              }
-            />
-          </Card>
-        </ColAnt>
-        <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 150 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={<i className="line-icon-Bar-Chart3 text-[#08415c]"></i>}
-                />
-              }
-              title="Economic Data"
-              description={
-                <>
-                  <span>
-                    Access macro-economic data which plays an important role in
-                    shaping the real estate market.
-                  </span>
-                  <br />
-                  <br />
-                </>
-              }
-            />
-          </Card>
-        </ColAnt>
-        <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 150 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={<i className="line-icon-Dashboard text-[#08415c]"></i>}
-                />
-              }
-              title="Visuals"
-              description={
-                <>
-                  <span>
-                    {" "}
-                    Access modern, well detailed and easy to understand
-                    dashboards offering key insights on data points
-                  </span>
-                  <br />
-                  <br />
-                </>
-              }
-            />
-          </Card>
-        </ColAnt>
-      </RowAnt> */}
-
-      <RowAnt gutter={56} className=" m-4 ">
-        {/* <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 320 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={
-                    <i className="line-icon-Search-People text-[#08415c]"></i>
-                  }
-                />
-              }
-              title="Search"
-              description={
-                <>
-                  <span>
-                    {" "}
-                    Access local property market data relevant in informing your
-                    investment objectives and Strategy
-                  </span>
-                  <br />
-                  <br />
-                  <p className="text-sm">
-                    i. Market Prices
-                    <br />
-                    ii. Unit Prices
-                    <br />
-                    iii. Rents
-                    <br />
-                    iv. Rental Yields
-                    <br />
-                    v. GRM
-                  </p>
-                </>
-              }
-            />
-          </Card>
-        </ColAnt>
-        <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 320 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={<i className="line-icon-Bar-Chart text-[#08415c]"></i>}
-                />
-              }
-              title="Area Data"
-              description={
-                <>
-                  <span>
-                    Access hyperlocal data to help you identify the most
-                    attractive local areas within the city or neighbourhood.
-                  </span>
-                  <br />
-                  <br />
-                  <RowAnt gutter={8}>
-                    <ColAnt className="gutter-row" span={12}>
-                      <p className="text-sm">
-                        i. Population
-                        <br />
-                        ii. Demographic profile
-                        <br />
-                        iii. Development character control
-                        <br />
-                        iv. Skyline
-                        <br />
-                        v. Densities
-                        <br />
-                        vi. Market inventory
-                      </p>
-                    </ColAnt>
-                    <ColAnt className="gutter-row" span={12}>
-                      <p className="text-sm">
-                        vii. Typology
-                        <br />
-                        viii. Plinth analysis
-                        <br />
-                        ix. Amenities
-                        <br />
-                        x. Proximity to areas of interest
-                        <br />
-                        xi. Land use profile
-                        <br />
-                        xii. Emerging patterns
-                      </p>
-                    </ColAnt>
-                  </RowAnt>
-                </>
-              }
-            />
-          </Card>
-        </ColAnt>
-        <ColAnt className="gutter-row" span={8}>
-          <Card style={{ width: 450, marginTop: 16, height: 320 }}>
-            <Meta
-              avatar={
-                <Avatar
-                  size={64}
-                  style={{ backgroundColor: "#FFFFFF" }}
-                  icon={<i className="line-icon-Money-Bag text-[#08415c]"></i>}
-                />
-              }
-              title="Invest"
-              description={
-                <>
-                  <span>
-                    {" "}
-                    Search for optimal investment opportunity within your
-                    capital outlay.
-                  </span>
-                  <br />
-                  <br />
-
-                  <p className="text-sm">
-                    i. Compare Market Price
-                    <br />
-                    ii. Rental Yield Insights
-                    <br />
-                    iii. GRM
-                    <br />
-                    iv. Location of Properties
-                    <br />
-                    v. Quality of Amenities
-                  </p>
-                </>
-              }
-            />
-          </Card>
-        </ColAnt> */}
-        <Col className="mt-4 mb-16" xs={12} md={8} lg={12}>
-          <IconWithText
-            grid="row-cols-1 row-cols-md-1 row-cols-lg-3 gap-y-[12px]"
-            theme="icon-with-text-02 about-us-icon-with-text"
-            data={IconWithTextData}
-            animation={fadeIn}
-            animationDelay={0.1}
-          />
-        </Col>
-      </RowAnt>
+      <Divider className="mt-3 mb-0">
+        {" "}
+        <h6>How Property Search Can Help You </h6>{" "}
+      </Divider>
+      <SearchInsights />
+      <SearchSection />
 
       <Modal
         title={

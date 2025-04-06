@@ -1,0 +1,41 @@
+.informed-decisions-container {
+  display: flex;
+  flex-direction: column; /* Stack on smaller screens */
+  padding: 40px 80px;
+  gap: 50px;
+}
+
+.informed-decisions-container .text-content {
+  flex: 1;
+}
+
+.informed-decisions-container h2 {
+  margin-bottom: 20px;
+}
+
+.informed-decisions-container .map-container {
+  flex: 1;
+}
+
+.informed-decisions-container .map-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments for larger screens */
+@media (min-width: 768px) {
+  .informed-decisions-container {
+    flex-direction: row; /* Arrange side-by-side on larger screens */
+    align-items: center;
+  }
+
+  .informed-decisions-container .text-content {
+    padding-right: 30px;
+  }
+
+  .informed-decisions-container .map-container {
+    padding-left: 30px;
+  }
+}
