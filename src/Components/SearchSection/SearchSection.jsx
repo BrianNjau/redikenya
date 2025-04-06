@@ -7,10 +7,12 @@ const SearchSection = () => {
       <div className="text-content">
         <h6 className="text-xl text-black">Make Informed Property Decisions</h6>
         <p className="text-base font-serif text-[32px]">
-          Our comprehensive property database provides you with accurate and
-          up-to-date information about Nairobi's real estate market. Whether
-          you're buying, selling, or investing, make data-driven decisions with
-          confidence.
+          The search feature is designed specifically for prospective property
+          buyers and developers who want to explore the local market by
+          conducting a thorough comparative market analysis. Additionally, the
+          analytics feature identifies the primary price influencers in the
+          residential sector, with location being a fundamental factor inherent
+          to the real estate industry.
         </p>
       </div>
       <div className="map-container">

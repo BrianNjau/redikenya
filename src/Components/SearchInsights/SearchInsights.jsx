@@ -11,7 +11,9 @@ const SearchInsights = () => {
       <div className="insights-grid">
         <SearchCard
           title="Vital Insights"
-          description="Get vital insights into the dynamics of the real estate market "
+          description="Our comprehensive property database
+          provides you with accurate and up-to-date information about Nairobi's
+          real estate market."
           imageUrl={SearchCard1} // Replace with actual image path
         />
         <SearchCard
