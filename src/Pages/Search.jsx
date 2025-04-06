@@ -254,7 +254,7 @@ const Search = () => {
   return (
     <div className="">
       <GlobalHeader theme="light" />
-      <div className="md:flex md:items-center overflow-hidden relative py-[80px] mb-24">
+      <div className="md:flex md:items-center overflow-hidden relative py-[80px]">
         <Parallax
           className="lg-no-parallax bg-cover cover-background w-full absolute top-[0px] left-0  xl:-top-[90px] "
           translateY={[-40, 40]}
@@ -340,12 +340,14 @@ const Search = () => {
           </Row>
         </Container>
       </div>
+      <div className=" bg-lightgray">
+        <Divider className="pt-[32px] mt-0 mb-0">
+          {" "}
+          <h6>How Property Search Can Help You </h6>{" "}
+        </Divider>
+        <SearchInsights />
+      </div>
 
-      <Divider className="mt-3 mb-0">
-        {" "}
-        <h6>How Property Search Can Help You </h6>{" "}
-      </Divider>
-      <SearchInsights />
       <SearchSection />
 
       <Modal
