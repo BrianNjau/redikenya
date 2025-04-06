@@ -671,10 +671,23 @@ const SearchResults = () => {
                     ]}
                     className="w-auto mb-12"
                   />
+
+                  <ToolTipANT
+                    className="font-base float-right"
+                    title="Get vital insights into the dynamics of the real estate market by leveraging on markets central tendency such as average and median of rents, rental yields, market prices, Gross Rent Multiplier (GRM) and unit prices.  These metrics serve as benchmarks, helping you and real estate professionals, gauge the health and trends within the industry."
+                  >
+                    <Button
+                      style={{
+                        backgroundColor: "#08415c",
+                      }}
+                      icon={
+                        <i className="feather-help-circle text-[#3EB489]"></i>
+                      }
+                    />
+                  </ToolTipANT>
+
                   {/* Tab options */}
-
                   {/* DropDown options */}
-
                   {displayMarketView === "scatterChart" ? (
                     <>
                       <Dropdown
@@ -695,7 +708,6 @@ const SearchResults = () => {
                     <></>
                   )}
                   {/* Render based on selected select value */}
-
                   {
                     displayMarketView === "scatterChart" ? (
                       <>
@@ -779,71 +791,91 @@ const SearchResults = () => {
                           </Col>
                         </Row>
                         {/* <Scatter  className='bg-[#08415c] rounded-md p-4' options={scatterOptions} data={scatterData} /> */}
-
+                        <div className="bg-[#08415c] rounded-lg p-8 mt-1">
+                          <span className="font-base text-[#f3efe0] text-sm mb-1 ">
+                            Market Price by Floor area (SqM)
+                          </span>{" "}
+                          <span>
+                            <ToolTipANT
+                              className="font-base float-right"
+                              title="Visually represents the correlation between property value and its influencing factors both quantitatively and qualitatively. The scatter chart acts as a valuable tool for real estate professionals, investors, and developers, aiding them in making informed decisions about pricing strategies, relative value comparisons, price trends, understanding buyer preferences"
+                            >
+                              <Button
+                                style={{
+                                  backgroundColor: "#08415c",
+                                  padding: "1px",
+                                }}
+                                icon={
+                                  <i className="feather-help-circle text-[#3EB489] mb-1"></i>
+                                }
+                              />
+                            </ToolTipANT>
+                          </span>{" "}
+                          <ResponsiveContainer width="100%" height={700}>
+                            <ScatterChart
+                              className="bg-[#08415c]  rounded-md p-5"
+                              margin={{
+                                top: 20,
+                                right: 20,
+                                bottom: 20,
+                                left: 20,
+                              }}
+                            >
+                              <CartesianGrid
+                                opacity={0.5}
+                                strokeDasharray="2  2"
+                              />
+                              <XAxis
+                                style={{
+                                  fontSize: "0.9rem",
+                                }}
+                                tick={{ fill: "#f3efe0" }}
+                                dataKey="floorArea"
+                                type="number"
+                                name="FloorArea (SqM)"
+                                unit="sqm"
+                              >
+                                <Label
+                                  fill="#f3efe0"
+                                  value="Floor area (SqM)"
+                                  offset={0}
+                                  position="bottom"
+                                />
+                              </XAxis>
+                              <YAxis
+                                style={{
+                                  fontSize: "0.9rem",
+                                }}
+                                tickFormatter={(val) =>
+                                  `Ksh.${val.toLocaleString()}`
+                                }
+                                tick={{ fill: "#f3efe0" }}
+                                dataKey="marketPrice"
+                                type="number"
+                                name="Estimated Market Price"
+                              >
+                                <Label
+                                  fill="#f3efe0"
+                                  value="Market Price"
+                                  angle={0}
+                                  offset={30}
+                                  position="top"
+                                />
+                              </YAxis>
+                              <RechartTooltip
+                                content={<CustomToolTip />}
+                                cursor={{ strokeDasharray: "3 3" }}
+                              />
+                              <RechartsLegend verticalAlign="top" height={36} />
+                              <RechartScatter
+                                name={`Data point`}
+                                data={antdScatterChartData}
+                                fill="#3eb489"
+                              />
+                            </ScatterChart>
+                          </ResponsiveContainer>
+                        </div>
                         {/* scatter chart upgrade */}
-                        <ResponsiveContainer width="100%" height={700}>
-                          <ScatterChart
-                            className="bg-[#08415c]  rounded-md p-5"
-                            margin={{
-                              top: 20,
-                              right: 20,
-                              bottom: 20,
-                              left: 20,
-                            }}
-                          >
-                            <CartesianGrid
-                              opacity={0.5}
-                              strokeDasharray="2  2"
-                            />
-                            <XAxis
-                              style={{
-                                fontSize: "0.9rem",
-                              }}
-                              tick={{ fill: "#f3efe0" }}
-                              dataKey="floorArea"
-                              type="number"
-                              name="FloorArea (SqM)"
-                              unit="sqm"
-                            >
-                              <Label
-                                fill="#f3efe0"
-                                value="Floor area (SqM)"
-                                offset={0}
-                                position="bottom"
-                              />
-                            </XAxis>
-                            <YAxis
-                              style={{
-                                fontSize: "0.9rem",
-                              }}
-                              tickFormatter={(val) =>
-                                `Ksh.${val.toLocaleString()}`
-                              }
-                              tick={{ fill: "#f3efe0" }}
-                              dataKey="marketPrice"
-                              type="number"
-                              name="Estimated Market Price"
-                            >
-                              <Label
-                                fill="#f3efe0"
-                                value="Market Price"
-                                angle={0}
-                                offset={30}
-                                position="top"
-                              />
-                            </YAxis>
-                            <RechartTooltip
-                              content={<CustomToolTip />}
-                              cursor={{ strokeDasharray: "3 3" }}
-                            />
-                            <RechartsLegend verticalAlign="top" height={36} />
-                            <RechartScatter
-                              name={`Data point`}
-                              data={antdScatterChartData}
-                              fill="#3eb489"
-                            />
-                          </ScatterChart>
-                        </ResponsiveContainer>
 
                         <div className="text-center  flex justify-center flex-col font-serif ">
                           <span className="text-[#08415c] font-base text-md -tracking-[1px] mt-4">
@@ -907,9 +939,23 @@ const SearchResults = () => {
                         </Row>
 
                         <div
-                          className="m-4"
-                          style={{ height: "60vh", width: "100%" }}
+                          className="m-4 mb-4"
+                          style={{ height: "100%", width: "100%" }}
                         >
+                          <ToolTipANT
+                            className="font-base float-right mb-2"
+                            title="Unveils the spatial context, allowing you to understand the property's location in relation to other features such as amenities, infrastructure, connectivity and natural surroundings. Geolocation data contributes to market analysis by providing insights into neighborhood characteristics, property values, and trends."
+                          >
+                            <Button
+                              style={{
+                                backgroundColor: "#08415c",
+                                padding: "1px",
+                              }}
+                              icon={
+                                <i className="feather-help-circle text-[#3EB489] mb-1"></i>
+                              }
+                            />
+                          </ToolTipANT>
                           {isLoaded && (
                             <GoogleMap
                               mapContainerStyle={containerStyle}
