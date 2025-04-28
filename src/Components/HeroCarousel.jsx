@@ -76,7 +76,7 @@ const HeroCarousel = () => {
     },
     {
       icon: "line-icon-Edit-Map text-gradient bg-gradient-to-r from-[#3eb489] via-[#f3efe0] via[#3eb489] to-[#3eb489]",
-      title: calculatedSummaryData.accerage,
+      title: calculatedSummaryData.accerage.toFixed(2),
       content: "Aggregate Acreage",
     },
     {

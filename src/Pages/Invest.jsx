@@ -612,7 +612,7 @@ const Invest = () => {
       ];
       // // Make a request to your ChatGPT API endpoint with streaming enabled
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini", // Specify the model you want to use
+        model: "gpt-4.1-mini", // Specify the model you want to use
         messages: [...formattedMessages],
 
         //   //   //   // stream: true,
